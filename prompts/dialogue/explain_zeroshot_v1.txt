@@ -1,0 +1,5 @@
+Your task is to explain why the trajectory that the user want to take violates the enforced temporal constaint.
+
+User's trajectory: ['a', 'c']
+Valid trajectory: ['a', 'b', 'c']
+Response:

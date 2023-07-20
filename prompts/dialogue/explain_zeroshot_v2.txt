@@ -1,0 +1,7 @@
+The partial trajectory that user generated is valid until certain action is made. Your task is to explain why the action that the user want to take makes the trajectory violate the enforced temporal constraint, given the invalid action that user makes and a full list of valid actions and their consequential trajectories.
+
+Valid partial trajectory: ['a', 'b']
+Invalid action: 'd'
+Valid action: ['c']
+Valid full trajectories: ['a', 'b', 'c', 'd']
+Response:
