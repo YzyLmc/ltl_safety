@@ -1,0 +1,1 @@
+Create a high-level plan for completing a household task using the allowed actions and objects

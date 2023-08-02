@@ -13,6 +13,8 @@ class constraint_module():
         '''
         convert a list of language constraints and returns final formula with prop map
         '''
+        input_ltl = "(! c U b) & G ! h" # enter bedroom before livingroom and always avoid coffeetable_2
+        dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
         pass
 
     def action_pruning(self, start, trajs):

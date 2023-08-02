@@ -11,6 +11,8 @@ import plotly.graph_objs as go
 import networkx as nx
 
 
+
+
 def fake_bb(ax):
     ax.set_aspect('equal')
     X = np.array([-10,5])
@@ -49,6 +51,7 @@ def cuboid(ax, coords, sides):
     #ax.add_collection3d(Line3DCollection(vertices, colors='k', linewidths=0.2, linestyles=':'))
 
     return faces
+
 
 
 def get_xyz_mouse_click(event, ax):
@@ -202,3 +205,6 @@ def display(graph):
 #                 yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)))
 
 #     py.iplot(fig, filename='networkx')
+
+
+

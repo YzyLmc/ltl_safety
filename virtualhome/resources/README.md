@@ -16,19 +16,14 @@ executor will choose between objects named fruit, watermelon, apple, or banana.
 Note that adding keys to value list is not necessary (i.e., `"fridge": ["fridge"]` or `"fruit": ["fruit", "watermelon", "apple", "banana"]`)
 since this is done automatically.
 
-### Object properties (`properties_data.json`)
+### Object properties (`object_properties.json`)
 
 This file contains a dictionary mapping from object names to their properties, see [../simulation/README.md](../simulation/README.md) enum class for a list of all
 supported properties. Example:
 
 `"oven": ["CAN_OPEN", HAS_SWITCH", CONTAINERS", HAS_PLUG"]`
 
-This enumerates properties for objects in the evolving graph simulator.
-
-### Object properties unity (`properties_data_unity.json`)
-Similar to properties data, but enumerates properties according to the Unity Simulator. This file will be updated as we improve the simulator. 
-
-### Object states (`object_states.json`)
+### Object properties (`object_properties.json`)
 
 This file contains a dictionary mapping from object names to states they can have, see [../simulation/README.md](../simulation/README.md) enum class for a list of all
 supported states.
