@@ -35,6 +35,24 @@ def load_from_file(fpath, noheader=True):
         raise ValueError(f"ERROR: file type {ftype} not recognized")
     return out
 
+def save_to_file(data, fpth, mode=None):
+    ftype = os.path.splitext(fpth)[-1][1:]
+    if ftype == 'pkl':
+        with open(fpth, mode if mode else 'wb') as wfile:
+            dill.dump(data, wfile)
+    elif ftype == 'txt':
+        with open(fpth, mode if mode else 'w') as wfile:
+            wfile.write(data)
+    elif ftype == 'json':
+        with open(fpth, mode if mode else 'w') as wfile:
+            json.dump(data, wfile, sort_keys=True)
+    elif ftype == 'csv':
+        with open(fpth, mode if mode else 'w', newline='') as wfile:
+            writer = csv.writer(wfile)
+            writer.writerows(data)
+    else:
+        raise ValueError(f"ERROR: file type {ftype} not recognized")
+
 def prompt2msg(query_prompt):
     """
     Make prompts for GPT-3 compatible with GPT-3.5 and GPT-4.
@@ -254,5 +272,14 @@ def prop_level_traj(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
     # return prop_traj
     return [concat_props(prop_state) for prop_state in prop_traj]
 
-        
-            
+def omit_obj_id(script_lines):
+    '''
+    omit redundent obj index. e.g., convert (1.319) -> (319)
+    '''
+    new_script = []
+    for line in script_lines:
+        while "." in line:
+            idx = line.index(".")
+            line = line[:idx-1] + line[idx+1:]
+        new_script.append(line)
+    return new_script
