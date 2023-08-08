@@ -19,7 +19,7 @@ verbose = True
 dump = True
 multi_process = True
 num_process = os.cpu_count()
-max_nodes = 300
+max_nodes = 500
 
 
 def dump_one_data(txt_file, script, graph_state_list, id_mapping, graph_path):
