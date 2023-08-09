@@ -1,0 +1,11 @@
+Put salmon into the fridge
+go to kitchen, finda and take salmon, and put it into the fridge, and close the fridge
+
+
+[WALK] <kitchen>
+[FIND] <salmon>
+[GRAB] <salmon>
+[WALK] <fridge>
+[OPEN] <fridge>
+[PUTIN] <salmon>
+[CLOSE] <fridge>
