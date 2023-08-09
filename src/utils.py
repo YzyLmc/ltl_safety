@@ -306,7 +306,8 @@ def convert_old_program_to_new(script_lines):
     '''
     new_lines = []
     for line in script_lines:
-        line.replace("dining_room", "kitchen")
-        line.replace("home_office", "living_room")
+        line = line.replace("dining_room", "kitchen")
+        line = line.replace("home_office", "living_room")
+        line = "<char0> " + line
         new_lines.append(line)
     return new_lines
