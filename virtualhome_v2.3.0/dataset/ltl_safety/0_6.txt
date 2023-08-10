@@ -1,0 +1,12 @@
+Write an email
+I go to my office and sit at my desk. Turn on the computer and type my email at the keyboard.
+
+
+[WALK] <living_room> (335)
+[WALK] <desk> (108)
+[FIND] <chair> (107)
+[SIT] <chair> (107)
+[FIND] <computer> (174)
+[SWITCHON] <computer> (174)
+[FIND] <keyboard> (172)
+[TYPE] <keyboard> (172)

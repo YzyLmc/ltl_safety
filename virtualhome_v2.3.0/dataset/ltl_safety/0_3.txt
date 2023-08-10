@@ -1,0 +1,10 @@
+Work
+Work on computer
+
+
+[WALK] <living_room> (335)
+[WALK] <chair> (107)
+[FIND] <chair> (107)
+[SIT] <chair> (107)
+[FIND] <computer> (174)
+[SWITCHON] <computer> (174)

@@ -1,0 +1,15 @@
+Write an email
+I walk to the Home Office then find the computer and sit in the chair. I switch on the computer and start typing the email. I switch the computer off.
+
+
+[WALK] <living_room> (335)
+[WALK] <computer> (174)
+[FIND] <computer> (174)
+[FIND] <chair> (107)
+[SIT] <chair> (107)
+[SWITCHON] <computer> (174)
+[TURNTO] <computer> (174)
+[LOOKAT] <computer> (174)
+[FIND] <keyboard> (172)
+[TYPE] <keyboard> (172)
+[SWITCHOFF] <computer> (174)
