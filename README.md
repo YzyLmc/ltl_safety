@@ -13,3 +13,5 @@ Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator an
 - Action embeddings stored on Oscar (ada-002)
 
 08/09: deleting dining_room and home_office in `resources/class_name_equivalence.json`. Change class_name `livingroom` to `living_room` in `virtualhome_v2.3.0/env_graphs/TestScene1_graph.json`
+
+08/10: More programs added for env0. Program `0_13.txt` need all lightswitch to be turned off at the beginning. Test run with `src/exp_virtualhome.py`, output not guranteed to be runable. 
