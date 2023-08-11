@@ -1,0 +1,12 @@
+Cook a pie
+Walk Into Kitchen. Open Refrigerator. Grab Pie. Walk to Microwave. Insert Pie into microwave. Cook until warm.
+
+
+[WALK] <kitchen> (205)
+[WALK] <fridge> (305)
+[OPEN] <fridge> (305)
+[FIND] <pie> (319)
+[CLOSE] <fridge> (305)
+[WALK] <microwave> (313)
+[SWITCHON] <microwave> (313)
+[SWITCHOFF] <microwave> (313)

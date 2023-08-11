@@ -13,8 +13,18 @@ import dill
 import random
 import networkx as nx
 import spot
+import sys
+
+sys.path.append("virtualhome_v2.3.0/simulation/")
+import evolving_graph.utils as utils
+from evolving_graph.environment import EnvironmentGraph
+from evolving_graph.execution import ScriptExecutor
+from evolving_graph.check_programs import modify_objects_unity2script, check_one_program
+from evolving_graph.scripts import read_script, read_script_from_string, read_script_from_list_string, ScriptParseException
 
 # General utils
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 def load_from_file(fpath, noheader=True):
     ftype = os.path.splitext(fpath)[-1][1:]
     if ftype == 'pkl':
@@ -22,10 +32,7 @@ def load_from_file(fpath, noheader=True):
             out = dill.load(rfile)
     elif ftype == 'txt':
         with open(fpath, 'r') as rfile:
-            if 'prompt' in fpath:
-                out = "".join(rfile.readlines())
-            else:
-                out = [line[:-1] for line in rfile.readlines()]
+            out = [line.strip() for line in rfile.readlines()]
     elif ftype == 'json':
         with open(fpath, 'r') as rfile:
             out = json.load(rfile)
@@ -49,7 +56,7 @@ def save_to_file(data, fpth, mode=None):
             wfile.write(data)
     elif ftype == 'json':
         with open(fpth, mode if mode else 'w') as wfile:
-            json.dump(data, wfile, sort_keys=True)
+            json.dump(data, wfile, sort_keys=True,  indent=4)
     elif ftype == 'csv':
         with open(fpth, mode if mode else 'w', newline='') as wfile:
             writer = csv.writer(wfile)
@@ -68,6 +75,7 @@ def prompt2msg(query_prompt):
     :return: message used by chat completion API (gpt-3, gpt-3.5-turbo).
     """
     prompt_splits = query_prompt.split("\n\n")
+    # print(prompt_splits)
     task_description = prompt_splits[0]
     examples = prompt_splits[1: -1]
     query = prompt_splits[-1]
@@ -85,11 +93,10 @@ def prompt2msg(query_prompt):
         else:  # info should be in system prompt, e.g., landmark list
             msg[0]["content"] += f"\n{example}"
     msg.append({"role": "user", "content": query})
-
     return msg
 
 class GPT4:
-    def __init__(self, engine="gpt-4", temp=0, max_tokens=128, n=1, stop=['\n']):
+    def __init__(self, engine="gpt-4-0613", temp=0, max_tokens=128, n=1, stop=['\n']):
         self.engine = engine
         self.temp = temp
         self.max_tokens = max_tokens
@@ -100,22 +107,22 @@ class GPT4:
         complete = False
         ntries = 0
         while not complete:
-            try:
-                raw_responses = openai.ChatCompletion.create(
-                    model=self.engine,
-                    messages=prompt2msg(query_prompt),
-                    temperature=self.temp,
-                    n=self.n,
-                    stop=self.stop,
-                    max_tokens=self.max_tokens,
-                )
-                complete = True
-            except:
-                sleep(30)
-                logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...")
-                # logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...\n{query_prompt}")
-                logging.info("OK continue")
-                ntries += 1
+            # try:
+            raw_responses = openai.ChatCompletion.create(
+                model=self.engine,
+                messages=prompt2msg(query_prompt),
+                temperature=self.temp,
+                n=self.n,
+                stop=self.stop,
+                max_tokens=self.max_tokens,
+            )
+            complete = True
+            # except:
+            #     sleep(30)
+            #     logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...")
+            #     # logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...\n{query_prompt}")
+            #     logging.info("OK continue")
+            #     ntries += 1
         if self.n == 1:
             responses = [raw_responses["choices"][0]["message"]["content"].strip()]
         else:
@@ -204,7 +211,12 @@ def all_prop(formula, action):
     props = list(set(props))
     return '&'.join(props).replace(f"! {action}", action)
 
-# VH utils
+##
+## VH utils
+
+def find_node(graph, class_name):
+    return [n for n in graph["nodes"] if n["class_name"] == class_name]
+
 def read_pose(pose_list):
     '''
     Convert raw pose list read from text to a dictionary of pose of each component
@@ -309,5 +321,43 @@ def convert_old_program_to_new(script_lines):
         line = line.replace("dining_room", "kitchen")
         line = line.replace("home_office", "living_room")
         line = "<char0> " + line
-        new_lines.append(line)
+        new_lines.append(line.lower())
     return new_lines
+
+def program2example(program_lines):
+    title = program_lines[:2]
+    title[1] = "Description: " + title[1]
+    script = read_script_from_list_string(program_lines)
+    example = []
+    # breakpoint()
+    for idx, script_line in enumerate(script):
+        act = script_line.action.name.lower()
+        params = script_line.parameters
+        if act == "put":
+            example.append(f"{idx}. put {params[0].name} on {params[1].name}")
+        elif act == "putin":
+            example.append(f"{idx}. put {params[0].name} in {params[1].name}")
+        else:
+            assert(len(script_line.parameters) == 1)
+            example.append(f"{idx}. {script_line.action.name.lower()} {script_line.parameters[0].name}.")
+        # breakpoint()
+    example.append(f"{idx+1}. DONE")
+    return title + example
+
+def get_action_and_obj(output_line):
+    while "." in output_line:
+        output_line = output_line.replace(".", "")
+    str_list = output_line.split()
+    if len(str_list) == 2:
+        return f"[{str_list[0]}]", [f"<{str_list[1]}>"]
+    elif len(str_list) == 3:
+        if "at" in str_list:
+            return "[lookat]", [f"<{str_list[2]}>"]
+        else:
+            return f"[{str_list[0]}]", [f"<{str_list[2]}>"]
+    elif len(str_list) > 3:
+        # print(str_list)
+        if "in" in str_list:
+            return "[putin]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
+        else:
+            return "[put]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]

@@ -1,0 +1,11 @@
+Put pie in Fridge
+take pie and put them in the fridge
+
+
+[WALK] <kitchen> (205)
+[WALK] <pie> (319)
+[FIND] <pie> (319)
+[GRAB] <pie> (319)
+[FIND] <fridge> (305)
+[OPEN] <fridge> (305)
+[PUTIN] <pie> (319) <fridge> (305)

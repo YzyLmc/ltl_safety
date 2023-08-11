@@ -1,0 +1,8 @@
+Turn on light
+Find the light circuit breaker in the kitchen
+
+
+[WALK] <kitchen> (205)
+[WALK] <lightswitch> (71)
+[FIND] <lightswitch> (71)
+[SWITCHON] <lightswitch> (71)

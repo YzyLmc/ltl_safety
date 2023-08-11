@@ -1,0 +1,62 @@
+{
+    "delay_react": [
+        {
+            "ltl": "G i kitchen F living_room",
+            "utt": "you have to go to living room if you have been to kitchen"
+        },
+        {
+            "ltl": "G i kitchen F bathroom",
+            "utt": "go to kitchen means you have to go to bathroom in the future"
+        }
+    ],
+    "future_avoid": [
+        {
+            "ltl": "G i bathroom G ! bedroom",
+            "utt": "don't go to bedroom if you have entered bathroom"
+        },
+        {
+            "ltl": "G i bathroom G ! living_room",
+            "utt": "go to bathroom means you cannot go to living room"
+        }
+    ],
+    "global_avoid": [
+        {
+            "ltl": "G ! kitchentable",
+            "utt": "never go near kitchentable"
+        },
+        {
+            "ltl": "G ! coffeetable",
+            "utt": "be away from coffeetable"
+        }
+    ],
+    "past_avoid": [
+        {
+            "ltl": "U ! bedroom living_room",
+            "utt": "you have to enter bedroom before going into living room"
+        },
+        {
+            "ltl": "U ! bathroom kitchen",
+            "utt": "don't go to bathroom if you haven't been to kitchen"
+        }
+    ],
+    "prompt_react": [
+        {
+            "ltl": "G i living_room X bedroom",
+            "utt": "you have to go to bedroom right after living room"
+        },
+        {
+            "ltl": "G i bedroom X bathroom",
+            "utt": "go to bedroom means you have to go to bathroom immediately after that"
+        }
+    ],
+    "upper_rest_avoid": [
+        {
+            "ltl": "! F & bedroom U bedroom & ! bedroom U ! bedroom F & bedroom U bedroom & ! bedroom U ! bedroom F bedroom",
+            "utt": "don't go to bedroom more than two times"
+        },
+        {
+            "ltl": "! F & kitchen U kitchen & ! kitchen U ! kitchen F & kitchen U kitchen & ! kitchen U ! kitchen F & kitchen U kitchen & ! kitchen U ! kitchen F kitchen",
+            "utt": "you can walk past kitchen table up to three times"
+        }
+    ]
+}

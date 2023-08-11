@@ -1,3 +1,6 @@
+'''
+filter executable scripts
+'''
 import sys
 import os
 

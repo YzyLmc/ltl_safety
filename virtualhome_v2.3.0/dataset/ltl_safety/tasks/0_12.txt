@@ -1,0 +1,9 @@
+Go to toilet
+The person will walk to the bathroom, and this case look at the toilet in the bathroom as no other action was requested
+
+
+[WALK] <bathroom> (11)
+[WALK] <toilet> (45)
+[FIND] <toilet> (45)
+[TURNTO] <toilet> (45)
+[LOOKAT] <toilet> (45)

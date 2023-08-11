@@ -1,0 +1,11 @@
+Pick up phone
+Find the phone
+
+
+[WALK] <cellphone> (188)
+[FIND] <cellphone> (188)
+[GRAB] <cellphone> (188)
+[TOUCH] <cellphone> (188)
+[PLUGIN] <cellphone> (188)
+[TURNTO] <cellphone> (188)
+[POINTAT] <cellphone> (188)
