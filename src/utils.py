@@ -14,6 +14,7 @@ import random
 import networkx as nx
 import spot
 import sys
+from scipy.spatial.transform import Rotation as R
 
 sys.path.append("virtualhome_v2.3.0/simulation/")
 import evolving_graph.utils as utils
@@ -74,7 +75,7 @@ def prompt2msg(query_prompt):
     :param query_prompt: prompt used by text completion API (text-davinci-003).
     :return: message used by chat completion API (gpt-3, gpt-3.5-turbo).
     """
-    prompt_splits = query_prompt.split("\n\n")
+    prompt_splits = query_prompt.split("\n\n") if type(query_prompt) == str else query_prompt
     # print(prompt_splits)
     task_description = prompt_splits[0]
     examples = prompt_splits[1: -1]
@@ -93,6 +94,7 @@ def prompt2msg(query_prompt):
         else:  # info should be in system prompt, e.g., landmark list
             msg[0]["content"] += f"\n{example}"
     msg.append({"role": "user", "content": query})
+    # print(msg)
     return msg
 
 class GPT4:
@@ -239,14 +241,27 @@ def hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False):
     :params graph: graph returned by comm.environment_graph()
     :returns bool: true for hitting the barrier
     '''
+    def is_point_inside_rotated_rectangular(center, size, rotation_matrix, point):
+        half_size = np.array(size) / 2
+        local_point = np.dot(np.linalg.inv(rotation_matrix), point - center)   
+        return all(-h <= p <= h for p, h in zip(local_point, half_size))
+
     obj = [node for node in graph['nodes'] if node['id'] == obj_id][0]
+    rotation_matrix = R.from_quat(obj["obj_transform"]["rotation"]).as_matrix()
     if room:
-        bb_center = obj["bounding_box"]["center"]
-        bb_size = obj["bounding_box"]["size"]
-        for i in range(len(cur_loc)):
-            if np.abs(cur_loc[i] - bb_center[i]) > bb_size[i]/2:
-                return False
-        return True
+        bb_center = np.array(obj["bounding_box"]["center"])
+        bb_size = np.array(obj["bounding_box"]["size"])#  - np.array([1, 1, 1]) # make bb smaller
+        # vertices = []
+        # for dim in range(len(bb_center)):
+        #     v1 = [bb_center[d] + 0.5*bb_size[d] for d in range(len(bb_center) if d==dim)]
+        #     v2 = [bb_center[d] - 0.5*bb_size[d] for d in range(len(bb_center) if d==dim)]
+        #     vertices.append(bb_center)
+        # R.from_quat(obj["obj_transform": rotation])
+        # rotated_vertices = [R.apply(v) for v in vertices]
+        # for i in range(len(cur_loc)):
+        #     if np.abs(cur_loc[i] - bb_center[i]) > bb_size[i]/2:
+        #         return False
+        return is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
 
     else:     
         obj_loc = np.array(obj["obj_transform"]["position"])
@@ -289,8 +304,8 @@ def prop_level_traj(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
     # record init truth values and only update when props changed
     state_buffer = [b for b in init_state_mapped.values()]
     for pose in pose_list[1:]:
-        state = {obj:hardcoded_truth_value_vh(pose, obj, graph,radius) for obj in obj_ids}
-        state.update({room: hardcoded_truth_value_vh(pose, room, graph, radius, room=True) for room in room_ids})
+        state = {obj:hardcoded_truth_value_vh(pose, obj, graph,radius=radius) for obj in obj_ids}
+        state.update({room: hardcoded_truth_value_vh(pose, room, graph, radius=radius, room=True) for room in room_ids})
         # breakpoint()
         new_state = [b for b in state.values()]
         if not state_buffer == new_state:
@@ -298,6 +313,29 @@ def prop_level_traj(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
             state_buffer = new_state
     # return prop_traj
     return [concat_props(prop_state) for prop_state in prop_traj]
+
+def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, env_num=0):
+    comm.reset(env_num)
+    _, g = comm.environment_graph()
+    comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
+    comm.render_script(program, recording=True, save_pose_data=True)
+    pose_dict = load_from_file("Output/script/0/pd_script.txt")
+    pose_list = read_pose(pose_dict)["Head"]
+    prop_traj = prop_level_traj(pose_list, g, obj_ids, room_ids, mappings, radius=2.0)
+    dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
+    state_list = []
+    success = True
+    for state in prop_traj:
+        action = state
+        if validate_next_action(dfa, curr_state, action, accepting_states):
+            state_list.append(f"Safe: {action}")
+            curr_state = progress_ltl(dfa, curr_state, action)
+        else:
+            state_list.append(f"Violated: {action}")
+            success = False
+            break
+    # breakpoint()
+    return success, state_list
 
 def omit_obj_id(script_lines):
     '''
@@ -311,6 +349,13 @@ def omit_obj_id(script_lines):
             line = line[:idx-1] + line[idx+1:]
         new_script.append(line)
     return new_script
+
+def convert_rooms(line):
+    new_line = line.replace("dining_room", "kitchen")
+    new_line = line.replace("home_office", "living_room")
+    new_line = line.replace("livingroom", "living_room")
+    new_line = line.replace("oven", "microwave") # :-(
+    return new_line
 
 def convert_old_program_to_new(script_lines):
     '''
@@ -333,10 +378,26 @@ def program2example(program_lines):
     for idx, script_line in enumerate(script):
         act = script_line.action.name.lower()
         params = script_line.parameters
-        if act == "put":
+        if act == "walk":
+            example.append(f"{idx}. walk to {params[0].name}")
+        elif act == "lookat":
+            example.append(f"{idx}. look at {params[0].name}")
+        elif act == "plug":
+            example.append(f"{idx}. plug in {params[0].name}")
+        elif act == "point":
+            example.append(f"{idx}. point at {params[0].name}")
+        elif act == "put":
             example.append(f"{idx}. put {params[0].name} on {params[1].name}")
         elif act == "putin":
             example.append(f"{idx}. put {params[0].name} in {params[1].name}")
+        elif act == "switchon":
+            example.append(f"{idx}. switch on {params[0].name}")
+        elif act == "switchoff":
+            example.append(f"{idx}. switch off {params[0].name}")
+        elif act == "lie":
+            example.append(f"{idx}. lie on {params[0].name}")
+        elif act == "sleep":
+            example.append(f"{idx}. sleep")
         else:
             assert(len(script_line.parameters) == 1)
             example.append(f"{idx}. {script_line.action.name.lower()} {script_line.parameters[0].name}.")
@@ -353,6 +414,11 @@ def get_action_and_obj(output_line):
     elif len(str_list) == 3:
         if "at" in str_list:
             return "[lookat]", [f"<{str_list[2]}>"]
+        elif "switch" in str_list:
+            if "on" in str_list:
+                return "[switchon]", [f"<{str_list[2]}>"]
+            elif "off" in str_list:
+                return "[switchoff]", [f"<{str_list[2]}>"]
         else:
             return f"[{str_list[0]}]", [f"<{str_list[2]}>"]
     elif len(str_list) > 3:
@@ -361,3 +427,48 @@ def get_action_and_obj(output_line):
             return "[putin]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
         else:
             return "[put]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
+
+def reprompt(translate_engine, valid_actions, invalid_action, constraints, state_lists, mappings, id2name,prompt_fpath="prompts/dialogue/explain_zeroshot_v2.txt"):
+
+    def state_prop2eng(state_list, mappings):
+        state_eng_list = []
+        inverse_mappings = {v:k for k,v in mappings.items()}
+        for state in state_list:
+            for prop in inverse_mappings.keys():
+                while prop in state:
+                    state = state.replace(prop, id2name[inverse_mappings[prop]])
+            state_eng_list.append(state)
+        return state_eng_list
+
+    task_description = load_from_file(prompt_fpath)
+    task_description = "\n".join(task_description) # just one line actually
+    constraints = f"Constraints: {str(constraints)}"
+
+    if valid_actions:
+        valid_act = ""
+        for i, action in enumerate(valid_actions):
+            header = f"Valid action {i}: {action}"
+            valid_act_i = header
+            state_list_i = state_lists[i]
+            valid_act_i += "\nState change:"
+            
+            state_eng = state_prop2eng(state_list_i, mappings)
+            for state in state_eng:
+                valid_act_i += f"\n{state}"
+            valid_act += valid_act_i
+    else:
+        valid_act = ""
+    
+    invalid_act = ""
+    header = f"Invalid action: {invalid_action}"
+    invalid_act = header
+    state_list_i = state_lists[-1]
+    invalid_act += "\nState change:"
+    state_eng = state_prop2eng(state_list_i, mappings)
+    for state in state_eng:
+        invalid_act += f"\n{state}"
+    prompt = f"{task_description}\n\n{constraints}\n{valid_act}\n{invalid_act}\nReason of violation:"
+    return translate_engine.generate(prompt)[0]
+
+
+

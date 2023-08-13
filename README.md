@@ -15,3 +15,7 @@ Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator an
 08/09: deleting dining_room and home_office in `resources/class_name_equivalence.json`. Change class_name `livingroom` to `living_room` in `virtualhome_v2.3.0/env_graphs/TestScene1_graph.json`
 
 08/10: More programs added for env0. Program `0_13.txt` need all lightswitch to be turned off at the beginning. Test run with `src/exp_virtualhome.py`, output not guranteed to be runable. 
+
+08/11: delay_react and prompt_react doesn't work since `stop` doesn't need to check DFA and cannot check using the current method, i.e., if there's a path towards accepting states.
+
+08/12: potential issues moving forward: providing env info to base agent. and Initial state. Instant reaction has issue, e.g., go to kitchen right after visiting living room is impossible if the kitchen between them is tracked too.
