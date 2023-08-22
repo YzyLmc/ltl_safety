@@ -1,0 +1,57 @@
+Your task is to translate English utterances into linear temporal logic (LTL) formulas. LTL is a formal language that has been used for describing temporal task specifications. It consists of propositions and operators. In the following task, here are the propositions and operators we use:
+
+Propositions: {"A", "B"}
+Operators: {"G": "Globally", "!": "Not", "X": "Next", "U": "Until", "i": "Indicate", "&": "And"}
+
+Utterance: never go to A
+LTL: G ! A
+
+Utterance: don't turn on A
+LTL: G ! A
+
+Utterance: please do not pick up A
+LTL: G ! A
+
+Utterance: don't go to B until you go to A
+LTL: U ! B A
+
+Utterance: you can't go to B if you haven't picked up A
+LTL: U ! A B
+
+Utterance: grab A before going to B
+LTL: U ! B A
+
+Utterance: if you do A, you can never do B after that
+LTL: G i A G ! B
+
+Utterance: pick up A means you can never go to B afterward
+LTL: G i A G ! B
+
+Utterance: don't touch A if you have been in B
+LTL: G i B G ! A
+
+Utterance: picking up A implies you have to go to B in the future
+LTL: G i A F B
+
+Utterance: if you switch on A, you have to switch it off later
+LTL: G i A F ! A
+
+Utterance: you can grab A, you have to leave B at some point in the future
+LTL: G i A F ! B
+
+Utterance: if you do A, you have to do B right after that
+LTL: G i A X B
+
+Utterance: entering A means you have to close B immediately 
+LTL: G i A X ! B
+
+Utterance: once you reach A you are never allowed to visit it again
+LTL: ! F & A U A & ! A U ! A F A
+
+Utterance: you can open A at most twice
+LTL: ! F & A U A & ! A U ! A F & A U A & ! A U ! A F A
+
+Utterance: passing through A thrice will lock it for future visits
+LTL: ! F & A U A & ! A U ! A F & A U A & ! A U ! A F & A U A & ! A U ! A F A
+
+Utterance:

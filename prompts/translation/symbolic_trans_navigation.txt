@@ -1,0 +1,42 @@
+Your task is to translate English utterances into linear temporal logic (LTL) formulas. LTL is a formal language that has been used for describing temporal task specifications. It consists of propositions and operators. In the following task, here are the actions, propositions, and operators we use:
+
+Propositions: {"A", "B"}
+Operators: {"G": "Globally", "!": "Not", "X": "Next", "U": "Until", "i": "Indicate", "&": "And"}
+
+Utterance: never go to A
+LTL: G ! A
+
+Utterance: don't go to B until you go to A
+LTL: U ! B A
+
+Utterance: you can't go to B if you haven't been to A
+LTL: U ! A B
+
+Utterance: visit A before going to B
+LTL: U ! B A
+
+Utterance: go to A means you can never go to B afterward
+LTL: G i A G ! B
+
+Utterance: never visit A if you have been in B
+LTL: G i B G ! A
+
+Utterance: picking up A implies you have to go to B in the future
+LTL: G i A F B
+
+Utterance: if you enter A, you have to leave it later
+LTL: G i A F ! A
+
+Utterance: if you are at A, you have to go to B right after that
+LTL: G i A X B
+
+Utterance: once you reach A you are never allowed to visit it again
+LTL: ! F & A U A & ! A U ! A F A
+
+Utterance: you can enter A at most twice
+LTL: ! F & A U A & ! A U ! A F & A U A & ! A U ! A F A
+
+Utterance: passing through A thrice will lock it for future visits
+LTL: ! F & A U A & ! A U ! A F & A U A & ! A U ! A F & A U A & ! A U ! A F A
+
+Utterance:
