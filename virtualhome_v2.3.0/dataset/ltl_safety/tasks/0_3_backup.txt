@@ -1,5 +1,6 @@
+Work
 Work on computer
-Go to living room, sit on a chair, and switch the computer on
+
 
 [WALK] <living_room> (335)
 [WALK] <chair> (107)

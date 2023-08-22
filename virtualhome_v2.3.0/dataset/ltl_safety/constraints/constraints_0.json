@@ -29,6 +29,12 @@
             "utt": "be away from coffeetable"
         }
     ],
+    "lower_rest_avoid": [
+        {
+            "ltl": "F kitchen",
+            "utt": "visit kitchen at least once"
+        }
+    ],
     "past_avoid": [
         {
             "ltl": "U ! bedroom living_room",
@@ -57,6 +63,10 @@
         {
             "ltl": "! F & kitchen U kitchen & ! kitchen U ! kitchen F & kitchen U kitchen & ! kitchen U ! kitchen F & kitchen U kitchen & ! kitchen U ! kitchen F kitchen",
             "utt": "you can walk past kitchen table up to three times"
+        },
+        {
+            "ltl": "! F & bedroom U bedroom & ! bedroom U ! bedroom F bedroom",
+            "utt": "once you reach bedroom you are never allowed to visit it again"
         }
     ]
 }

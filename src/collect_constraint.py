@@ -4,7 +4,7 @@ from utils import save_to_file
 
 constraints = defaultdict(list)
 constraint_types = ["past_avoid", "global_avoid", "future_avoid",\
-                    "upper_rest_avoid", "delay_react", "prompt_react"]
+                    "upper_rest_avoid", "delay_react", "prompt_react", "lower_rest_avoid"]
 
 for c_type in constraint_types:
     if c_type == "past_avoid":
@@ -19,6 +19,9 @@ for c_type in constraint_types:
     if c_type == "upper_rest_avoid":
         constraints[c_type].append({"utt": "don't go to bedroom more than two times", "ltl": "! F & bedroom U bedroom & ! bedroom U ! bedroom F & bedroom U bedroom & ! bedroom U ! bedroom F bedroom"})
         constraints[c_type].append({"utt": "you can walk past kitchen table up to three times", "ltl": "! F & kitchen U kitchen & ! kitchen U ! kitchen F & kitchen U kitchen & ! kitchen U ! kitchen F & kitchen U kitchen & ! kitchen U ! kitchen F kitchen"})
+        constraints[c_type].append({"utt": "once you reach bedroom you are never allowed to visit it again", "ltl": "! F & bedroom U bedroom & ! bedroom U ! bedroom F bedroom"})
+    if c_type == "lower_rest_avoid":
+        constraints[c_type].append({"utt": "visit kitchen at least once", "ltl": "F kitchen"})
     if c_type == "delay_react":
         constraints[c_type].append({"utt": "you have to go to living room if you have been to kitchen", "ltl": "G i kitchen F living_room"})
         constraints[c_type].append({"utt": "go to kitchen means you have to go to bathroom in the future", "ltl": "G i kitchen F bathroom"})

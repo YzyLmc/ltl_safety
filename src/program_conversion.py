@@ -55,7 +55,7 @@ if __name__ == "__main__":
     # omit obj id; replace rooms: dining_room to kitchen, home_office to living_room
     script = replace_rooms(omit_obj_id(script))
     # replace old obj to new with obj dict, this dict is constructive collectively by manually testing conversion on multiple old programs
-    obj_dict = {"<freezer>": "<fridge>", "<food_food>": "<pie>", "<light>": "<lightswitch>", "<phone>": "<cellphone>"}
+    obj_dict = {"<freezer>": "<fridge>", "<food_food>": "<pie>", "<light>": "<lightswitch>", "<phone>": "<cellphone>", "<oven>": "<microwave>"}
     script = replace_objs(script, obj_dict)
 
     script = replace_new_obj_id(script, graph_dict)

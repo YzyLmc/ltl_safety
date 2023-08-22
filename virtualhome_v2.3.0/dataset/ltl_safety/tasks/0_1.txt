@@ -1,7 +1,7 @@
-Go to toilet
-Travel through the house and locate the bathroom, and proceed to the toilet.
+Go to wash basin
+Travel through the house and locate the bathroom, and proceed to the wash basin.
 
 
 [WALK] <bathroom> (11)
-[WALK] <toilet> (45)
-[FIND] <toilet> (45)
+[WALK] <wash basin> (45)
+[FIND] <wash basin> (45)
