@@ -19,3 +19,5 @@ Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator an
 08/11: delay_react and prompt_react doesn't work since `stop` doesn't need to check DFA and cannot check using the current method, i.e., if there's a path towards accepting states.
 
 08/12: potential issues moving forward: providing env info to base agent. and Initial state. Instant reaction has issue, e.g., go to kitchen right after visiting living room is impossible if the kitchen between them is tracked too.
+
+08/23: change 'U' to 'W' for past avoidance.

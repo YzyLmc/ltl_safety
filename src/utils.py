@@ -33,7 +33,10 @@ def load_from_file(fpath, noheader=True):
             out = dill.load(rfile)
     elif ftype == 'txt':
         with open(fpath, 'r') as rfile:
-            out = [line.strip() for line in rfile.readlines()]
+            if 'prompt' in fpath:
+                out = "".join(rfile.readlines())
+            else:
+                out = [line.strip() for line in rfile.readlines()]
     elif ftype == 'json':
         with open(fpath, 'r') as rfile:
             out = json.load(rfile)
@@ -76,7 +79,7 @@ def prompt2msg(query_prompt):
     :return: message used by chat completion API (gpt-3, gpt-3.5-turbo).
     """
     prompt_splits = query_prompt.split("\n\n") if type(query_prompt) == str else query_prompt
-    # print(prompt_splits)
+    # breakpoint()
     task_description = prompt_splits[0]
     examples = prompt_splits[1: -1]
     query = prompt_splits[-1]
@@ -94,11 +97,11 @@ def prompt2msg(query_prompt):
         else:  # info should be in system prompt, e.g., landmark list
             msg[0]["content"] += f"\n{example}"
     msg.append({"role": "user", "content": query})
-    # print(msg)
+    breakpoint()
     return msg
 
 class GPT4:
-    def __init__(self, engine="gpt-4-0613", temp=0, max_tokens=128, n=1, stop=['\n']):
+    def __init__(self, engine="gpt-4-0613", temp=0.00000001, max_tokens=128, n=1, stop=['\n']):
         self.engine = engine
         self.temp = temp
         self.max_tokens = max_tokens
@@ -130,6 +133,48 @@ class GPT4:
         else:
             responses = [choice["message"]["content"].strip() for choice in raw_responses["choices"]]
         return responses
+        
+    def extract_re(self, query_prompt):
+        outs = self.generate(query_prompt)
+        # breakpoint()
+        name_entities = outs[0].split(' | ')
+        return name_entities
+
+    # def translate(self, query, prompt=""):
+    #     if isinstance(query, list):
+    #         query = query[0]
+    #     query_prompt = prompt + query
+    #     outs = self.generate(query_prompt)
+    #     return outs
+
+def prefix_to_infix(formula):
+    """
+    :param formula: LTL formula string in prefix order
+    :return: LTL formula string in infix order
+    Spot's prefix parser uses i for implies and e for equivalent. https://spot.lre.epita.fr/ioltl.html#prefix
+    """
+    BINARY_OPERATORS = {"&", "|", "U", "W", "R", "->", "i", "<->", "e"}
+    UNARY_OPERATORS = {"!", "X", "F", "G"}
+    formula_in = formula.split()
+    stack = []  # stack
+
+    while formula_in:
+        op = formula_in.pop(-1)
+        if op == ">":
+            op += formula_in.pop(-1)  # implication operator has 2 chars, ->
+        if formula_in and formula_in[-1] == "<":
+            op += formula_in.pop(-1)  # equivalent operator has 3 chars, <->
+
+        if op in BINARY_OPERATORS:
+            formula_out = "(" + stack.pop(0) + " " + op + " " + stack.pop(0) + ")"
+            stack.insert(0, formula_out)
+        elif op in UNARY_OPERATORS:
+            formula_out = op + "(" + stack.pop(0) + ")"
+            stack.insert(0, formula_out)
+        else:
+            stack.insert(0, op)
+
+    return stack[0]
 
 def ltl2digraph(formula: str):
     """
@@ -199,13 +244,22 @@ def validate_next_action(dfa, curr_dfa_state, traj_state, accepting_states):
     :params dfa: a DFA that represents the LTL formula
     :params curr_dfa_state: the current state of the DFA
     :params traj_state: the current state of the trajectory
-    :returns: the next state in the dfa
+    :returns bool:
+    :returns next_state: the next state in the dfa
     """
-    next_state = progress_ltl(dfa, curr_dfa_state, traj_state)
-    for accepting_state in accepting_states:
-      if nx.has_path(dfa, next_state, accepting_state):
-        return True
-    return False
+    
+    if traj_state == "stop":
+        return True if curr_dfa_state in accepting_states else False, curr_dfa_state
+    else:
+        next_state = progress_ltl(dfa, curr_dfa_state, traj_state)
+        for accepting_state in accepting_states:
+            if nx.has_path(dfa, next_state, accepting_state):
+                return True, next_state
+            return False, next_state
+    # for accepting_state in accepting_states:
+    #     if nx.has_path(dfa, next_state, accepting_state):
+    #         return True
+    #     return False
     
 def all_prop(formula, action):
     formula_ls = [char for char in formula]
@@ -251,16 +305,6 @@ def hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False):
     if room:
         bb_center = np.array(obj["bounding_box"]["center"])
         bb_size = np.array(obj["bounding_box"]["size"])#  - np.array([1, 1, 1]) # make bb smaller
-        # vertices = []
-        # for dim in range(len(bb_center)):
-        #     v1 = [bb_center[d] + 0.5*bb_size[d] for d in range(len(bb_center) if d==dim)]
-        #     v2 = [bb_center[d] - 0.5*bb_size[d] for d in range(len(bb_center) if d==dim)]
-        #     vertices.append(bb_center)
-        # R.from_quat(obj["obj_transform": rotation])
-        # rotated_vertices = [R.apply(v) for v in vertices]
-        # for i in range(len(cur_loc)):
-        #     if np.abs(cur_loc[i] - bb_center[i]) > bb_size[i]/2:
-        #         return False
         return is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
 
     else:     
@@ -311,10 +355,9 @@ def prop_level_traj(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
         if not state_buffer == new_state:
             prop_traj.append({mappings[k]:v for k, v in state.items()})
             state_buffer = new_state
-    # return prop_traj
     return [concat_props(prop_state) for prop_state in prop_traj]
 
-def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, env_num=0):
+def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, env_num=0,stopped=False):
     comm.reset(env_num)
     _, g = comm.environment_graph()
     comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
@@ -325,15 +368,20 @@ def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, 
     dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
     state_list = []
     success = True
+    if stopped:
+        prop_traj.append("stop")
     for state in prop_traj:
         action = state
-        if validate_next_action(dfa, curr_state, action, accepting_states):
+        valid, next_state = validate_next_action(dfa, curr_state, action, accepting_states)
+        if valid:
             state_list.append(f"Safe: {action}")
-            curr_state = progress_ltl(dfa, curr_state, action)
+            curr_state = next_state
         else:
             state_list.append(f"Violated: {action}")
             success = False
+            # breakpoint()
             break
+        # breakpoint()
     # breakpoint()
     return success, state_list
 
@@ -351,11 +399,11 @@ def omit_obj_id(script_lines):
     return new_script
 
 def convert_rooms(line):
-    new_line = line.replace("dining_room", "kitchen")
-    new_line = line.replace("home_office", "living_room")
-    new_line = line.replace("livingroom", "living_room")
-    new_line = line.replace("oven", "microwave") # :-(
-    return new_line
+    line = line.replace("dining_room", "kitchen")
+    line = line.replace("home_office", "living_room")
+    line = line.replace("livingroom", "living_room")
+    line = line.replace("oven", "microwave") # :-(
+    return line
 
 def convert_old_program_to_new(script_lines):
     '''
@@ -441,7 +489,7 @@ def reprompt(translate_engine, valid_actions, invalid_action, constraints, state
         return state_eng_list
 
     task_description = load_from_file(prompt_fpath)
-    task_description = "\n".join(task_description) # just one line actually
+    task_description = "\n".join([task_description]) # just one line actually
     constraints = f"Constraints: {str(constraints)}"
 
     if valid_actions:
@@ -468,7 +516,7 @@ def reprompt(translate_engine, valid_actions, invalid_action, constraints, state
     for state in state_eng:
         invalid_act += f"\n{state}"
     prompt = f"{task_description}\n\n{constraints}\n{valid_act}\n{invalid_act}\nReason of violation:"
+    # breakpoint()
     return translate_engine.generate(prompt)[0]
-
 
 

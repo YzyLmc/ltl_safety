@@ -490,7 +490,7 @@ I walk to the bedroom then go to the kitchen. I then walk to the bathroom and fi
 
 ### 0_2; 4 constraints;
 constraints = ["you have to enter bathroom before living room", "you have to go to bedroom right after bathroom" , "you can go to bedroom at most twice", "you cannot go to bathroom if you have visited kitchen"]
-#### ltl_safety: TRYE
+#### ltl_safety: TRUE
 I walk to the Home Office then find the computer and sit in the chair. I switch on the computer and start typing. I switch the computer off.
 0. walk to living_room
 Error: The user is trying to walk to the living room without having entered the bathroom first, which violates the constraint 'you have to enter bathroom before living room'. The correct plan would be:

@@ -38,7 +38,7 @@ bedroom_id = [node['id'] for node in g['nodes'] if node["class_name"] == "bedroo
 coffeetable1_id = [node['id'] for node in g['nodes'] if node["class_name"] == "coffeetable"][-1]
 coffeetable2_id = [node['id'] for node in g['nodes'] if node["class_name"] == "coffeetable"][-2] # two coffee tables
 kitchentable_id = [node['id'] for node in g['nodes'] if node["class_name"] == "kitchentable"][-1]
-# room_ids = [11, 73, 335] # bathroom, bedroom, livingroom
+
 room_ids = [bathroom_id, bedroom_id, kitchen_id, livingroom_id]
 # obj_ids = [coffeetable1_id, kitchentable_id, coffeetable2_id]
 obj_ids = []
@@ -46,8 +46,10 @@ obj_ids = []
 mappings = {bathroom_id: "A", bedroom_id: "B", kitchen_id: "C", livingroom_id: "D"}
 id2name = {bathroom_id: "bathroom", bedroom_id: "bedroom", kitchen_id: "kitchen", livingroom_id: "living_room"}
 # 0_1
-# input_ltl = "(! A U D)"
-# constraints = ["you have to enter living room before bathroom"]
+input_ltl = "(! A W D)"
+constraints = ["you have to enter living room before bathroom"]
+# input_ltl = "G(B -> F D)"
+# constraints = ["you have to go to living room afterwards if you have entered bedroom"]
 # input_ltl = "(! A U D) & (! D U B)" # you have to enter living room before bathroom
 # constraints = ["you have to enter living room before bathroom", "you have to enter bedroom before going into living room" ]
 # input_ltl = "(! A U D) & (! D U B) & (G B -> X C)" # i only works with prefix
@@ -103,8 +105,8 @@ id2name = {bathroom_id: "bathroom", bedroom_id: "bedroom", kitchen_id: "kitchen"
 # constraints = ["you have to enter bathroom before living room", "you can only go to bathroom once"]
 # input_ltl = "(! D U A) & !(F((A & (A U (!(A) & (!(A) U F(A))))))) & (G A -> F C) & (!(B) U F((B & (B U (!(B) & (!(B) U F(B)))))))"
 # constraints = ["you have to enter bathroom before living room", "you can only go to bathroom once", "go to bathroom means you have to visit kitchen", "you have to visit bedroom at most two times"]
-input_ltl = "(! D U A) & !(F((A & (A U (!(A) & (!(A) U F(A))))))) & (G A -> F C) & (!(B) U F((B & (B U (!(B) & (!(B) U F(B))))))) & (G C -> G(! A))"
-constraints = ["you have to enter bathroom before living room", "you can only go to bathroom once", "go to bathroom means you have to visit kitchen", "you have to visit bedroom at most two times", "you cannot go to bathroom if kitchen is visited"]
+# input_ltl = "(! D U A) & !(F((A & (A U (!(A) & (!(A) U F(A))))))) & (G A -> F C) & (!(B) U F((B & (B U (!(B) & (!(B) U F(B))))))) & (G C -> G(! A))"
+# constraints = ["you have to enter bathroom before living room", "you can only go to bathroom once", "go to bathroom means you have to visit kitchen", "you have to visit bedroom at most two times", "you cannot go to bathroom if kitchen is visited"]
 
 # 0_7
 # input_ltl = "(F C)"
@@ -116,12 +118,13 @@ constraints = ["you have to enter bathroom before living room", "you can only go
 
 # load tasks
 task_description = load_from_file("prompts/planning/planning_with_cons_v1.txt")
-task_description = "\n".join(task_description)
-# lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_1.txt")
+# breakpoint()
+# task_description = "\n".join(task_description)
+lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_1.txt")
 # lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_10.txt")
 # lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_9.txt")
 # lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_2.txt")
-lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_5.txt")
+# lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_5.txt")
 example = program2example(lines)
 example = "\n".join(example)
 prompt = task_description+ "\n\n" + example
@@ -129,11 +132,11 @@ prompt = task_description+ "\n\n" + example
 # [print(line) for line in prompt]
 
 # give goal according to each prompt
-# dummy_query = "Go to toilet" # for 0_1
+dummy_query = "Go to toilet" # for 0_1
 # dummy_query = "Put salmon in Fridge"
 # dummy_query = "Cook a pie"
 # dummy_query = "Type on computer"
-dummy_query = "Browse on computer by my desk"
+# dummy_query = "Browse on computer by my desk"
 
 prompt += f"\n{dummy_query}\nDescription:"
 # prompt = ''.join(prompt)
@@ -144,7 +147,7 @@ embed_engine = GPT3(engine="text-embedding-ada-002")
 
 # first response is description
 output = gpt4.generate(prompt)[0]
-print("Description:", output)
+print(output)
 
 prompt = prompt + f"\n{output}"
 graph_dict_path = "virtualhome_v2.3.0/env_graphs/TestScene1_graph.json"
@@ -156,88 +159,62 @@ program = []
 state_lists = []
 valid_actions = []
 invalid_action_mem = None
-while n_try < 10:
+stopped = False
+idx = 0
+while n_try < 10: # max step + replan time <=10
+    prompt += f"\n{idx}."
     output = gpt4.generate(prompt)[0]
     print(output)
-    if "DONE" in output: break
-    action_string = output.strip(".").split(". ")[-1]
-    idx = len(program)
-    if not action_string in allowed_actions:
-        action_string_embed = embed_engine.get_embedding(action_string)
-        sims = {o: cosine_similarity(e, action_string_embed) for o, e in act2embed.items()}
-        sims_sorted = sorted(sims.items(), key=lambda kv: kv[1], reverse=True)
-        action_string = list(dict(sims_sorted[:1]).keys())[0]
-    act, obj_ls = get_action_and_obj(action_string)
-    obj_ls = [f"{obj} (0)" for obj in obj_ls]
-    dummy_program_line = f"{act} {' '.join(obj_ls)}"
-    dummy_program_line = convert_rooms(dummy_program_line)
-    # breakpoint()
-    # print(dummy_program_line)
-    try:
-    # breakpoint()
-        grounded_program_line = replace_new_obj_id([dummy_program_line], graph_dict)[0]
-        program.extend(convert_old_program_to_new([grounded_program_line]))
-    except:
-        raise Exception(f"probably parsing problem: {dummy_program_line}")
-    if invalid_action_mem == grounded_program_line:
-        continue
-    # print(grounded_program_line)
-    # program = convert_old_program_to_new(program)
+
+    if "DONE" in output: 
+        stopped = True
+        action_string = "STOP"
+    else:
+        action_string = output.strip(".").split(". ")[-1]
+        if not action_string in allowed_actions:
+            action_string_embed = embed_engine.get_embedding(action_string)
+            sims = {o: cosine_similarity(e, action_string_embed) for o, e in act2embed.items()}
+            sims_sorted = sorted(sims.items(), key=lambda kv: kv[1], reverse=True)
+            action_string = list(dict(sims_sorted[:1]).keys())[0]
+        act, obj_ls = get_action_and_obj(action_string)
+        obj_ls = [f"{obj} (0)" for obj in obj_ls]
+        dummy_program_line = f"{act} {' '.join(obj_ls)}"
+        dummy_program_line = convert_rooms(dummy_program_line)
+
+        # print(dummy_program_line)
+        try:
+            # breakpoint()
+            grounded_program_line = replace_new_obj_id([dummy_program_line], graph_dict)[0]
+            program.extend(convert_old_program_to_new([grounded_program_line]))
+        except:
+            raise Exception(f"probably parsing problem: {dummy_program_line}")
+        if invalid_action_mem == grounded_program_line:
+            continue
+
     partial_program = program
-    success, state_list = state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room)
-    prompt += f" {output}" if prompt[-2:] == f"{idx}." else f"\n{output}"
+    # this step ensure output is executable and renderable(?)
+    success, state_list = state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, stopped=stopped)
+    # prompt += f" {output}" if prompt[-2:] == f"{idx}." else f"\n{output}"
+    prompt += f" {output}"
     if not success:
         invalid_action = action_string
         invalid_state_lists = state_lists + [state_list]
-        reprompted_plan = f"\nError: {reprompt(gpt4, valid_actions, invalid_action, constraints, invalid_state_lists, mappings, id2name)} The correct plan would be:\n{idx}."
+        reprompted_plan = f"\nError: {reprompt(gpt4, valid_actions, invalid_action, constraints, invalid_state_lists, mappings, id2name)} The correct plan would be:"
         program = program[:-1]
         print("handling error by reprompting")
         print(reprompted_plan)
         prompt += reprompted_plan
         invalid_action_mem = grounded_program_line
+        stopped = False
     else:
+        if "DONE" in output: break
         state_lists.append(state_list)
         valid_actions.append(action_string)
         invalid_action_mem = None
+        idx += 1
     # breakpoint()
 print("Programs:")
-old_program = program
+# old_program = program
 [print(line) for line in program]
-print(old_program)
+# print(old_program)
 print(prompt)
-
-
-# # render the example and record pose data
-# comm.render_script(program, recording=True, save_pose_data=True)
-# pose_list = load_from_file("Output/script/0/pd_script.txt")
-# pose_dict = read_pose(pose_list)
-# pose_list = pose_dict["Head"]
-
-# rooms = [node for node in g['nodes'] if node["category"] == "Rooms"]
-# tables = [node for node in g['nodes'] if "table" in node["class_name"]]
-# kitchen_id = [node['id'] for node in g['nodes'] if node["class_name"] == "kitchen"][-1]
-# livingroom_id = [node['id'] for node in g['nodes'] if node["class_name"] == "livingroom"][-1]
-# bathroom_id = [node['id'] for node in g['nodes'] if node["class_name"] == "bathroom"][-1]
-# bedroom_id = [node['id'] for node in g['nodes'] if node["class_name"] == "bedroom"][-1]
-# coffeetable1_id = [node['id'] for node in g['nodes'] if node["class_name"] == "coffeetable"][-1]
-# coffeetable2_id = [node['id'] for node in g['nodes'] if node["class_name"] == "coffeetable"][-2] # two coffee tables
-# kitchentable_id = [node['id'] for node in g['nodes'] if node["class_name"] == "kitchentable"][-1]
-# # room_ids = [11, 73, 335] # bathroom, bedroom, livingroom
-# room_ids = [bathroom_id, bedroom_id, kitchen_id, livingroom_id]
-# # obj_ids = [coffeetable1_id, kitchentable_id, coffeetable2_id]
-# obj_ids = []
-
-# # mappings = {bathroom_id: "a", bedroom_id: "b", kitchen_id: "c", coffeetable1_id:"d", kitchentable_id:"h", coffeetable2_id:"j"}
-# mappings = {bathroom_id: "A", bedroom_id: "B", kitchen_id: "C", livingroom_id: "D"}
-# prop_traj = prop_level_traj(pose_list, g, obj_ids, room_ids, mappings, radius=2.0)
-# input_ltl = "! c U b" # enter bedroom before kitchen
-# dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
-# for state in prop_traj:
-#     action = state
-#     if validate_next_action(dfa, curr_state, action, accepting_states):
-#         print("Safe:", action)
-#         curr_state = progress_ltl(dfa, curr_state, action)
-#     else:
-#         print("Violated:", action)
-#         break
-# breakpoint()
