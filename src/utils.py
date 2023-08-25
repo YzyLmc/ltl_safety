@@ -23,6 +23,8 @@ from evolving_graph.execution import ScriptExecutor
 from evolving_graph.check_programs import modify_objects_unity2script, check_one_program
 from evolving_graph.scripts import read_script, read_script_from_string, read_script_from_list_string, ScriptParseException
 
+PREDICATE = ["agent_at", "is_switchedon", "is_open", "is_grabbed", "is_touched", "is_in", "is_on"]
+
 # General utils
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -85,19 +87,20 @@ def prompt2msg(query_prompt):
     query = prompt_splits[-1]
 
     msg = [{"role": "system", "content": task_description}]
-    for example in examples:
-        if "\n" in example:
-            example_splits = example.split("\n")
-            q = '\n'.join(example_splits[0:-1])  # every line except the last in 1 example block
-            a_splits = example_splits[-1].split(" ")  # last line is the response
-            q += f"\n{a_splits.pop(0)}"
-            a = " ".join(a_splits)
-            msg.append({"role": "user", "content": q})
-            msg.append({"role": "assistant", "content": a})
-        else:  # info should be in system prompt, e.g., landmark list
-            msg[0]["content"] += f"\n{example}"
-    msg.append({"role": "user", "content": query})
-    breakpoint()
+    # for example in examples:
+    #     if "\n" in example:
+    #         example_splits = example.split("\n")
+    #         q = '\n'.join(example_splits[0:-1])  # every line except the last in 1 example block
+    #         a_splits = example_splits[-1].split(" ")  # last line is the response
+    #         q += f"\n{a_splits.pop(0)}"
+    #         a = " ".join(a_splits)
+    #         msg.append({"role": "user", "content": q})
+    #         msg.append({"role": "assistant", "content": a})
+    #     else:  # info should be in system prompt, e.g., landmark list
+    #         msg[0]["content"] += f"\n{example}"
+    # msg.append({"role": "user", "content": query})
+    msg.append({"role": "user", "content": "\n\n".join(prompt_splits[1:])})
+    # breakpoint()
     return msg
 
 class GPT4:
@@ -174,7 +177,10 @@ def prefix_to_infix(formula):
         else:
             stack.insert(0, op)
 
-    return stack[0]
+    output = stack[0]
+    while " i " in output:
+        output = output.replace(" i ", " -> ")
+    return output
 
 def ltl2digraph(formula: str):
     """
@@ -519,4 +525,7 @@ def reprompt(translate_engine, valid_actions, invalid_action, constraints, state
     # breakpoint()
     return translate_engine.generate(prompt)[0]
 
+def parse_predicate():
+    hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False)
+    pass
 

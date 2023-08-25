@@ -4,7 +4,7 @@ sys.path.append("src/")
 import spot
 
 from utils import *
-from lang2ltl import rer, ground_res, ground_utterances, build_placeholder_map, substitute, translate_modular, unify_formula
+from lang2ltl import rer, ground_res, ground_utterances, build_placeholder_map, substitute, translate_modular, unify_formula, sub_predicate
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -17,7 +17,7 @@ class constraint_module():
             constraints = self.encode_constraints(constraint_strs)
             self.dfa, self.accepting_states, self.init_state = ltl2digraph(self. encode_constraints(constraints))
 
-    def encode_constraints(self, constraint_strs, prompt_fpath="prompts/translation/rer_general.txt"):
+    def encode_constraints(self, constraint_strs, manipulation=True, prompt_fpath="prompts/translation/rer_general.txt", trans_modular_prompt_fpath="prompts/translation/symbolic_trans_manipulation_v2.txt"):
         '''
         convert a list of language constraints and returns final formula with prop map
         '''
@@ -28,12 +28,15 @@ class constraint_module():
         re2grounds = {obj: [obj] for obj in names}
         # build mappings
         ground_utts, objs_per_utt = ground_utterances(constraint_strs, utt2res, re2grounds)
-        sym_utts, sym_ltls, out_ltls, placeholder_maps = translate_modular(ground_utts, self.translator, objs_per_utt)
+        sym_utts, sym_ltls, out_ltls, placeholder_maps = translate_modular(ground_utts, self.translator, objs_per_utt, trans_modular_prompt_fpath=trans_modular_prompt_fpath)
         # breakpoint()
-        unified_ltl, unified_mapping = unify_formula(out_ltls, placeholder_maps)
+        unified_ltl, obj_mapping = unify_formula(out_ltls, placeholder_maps)
         self.constraint = unified_ltl
-        self.mapping = unified_mapping
-        return unified_ltl, unified_mapping
+        self.obj_mapping = obj_mapping
+        if manipulation:
+            unified_ltl, pred_mapping = sub_predicate(unified_ltl)
+            self.pred_mapping = pred_mapping
+        return unified_ltl, obj_mapping, pred_mapping if manipulation else None
 
     def action_pruning(self, start, trajs):
         '''
@@ -67,5 +70,5 @@ if __name__ == "__main__":
     constraint_strs = ["don't go to kitchen until go to bathroom",\
                         "always avoid coffeetable",\
                         "if you go to kitchen, you have to go to living room later"]
-    constraints = cm.encode_constraints(constraint_strs)
-    print(constraints)
+    unified_ltl, obj_mapping, pred_mapping = cm.encode_constraints(constraint_strs)
+    print(unified_ltl, obj_mapping, pred_mapping)

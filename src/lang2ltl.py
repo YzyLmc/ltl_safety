@@ -6,7 +6,9 @@ import nltk
 
 from utils import load_from_file, save_to_file, prefix_to_infix
 
-PROPS = ['A', 'B', 'C', 'D', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'Q', 'R', 'S', 'Y', 'Z']  # 16
+PROPS_OBJ = ['A', 'B', 'C', 'D', 'H', 'J', 'K', 'L', 'N', 'O', 'P', 'Q', 'R', 'S', 'Y', 'Z']  # 16
+PROPS_PRED = ["a", "b", "c", "d", "h", "j", "k", "l", "n", "o", "p", "q", "r", "s", "y", "z"]
+OPERATORS = ["G", "!", "X", "W", "U", "i", "&", "F"]
 
 def rer(rer_module, rer_prompt, input_utts, utt2lmk=None):
     """
@@ -120,12 +122,26 @@ def translate_modular(ground_utts, trans_module, objs_per_utt, trans_modular_pro
             #     spot.formula(ltl)
             # except SyntaxError:
             #     ltl = feedback_module(trans_module, query, trans_modular_prompt, ltl)
-        breakpoint()
-        symbolic_ltls.append(prefix_to_infix(ltl))
-
-    output_ltls, _ = substitute(symbolic_ltls, placeholder_maps_inv, is_utt=False)  # replace symbols by props
-
+        # breakpoint()
+        # symbolic_ltls.append(prefix_to_infix(ltl))
+        symbolic_ltls.append(ltl)
+    # breakpoint()
+    # output_ltls, _ = substitute(symbolic_ltls, placeholder_maps_inv, is_utt=False)  # replace symbols by props
+    output_ltls = simple_sub(symbolic_ltls, placeholder_maps_inv)  # replace symbols by props
+    # breakpoint()
     return symbolic_utts, symbolic_ltls, output_ltls, placeholder_maps
+
+def simple_sub(input_strs, substitute_maps):
+    """
+    simpler substitute function, only check capital characters
+    """
+    output_strs = []
+    for input_str, sub_map in zip(input_strs, substitute_maps):
+        for prop, obj in sub_map.items():
+            while prop in input_str:
+                input_str = input_str.replace(prop, obj)
+        output_strs.append(input_str)
+    return output_strs
 
 def substitute(input_strs, substitute_maps, is_utt):
     """
@@ -229,11 +245,16 @@ def name_to_prop(name):
     #     raise ValueError(f"ERROR: unrecognized conversion rule: {convert_rule}")
 
 ## concat formulas and unified placeholder map
-def concat_formula(formula_list):
-    formula_list = [f"({formula})" for formula in formula_list]
-    return " & ".join(formula_list)
+def concat_formula(formula_list, format="prefix"):
+    if format == "infix":
+        formula_list = [f"({formula})" for formula in formula_list]
+        return " & ".join(formula_list)
+    elif format == "prefix":
+        return (len(formula_list)-1)*"& " + " ".join(formula_list)
+    else:
+        raise Exception("format not defined")
 
-def unify_formula(out_ltls, placeholder_maps, props=PROPS):
+def unify_formula(out_ltls, placeholder_maps, props=PROPS_OBJ):
     map_key_list = [list(map.keys()) for map in placeholder_maps]
     objs = set(list(itertools.chain.from_iterable(map_key_list)))
     unified_mapping = {obj: props[i] for i, obj in enumerate(objs)}
@@ -243,3 +264,13 @@ def unify_formula(out_ltls, placeholder_maps, props=PROPS):
             # breakpoint()
             unified_ltl = unified_ltl.replace(obj, unified_mapping[obj])
     return unified_ltl, {v:k for k,v in unified_mapping.items()}
+
+def sub_predicate(unified_ltl, operators=OPERATORS, props=PROPS_PRED):
+    ltl_split = unified_ltl.split()
+    predicates = set([char for char in ltl_split if char not in operators])
+    pred_map = {}
+    for i, p in enumerate(predicates):
+        pred_map[p] = props[i]
+    sym_unified_ltl = simple_sub([unified_ltl], [pred_map])[0]
+    inv_pred_map = {v:k for k,v in pred_map.items()} 
+    return sym_unified_ltl, inv_pred_map  

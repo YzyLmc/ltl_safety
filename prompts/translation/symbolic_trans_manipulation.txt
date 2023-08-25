@@ -1,7 +1,7 @@
 Your task is to translate English utterances into linear temporal logic (LTL) formulas. LTL is a formal language that has been used for describing temporal task specifications. It consists of propositions and operators. In the following task, here are the propositions and operators we use:
 
 Propositions: {"A", "B"}
-Operators: {"G": "Globally", "!": "Not", "X": "Next", "W": "Weak Until", "U": "Until", "i": "Indicate", "&": "And"}
+Operators: {"G": "Globally", "!": "Not", "X": "Next", "W": "Weak Until", "U": "Until", "i": "Indicate", "&": "And", "F":"Finally"}
 
 Utterance: never go to A
 LTL: G ! A

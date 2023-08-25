@@ -20,4 +20,6 @@ Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator an
 
 08/12: potential issues moving forward: providing env info to base agent. and Initial state. Instant reaction has issue, e.g., go to kitchen right after visiting living room is impossible if the kitchen between them is tracked too.
 
-08/23: change 'U' to 'W' for past avoidance.
+08/23: change 'U' to 'W' for past avoidance. Adding Lang2LTL part for encoding.
+
+08/24: work on parsing predicates for mobile manipulation. Current supported predicates are: `{agent_at(), is_switchedon(), is_open(), is_grabbed(), is_touched(), is_in(), is_on()}`. Add `F` operator to task specifications.
