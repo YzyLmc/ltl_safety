@@ -23,3 +23,5 @@ Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator an
 08/23: change 'U' to 'W' for past avoidance. Adding Lang2LTL part for encoding.
 
 08/24: work on parsing predicates for mobile manipulation. Current supported predicates are: `{agent_at(), is_switchedon(), is_open(), is_grabbed(), is_touched(), is_in(), is_on()}`. Add `F` operator to task specifications.
+
+08/26: Working on scripts for pre-generating plans for spot. Working on parsing predicates and getting truth values.

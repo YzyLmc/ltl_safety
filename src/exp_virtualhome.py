@@ -46,10 +46,10 @@ obj_ids = []
 mappings = {bathroom_id: "A", bedroom_id: "B", kitchen_id: "C", livingroom_id: "D"}
 id2name = {bathroom_id: "bathroom", bedroom_id: "bedroom", kitchen_id: "kitchen", livingroom_id: "living_room"}
 # 0_1
-input_ltl = "(! A W D)"
-constraints = ["you have to enter living room before bathroom"]
-# input_ltl = "G(B -> F D)"
-# constraints = ["you have to go to living room afterwards if you have entered bedroom"]
+# input_ltl = "(! A W D)"
+# constraints = ["you have to enter living room before bathroom"]
+input_ltl = "G(B -> F D)"
+constraints = ["you have to go to living room afterwards if you have entered bedroom"]
 # input_ltl = "(! A U D) & (! D U B)" # you have to enter living room before bathroom
 # constraints = ["you have to enter living room before bathroom", "you have to enter bedroom before going into living room" ]
 # input_ltl = "(! A U D) & (! D U B) & (G B -> X C)" # i only works with prefix
@@ -127,7 +127,7 @@ lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_1.txt")
 # lines = load_from_file("virtualhome_v2.3.0/dataset/ltl_safety/tasks/0_5.txt")
 example = program2example(lines)
 example = "\n".join(example)
-prompt = task_description+ "\n\n" + example
+prompt = task_description+ "\n\n" + example + "\n"
 # prompt = [line + '\n' for line in prompt]
 # [print(line) for line in prompt]
 

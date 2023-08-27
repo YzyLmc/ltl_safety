@@ -525,7 +525,72 @@ def reprompt(translate_engine, valid_actions, invalid_action, constraints, state
     # breakpoint()
     return translate_engine.generate(prompt)[0]
 
-def parse_predicate():
-    hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False)
-    pass
+## 
+def prop_from_pred(pred_str):
+    assert "(" in pred_str and ")" in pred_str
+    left_p = pred_str.index("(")
+    right_p = pred_str.index(")")
+    return pred_str[:left_p], pred_str[left_p: right_p].split(",")
+
+def parse_predicate(pred_str, cur_loc, obj_mapping, graph, state_dict, room=False):
+    """
+    :pred_str str: "is_on(A, B)"
+    :obj_mapping dict:
+    :state_dict: dictionary of states of objects for manipulation tasks
+    return truth value for following predicates:
+    ["agent_at", "is_switchedon", "is_open", "is_grabbed", "is_touched", "is_in", "is_on"]
+    """
+    pred, props = prop_from_pred(pred_str)
+    objs = [obj_mapping[prop] for prop in props]
+    if pred == "agent_at":
+        return hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=room)
+    else:
+        return check_state_dict(pred, obj_tuple, state_dcit)
+
+def check_state_dict(pred, obj_tuple, state_dict):
+    """
+    :params obj_tuple: (obj) or (obj_1, obj_2)
+    return truth value by checking state dictionary.
+    """
+    #pred_to_action = {"is_switchedon": "switchon", "is_open":"open", "is_grabbed": "grab", "is_touched": "touch", "is_in": "putin", "is_on":"puton"}
+    if len(obj_tuple) == 2:
+        (obj_1, obj_2) = obj_tuple
+        return state_dict[obj_1][pred] == obj_2 if pred in state_dict[obj_1] else False
+    elif len(obj_tuple) == 1:
+        # action = pred_to_action[pred]
+        return state_dict[obj][pred] if action in state_dict[obj] else False
+
+class manipulation_dict():
+    """
+    dictionary for tracking states of object for manipulation actions only; navigational action are handled by hardcoded_truth_value_vh
+    """
+    def __init__(objs=None):
+        action2pred = {'switchon': 'is_switchedon', 'open': 'is_open', 'grab': 'is_grabbed', 'touch': 'is_touched', 'putin': 'is_in', 'puton': 'is_on'}
+        if objs:
+            self.dict = {i: {} for i in objs}
+        else:
+            self.dict = defaultdict(dict)
+    def step(self, action, obj_tuple):
+        """
+        :obj_tuple tuple: (obj) or (obj_1, obj_2)
+        """
+        pred = action2pred[action]
+        if len(obj_tuple) == 2:
+            # action str should be lowercased
+            assert action == "putin" or action == "puton"
+            (obj_1, obj_2) = obj_tuple
+            self.dict[obj_1][pred] = obj_2
+            if "grab" in self.dict[obj_1]:
+                self.dict[obj_1]["grab"] = False
+        elif len(obj_tuple) == 1:
+            (obj) = obj_tuple
+            if action == "switchoff":
+                self.dict[obj][action2pred["switchon"]] = False
+            elif action == "close":
+                self.dict[obj][action2pred["open"]] = False
+            else:
+                self.dict[obj][action] = True
+        elif len(obj_tuple) == 1:
+            (action) = obj_tuple
+            self.dict[action] = True
 

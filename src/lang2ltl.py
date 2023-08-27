@@ -228,21 +228,22 @@ def build_placeholder_map(name_entities, props):
         placeholder_map_inv[letter] = name_to_prop(name)
     return placeholder_map, placeholder_map_inv
 
-def name_to_prop(name):
+def name_to_prop(name, convert_rule="lang2ltl"):
     """
     :param name: name, e.g. Canal Street, TD Bank.
     :param convert_rule: identifier for conversion rule.
     :return: proposition that corresponds to input landmark name and is compatible with Spot.
     """
-    return name
-    # if convert_rule == "lang2ltl":
-    #     return "_".join(name.translate(str.maketrans('/()-–', '     ', "'’,.!?")).lower().split())
-    # elif convert_rule == "copynet":
-    #     return f"lm( {name} )lm"
-    # elif convert_rule == "cleanup":
-    #     return "_".join(name.split()).strip()
-    # else:
-    #     raise ValueError(f"ERROR: unrecognized conversion rule: {convert_rule}")
+    # return name
+    if convert_rule == "lang2ltl":
+        # return "_".join(name.translate(str.maketrans('/()-–', '     ', "'’,.!?")).lower().split())
+        return "".join(name.translate(str.maketrans('/()-–', '     ', "'’,.!?")).lower().split())
+    elif convert_rule == "copynet":
+        return f"lm( {name} )lm"
+    elif convert_rule == "cleanup":
+        return "_".join(name.split()).strip()
+    else:
+        raise ValueError(f"ERROR: unrecognized conversion rule: {convert_rule}")
 
 ## concat formulas and unified placeholder map
 def concat_formula(formula_list, format="prefix"):
