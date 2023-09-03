@@ -18,7 +18,7 @@ LTL: W ! agent_at(B) agent_at(A)
 Utterance: you can't go to B if you haven't picked up A
 LTL: W ! is_grabbed(A) agent_at(B)
 
-Utterance: grab A before going to B
+Utterance: pick up A before going to B
 LTL: W ! agent_at(B) is_grabbed(A)
 
 Utterance: if you  open A, you can never open B after that

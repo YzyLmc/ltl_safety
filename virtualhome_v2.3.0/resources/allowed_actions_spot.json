@@ -1,0 +1,22 @@
+[
+    "walk to television",
+    "walk to mail_room",
+    "walk to bedroom",
+    "walk to office_table",
+    "walk to mail_box",
+    "walk to bed",
+    "grab mail",
+    "grab phone",
+    "put mail in television",
+    "put mail in mail_room",
+    "put mail in bedroom",
+    "put mail in office_table",
+    "put mail in mail_box",
+    "put mail in bed",
+    "put phone in television",
+    "put phone in mail_room",
+    "put phone in bedroom",
+    "put phone in office_table",
+    "put phone in mail_box",
+    "put phone in bed"
+]

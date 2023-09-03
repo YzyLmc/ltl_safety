@@ -15,6 +15,8 @@ import networkx as nx
 import spot
 import sys
 from scipy.spatial.transform import Rotation as R
+from copy import deepcopy
+import itertools
 
 sys.path.append("virtualhome_v2.3.0/simulation/")
 import evolving_graph.utils as utils
@@ -311,7 +313,10 @@ def hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False):
     if room:
         bb_center = np.array(obj["bounding_box"]["center"])
         bb_size = np.array(obj["bounding_box"]["size"])#  - np.array([1, 1, 1]) # make bb smaller
-        return is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
+        # return is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
+        is_inside = is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
+        # print(cur_loc, is_inside)
+        return is_inside
 
     else:     
         obj_loc = np.array(obj["obj_transform"]["position"])
@@ -364,6 +369,9 @@ def prop_level_traj(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
     return [concat_props(prop_state) for prop_state in prop_traj]
 
 def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, env_num=0,stopped=False):
+    """
+    navigational constraints only for vh env
+    """
     comm.reset(env_num)
     _, g = comm.environment_graph()
     comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
@@ -387,8 +395,6 @@ def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, 
             success = False
             # breakpoint()
             break
-        # breakpoint()
-    # breakpoint()
     return success, state_list
 
 def omit_obj_id(script_lines):
@@ -422,6 +428,40 @@ def convert_old_program_to_new(script_lines):
         line = "<char0> " + line
         new_lines.append(line.lower())
     return new_lines
+
+def convert_to_nl(act, objs):
+    '''
+    hardcoded translation function for VH program to allowed action
+    :params obj tuple: (obj,) or (obj_1, obj_2)
+    '''
+    if act == "walk":
+        return f"walk to {objs[0]}"
+    elif act == "lookat":
+        return f"look at {objs[0]}"
+    elif act == "plug":
+        return f"plug in {objs[0]}"
+    elif act == "point":
+        return f"point at {objs[0]}"
+    elif act == "put":
+        return f"put {objs[0]} on {objs[1]}"
+    elif act == "putin":
+        return f"put {objs[0]} in {objs[1]}"
+    elif act == "switchon":
+        return f"switch on {objs[0]}"
+    elif act == "switchoff":
+        return f"switch off {objs[0]}"
+    elif act == "lie":
+        return f"lie on {objs[0]}"
+    elif act == "sleep":
+        return f"sleep"
+    elif act == "standup":
+        return f"stand up"
+    elif act == "sitdown":
+        return f"sit down"
+    elif len(objs) == 1:
+        return f"{act} {objs[0]}"
+    elif not objs:
+        return f"{act}"
 
 def program2example(program_lines):
     title = program_lines[:2]
@@ -482,15 +522,18 @@ def get_action_and_obj(output_line):
         else:
             return "[put]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
 
-def reprompt(translate_engine, valid_actions, invalid_action, constraints, state_lists, mappings, id2name,prompt_fpath="prompts/dialogue/explain_zeroshot_v2.txt"):
+def reprompt(translate_engine, valid_action2states, invalid_action, invalid_state_list, constraints, mappings, prompt_fpath="prompts/dialogue/explain_zeroshot_v2.txt"):
 
     def state_prop2eng(state_list, mappings):
         state_eng_list = []
-        inverse_mappings = {v:k for k,v in mappings.items()}
+        # inverse_mappings = {v:k for k,v in mappings.items()}
         for state in state_list:
-            for prop in inverse_mappings.keys():
-                while prop in state:
-                    state = state.replace(prop, id2name[inverse_mappings[prop]])
+            # capitalize states but not 'safe' or 'violated'
+            state_list = state.split(":")
+            state = ":".join([state_list[0], state_list[1].upper()])
+            for prop in mappings.keys():
+                while prop.upper() in state:
+                    state = state.replace(prop.upper(), mappings[prop])
             state_eng_list.append(state)
         return state_eng_list
 
@@ -498,54 +541,53 @@ def reprompt(translate_engine, valid_actions, invalid_action, constraints, state
     task_description = "\n".join([task_description]) # just one line actually
     constraints = f"Constraints: {str(constraints)}"
 
-    if valid_actions:
+    if valid_action2states:
         valid_act = ""
-        for i, action in enumerate(valid_actions):
-            header = f"Valid action {i}: {action}"
+        for i, (action, state_list) in enumerate(valid_action2states.items()):
+            header = f"\n\nValid action #{i+1}: {action}"
             valid_act_i = header
-            state_list_i = state_lists[i]
+            # state_list_i = state_lists[i]
             valid_act_i += "\nState change:"
             
-            state_eng = state_prop2eng(state_list_i, mappings)
+            state_eng = state_prop2eng(state_list, mappings)
             for state in state_eng:
                 valid_act_i += f"\n{state}"
             valid_act += valid_act_i
     else:
         valid_act = ""
     
-    invalid_act = ""
     header = f"Invalid action: {invalid_action}"
     invalid_act = header
-    state_list_i = state_lists[-1]
+    # state_list_i = state_lists[-1]
     invalid_act += "\nState change:"
-    state_eng = state_prop2eng(state_list_i, mappings)
+    state_eng = state_prop2eng(invalid_state_list, mappings)
     for state in state_eng:
         invalid_act += f"\n{state}"
-    prompt = f"{task_description}\n\n{constraints}\n{valid_act}\n{invalid_act}\nReason of violation:"
-    # breakpoint()
+    prompt = f"{task_description}\n{constraints}\n{valid_act}\n\n{invalid_act}\n\nReason of violation:"
+    breakpoint()
     return translate_engine.generate(prompt)[0]
 
-## 
+## truth value function for manipulation tasks
 def prop_from_pred(pred_str):
     assert "(" in pred_str and ")" in pred_str
     left_p = pred_str.index("(")
     right_p = pred_str.index(")")
-    return pred_str[:left_p], pred_str[left_p: right_p].split(",")
+    return pred_str[:left_p], tuple(pred_str[left_p + 1: right_p].split(","))
 
-def parse_predicate(pred_str, cur_loc, obj_mapping, graph, state_dict, room=False):
-    """
-    :pred_str str: "is_on(A, B)"
-    :obj_mapping dict:
-    :state_dict: dictionary of states of objects for manipulation tasks
-    return truth value for following predicates:
-    ["agent_at", "is_switchedon", "is_open", "is_grabbed", "is_touched", "is_in", "is_on"]
-    """
-    pred, props = prop_from_pred(pred_str)
-    objs = [obj_mapping[prop] for prop in props]
-    if pred == "agent_at":
-        return hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=room)
-    else:
-        return check_state_dict(pred, obj_tuple, state_dcit)
+# def parse_predicate(pred_str, cur_loc, obj_mapping, graph, state_dict, room=False):
+#     """
+#     :pred_str str: "is_on(A, B)"
+#     :obj_mapping dict:
+#     :state_dict: dictionary of states of objects for manipulation tasks
+#     return truth value for following predicates:
+#     ["agent_at", "is_switchedon", "is_open", "is_grabbed", "is_touched", "is_in", "is_on"]
+#     """
+#     pred, props = prop_from_pred(pred_str)
+#     objs = [obj_mapping[prop] for prop in props]
+#     if pred == "agent_at":
+#         return hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=room)
+#     else:
+#         return check_state_dict(pred, obj_tuple, state_dcit)
 
 def check_state_dict(pred, obj_tuple, state_dict):
     """
@@ -558,14 +600,20 @@ def check_state_dict(pred, obj_tuple, state_dict):
         return state_dict[obj_1][pred] == obj_2 if pred in state_dict[obj_1] else False
     elif len(obj_tuple) == 1:
         # action = pred_to_action[pred]
-        return state_dict[obj][pred] if action in state_dict[obj] else False
+        obj = obj_tuple[0]
+        return state_dict[obj][pred] if pred in state_dict[obj] else False
+    # predicates like standup and sit and sleep are recorded at the same level of objs #1
+    elif len(obj_tuple) == 0:
+        return state_dict[pred] if pred in state_dict else False
 
 class manipulation_dict():
     """
     dictionary for tracking states of object for manipulation actions only; navigational action are handled by hardcoded_truth_value_vh
     """
-    def __init__(objs=None):
-        action2pred = {'switchon': 'is_switchedon', 'open': 'is_open', 'grab': 'is_grabbed', 'touch': 'is_touched', 'putin': 'is_in', 'puton': 'is_on'}
+    def __init__(self, objs=None):
+        self.action2pred = {'switchon': 'is_switchedon', 'open': 'is_open', 'grab': 'is_grabbed', 'touch': 'is_touched', 'putin': 'is_in', 'puton': 'is_on'}
+        self.supported_acts = [act for act in self.action2pred.keys()]
+        self.supported_acts.extend(["switchoff", "close"])
         if objs:
             self.dict = {i: {} for i in objs}
         else:
@@ -574,23 +622,250 @@ class manipulation_dict():
         """
         :obj_tuple tuple: (obj) or (obj_1, obj_2)
         """
-        pred = action2pred[action]
+        self.prev_state = deepcopy(self.dict)
+        try:
+            pred = self.action2pred[action]
+        except:
+            assert action in ["switchoff", "close"]
         if len(obj_tuple) == 2:
             # action str should be lowercased
             assert action == "putin" or action == "puton"
             (obj_1, obj_2) = obj_tuple
             self.dict[obj_1][pred] = obj_2
-            if "grab" in self.dict[obj_1]:
-                self.dict[obj_1]["grab"] = False
+            if "is_grabbed" in self.dict[obj_1]:
+                self.dict[obj_1]["is_grabbed"] = False
         elif len(obj_tuple) == 1:
-            (obj) = obj_tuple
+            obj = obj_tuple[0]
             if action == "switchoff":
-                self.dict[obj][action2pred["switchon"]] = False
+                self.dict[obj][self.action2pred["switchon"]] = False
             elif action == "close":
-                self.dict[obj][action2pred["open"]] = False
+                self.dict[obj][self.action2pred["open"]] = False
             else:
-                self.dict[obj][action] = True
-        elif len(obj_tuple) == 1:
-            (action) = obj_tuple
-            self.dict[action] = True
+                self.dict[obj][pred] = True
+        elif len(obj_tuple) == 0:
+            self.dict[pred] = True
+    
+    def revert(self):
+        """
+        revert an action has just been made
+        """
+        assert self.prev_state is not None
+        self.dict = self.prev_state
 
+### truth value for manipulation 
+def state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id, obj_mappings, pred_mappings, init_position, init_room, env_num=0,stopped=False):
+    """
+    manipulation constraints for vh env, recursively render program and align navigation with actions.
+    :params obj2id: ids of the objects including rooms
+    :params room2id: ids of the rooms
+    :params obj2id dict: obj name to obj id
+    :params obj_mappings: placeholder to obj name e.g., {'A': 'coffeetable'}
+    :params pred_mappings: proposition to predicates e.g., {'a': 'agent_at(A)'}
+    :params input_ltl: lifted ltl formula e.g., "& & W ! d b G ! a G i d F c"
+    """
+    NAV_ACTIONS = ["find", "walk", "run"]
+    NAV_PRED = ["agent_at"]
+
+    # first sort all predicates into nav and manip
+    nav_prop2pred = {}
+    manip_prop2pred = {}
+    for prop, pred in pred_mappings.items():
+        if any(x in pred for x in NAV_PRED):
+            nav_prop2pred[prop] = pred
+        else:
+            manip_prop2pred[prop] = pred
+    # {prop: obj}
+    nav_prop2obj = {}
+    for prop, pred in nav_prop2pred.items():
+        _, (placeholder) = prop_from_pred(pred)
+        nav_prop2obj[prop] = obj_mappings[placeholder[0]]
+    # {prop: (predicate, (object))}
+    manip_prop2obj = {}
+    for prop, pred in manip_prop2pred.items():
+        p, placeholders = prop_from_pred(pred) # "agent_at", "A"
+        manip_prop2obj[prop] = (p, tuple([obj_mappings[placeholder] for placeholder in placeholders]))
+
+    # encode LTL as a DFA
+    dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
+    # categorize objs and rooms
+    nav_mappings = {obj2id[obj]:prop for prop, obj in nav_prop2obj.items()}
+    obj_ids = [obj2id[obj] for obj in nav_prop2obj.values() if not obj in room2id.keys()]
+    room_ids = [obj2id[obj] for obj in nav_prop2obj.values() if obj in room2id.keys()]
+    # nav_preds only change when executing navigation actions, manip_preds only change when executing non-nav actions
+    # build the full list of state changes as a stack of state changes of each program line
+
+    # record the last length of agent pose 
+    pose_end_idx = 0
+    state_lists = []
+    manip_dict = manipulation_dict()
+    # initialize nav & manip state with everything equal to False
+    init_nav_state = {prop:False for prop in nav_prop2obj.keys()}
+    init_manip_state = {prop:False for prop in manip_prop2obj.keys()}
+
+    nav_state = init_nav_state
+    manip_state = init_manip_state
+    for i, line in enumerate(program):
+        # execute programs 0:i to get full pose
+        step_program = program[:i+1]
+        comm.reset(env_num)
+        _, g = comm.environment_graph()
+        comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
+        # breakpoint()
+        comm.render_script(step_program, recording=True, save_pose_data=True)
+        pose_dict = load_from_file("Output/script/0/pd_script.txt")
+        pose_list = read_pose(pose_dict)["Head"]
+        # split the pose list to only contains pose for step i
+        pose_list = pose_list[pose_end_idx:]
+        # pose_end_idx = len(read_pose(pose_dict)["Head"])
+        script_line = read_script_from_list_string([line])[0]
+        act = script_line.action.name.lower()
+        params = script_line.parameters
+        # breakpoint()
+
+        # generate prop level trajectory: e.g., ['a & b & !c', 'a & ! b & ! c']
+        if any(x in line for x in NAV_ACTIONS): # nav action
+            try:
+                prop_traj = check_nav_state(pose_list, g, obj_ids, room_ids, nav_mappings, radius=2.0)
+            except:
+                breakpoint()
+            # it returns [{prop: bool,...} ,...]
+
+            # append the same manip_states to nav_state for each element
+            # state_list_i = [" & ".join([concat_props(traj_i), concat_props(manip_state)]) for traj_i in prop_traj]
+            state_list_i = [concat_props(traj_i  |manip_state) for traj_i in prop_traj]
+            state_lists.append(state_list_i)
+            # update states for nav props
+            nav_state = prop_traj[-1]
+            # breakpoint()
+
+        elif any(x in line for x in manip_dict.supported_acts): # manip action
+            manip_objs = tuple([param.name for param in params])
+            # breakpoint()
+            manip_dict.step(act, manip_objs)
+            print(manip_dict.dict)
+            manip_state = {}
+            # breakpoint()
+            # update mani_state
+            for prop, (pred, obj_tuple) in manip_prop2obj.items():
+                manip_state[prop] = check_state_dict(pred, obj_tuple, manip_dict.dict)
+            # append the nav state
+            # state_list.append(" & ".join([concat_props(manip_state), concat_props(nav_state)]))
+            state_lists.append([concat_props(nav_state | manip_state)])
+            # breakpoint()
+    # breakpoint()
+    if stopped:
+        state_lists.append(["stop"])
+    joined_state_list = clean_state_list(list(itertools.chain.from_iterable(state_lists)))
+    # breakpoint()
+
+    grounded_state_list = []
+    success = True
+
+    for state in joined_state_list:
+        action = state
+        valid, next_state = validate_next_action(dfa, curr_state, action, accepting_states)
+        if valid:
+            grounded_state_list.append(f"Safe: {action}")
+            curr_state = next_state
+        else:
+            grounded_state_list.append(f"Violated: {action}")
+            success = False
+            break
+    if success: 
+        pose_end_idx = len(read_pose(pose_dict)["Head"]) - 2
+    return success, grounded_state_list, [len(ls) for ls in state_lists]
+
+def check_nav_state(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
+    '''
+    proposition-level trajectory for executing one action. For v2.3.0 only
+    this function is the same as prop_level_traj() except this func returns 
+    :params pose_list: list of [x, z, y] poses
+    :params list(str) obj_ids: objects for props
+    :params list(str) room_ids: rooms for props
+    :params dict mappings: name of the obj_id/room_id to proposition character generated by Lang2LTL
+    :returns list(dict) prop_traj: list of dictionaries tracking all props for each state change
+    '''
+    init_state = {obj:hardcoded_truth_value_vh(pose_list[0], obj, graph, radius) for obj in obj_ids}
+    init_state.update({room: hardcoded_truth_value_vh(pose_list[0], room, graph, radius, room=True) for room in room_ids})
+    init_state_mapped = {mappings[k]:v for k, v in init_state.items()}
+
+    prop_traj = [init_state_mapped]
+    # record init truth values and only update when props changed
+    state_buffer = [b for b in init_state_mapped.values()]
+    for pose in pose_list[1:]:
+        state = {obj:hardcoded_truth_value_vh(pose, obj, graph,radius=radius) for obj in obj_ids}
+        state.update({room: hardcoded_truth_value_vh(pose, room, graph, radius=radius, room=True) for room in room_ids})
+        new_state = [b for b in state.values()]
+        if not state_buffer == new_state:
+            prop_traj.append({mappings[k]:v for k, v in state.items()})
+            state_buffer = new_state
+    return prop_traj
+
+def clean_state_list(state_list):
+    """
+    pop the second state if two same states in a row
+    """
+    head = state_list[-1]
+    for i in reversed(range(len(state_list)-1)):
+        if state_list[i] == head:
+            state_list.pop(i)
+        else:
+            head = state_list[i]
+
+    return state_list
+
+## for robot demo
+
+def state_change_by_step_spot(program, input_ltl, g, obj_mapping, pred_mapping, obj2id, init_loc, stopped=False):
+
+    NAV_ACTIONS = ["walk"]
+    NAV_PRED = ["agent_at"]
+    # first sort all predicates into nav and manip
+    nav_prop2pred = {}
+    manip_prop2pred = {}
+    for prop, pred in pred_mappings.items():
+        if any(x in pred for x in NAV_PRED):
+            nav_prop2pred[prop] = pred
+        else:
+            manip_prop2pred[prop] = pred
+    # {prop: obj}
+    nav_prop2obj = {}
+    for prop, pred in nav_prop2pred.items():
+        _, (placeholder) = prop_from_pred(pred)
+        nav_prop2obj[prop] = obj_mappings[placeholder[0]]
+    # {prop: (predicate, (object))}
+    manip_prop2obj = {}
+    for prop, pred in manip_prop2pred.items():
+        p, placeholders = prop_from_pred(pred) # "agent_at", "A"
+        manip_prop2obj[prop] = (p, tuple([obj_mappings[placeholder] for placeholder in placeholders]))
+    
+    # encode LTL as a DFA
+    dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
+    # categorize objs and rooms
+    nav_mappings = {obj2id[obj]:prop for prop, obj in nav_prop2obj.items()}
+    # obj_ids = [obj2id[obj] for obj in nav_prop2obj.values() if not obj in room2id.keys()]
+    # room_ids = [obj2id[obj] for obj in nav_prop2obj.values() if obj in room2id.keys()]
+
+    state_lists = []
+    manip_dict = manipulation_dict()
+    # initialize nav & manip state with everything equal to False
+    init_nav_state = {prop:False for prop in nav_prop2obj.keys()}
+    init_manip_state = {prop:False for prop in manip_prop2obj.keys()}
+
+    nav_state = init_nav_state
+    manip_state = init_manip_state
+    for i, line in enumerate(program):
+        # execute programs 0:i to get full pose
+        step_program = program[:i+1]
+        script_line = read_script_from_list_string([line])[0]
+        act = script_line.action.name.lower()
+        params = script_line.parameters
+        breakpoint()
+
+        # generate prop level trajectory: e.g., ['a & b & !c', 'a & ! b & ! c']
+        if any(x in line for x in NAV_ACTIONS): # nav action
+            assert len(params) == 1
+            try:
+                prop_traj = check_nav_state(params[0], g, obj_ids, room_ids, nav_mappings, radius=2.0)
+            except:
+                breakpoint()

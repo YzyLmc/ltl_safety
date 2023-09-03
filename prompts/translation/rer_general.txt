@@ -1,4 +1,4 @@
-Your task is to repeat exact strings from the given utterance which possibly refer to certain propositions.
+Your task is to repeat exact strings from the given utterance which possibly refer to certain objeccts or locations.
 
 Utterance: move to red room
 Propositions: red room
@@ -9,11 +9,11 @@ Propositions: apple | classroom
 Utterance: visit Cutler Majestic Theater
 Propositions: Cutler Majestic Theater
 
-Utterance: robot c move to big red room and then move to green area
-Propositions: big red room | green area
+Utterance: robot c move to big red room and then pick up key
+Propositions: big red room | key
 
-Utterance: you have to visit Panera Bread, four or more than four times
-Propositions: Panera Bread
+Utterance: you have to touch switch, four or more than four times
+Propositions: switch
 
 Utterance: i want you to go into the yellow region
 Propositions: the yellow region

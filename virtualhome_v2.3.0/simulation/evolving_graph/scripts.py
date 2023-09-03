@@ -117,14 +117,18 @@ def parse_script_line(string, index):
     :param string: script line in format [action] <object> (object_instance) <subject> (object_instance)
     :return: ScriptLine objects; raises ScriptParseException
     """
+    if "<char0>" in string:
+        string = " ".join(string.split()[1:])
     params = []
 
     patt_action = r'^\[(\w+)\]'
     patt_params = r'\<(.+?)\>\s*\((.+?)\)'
 
     action_match = re.search(patt_action, string.strip())
+    # print(string, index, action_match)
     if not action_match:
-        raise ScriptParseException('Cannot parse action')
+        # breakpoint()
+        raise ScriptParseException('Cannot parse action {}', string)
     action_string = action_match.group(1).upper()
     if action_string not in Action.__members__:
         raise ScriptParseException('Unknown action "{}"', action_string)

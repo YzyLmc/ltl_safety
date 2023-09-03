@@ -1,9 +1,8 @@
 Put mail into the mailbox
 Description: go to table, find and take mail, and go to mailbox, and put it into the mailbox
 
-0. walk to table
-1. find mail
-2. grab mail
-3. go to mail box
-4. put mail into mail box
-5. Done
+[WALK] <table> (0)
+[WALK] <mail> (0)
+[GRAB] <mail> (0)
+[WALK] <mailbox> (0)
+[PUTIN] <mail> (0) <mailbox> (0)
