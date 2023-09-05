@@ -261,9 +261,9 @@ def validate_next_action(dfa, curr_dfa_state, traj_state, accepting_states):
     else:
         next_state = progress_ltl(dfa, curr_dfa_state, traj_state)
         for accepting_state in accepting_states:
-            if nx.has_path(dfa, next_state, accepting_state):
+            if nx.has_path(dfa, next_state, accepting_state) or next_state == accepting_state :
                 return True, next_state
-            return False, next_state
+        return False, next_state
     # for accepting_state in accepting_states:
     #     if nx.has_path(dfa, next_state, accepting_state):
     #         return True
@@ -412,8 +412,8 @@ def omit_obj_id(script_lines):
 
 def convert_rooms(line):
     line = line.replace("dining_room", "kitchen")
-    line = line.replace("home_office", "living_room")
-    line = line.replace("livingroom", "living_room")
+    line = line.replace("home_office", "livingroom")
+    line = line.replace("living room", "livingroom")
     line = line.replace("oven", "microwave") # :-(
     return line
 
@@ -541,18 +541,21 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
     task_description = "\n".join([task_description]) # just one line actually
     constraints = f"Constraints: {str(constraints)}"
 
+    len_buffer = 0
     if valid_action2states:
         valid_act = ""
+
         for i, (action, state_list) in enumerate(valid_action2states.items()):
             header = f"\n\nValid action #{i+1}: {action}"
             valid_act_i = header
-            # state_list_i = state_lists[i]
             valid_act_i += "\nState change:"
             
-            state_eng = state_prop2eng(state_list, mappings)
+            state_list_i = state_list[len_buffer:]
+            state_eng = state_prop2eng(state_list_i, mappings)
             for state in state_eng:
                 valid_act_i += f"\n{state}"
             valid_act += valid_act_i
+            len_buffer = len(state_list) - 1 # only include new state changes
     else:
         valid_act = ""
     
@@ -560,7 +563,7 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
     invalid_act = header
     # state_list_i = state_lists[-1]
     invalid_act += "\nState change:"
-    state_eng = state_prop2eng(invalid_state_list, mappings)
+    state_eng = state_prop2eng(invalid_state_list[len_buffer:], mappings)
     for state in state_eng:
         invalid_act += f"\n{state}"
     prompt = f"{task_description}\n{constraints}\n{valid_act}\n\n{invalid_act}\n\nReason of violation:"
@@ -725,7 +728,7 @@ def state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id,
         # generate prop level trajectory: e.g., ['a & b & !c', 'a & ! b & ! c']
         if any(x in line for x in NAV_ACTIONS): # nav action
             try:
-                prop_traj = check_nav_state(pose_list, g, obj_ids, room_ids, nav_mappings, radius=2.0)
+                prop_traj = check_nav_state(pose_list, g, obj_ids, room_ids, nav_mappings)
             except:
                 breakpoint()
             # it returns [{prop: bool,...} ,...]
@@ -773,9 +776,9 @@ def state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id,
             break
     if success: 
         pose_end_idx = len(read_pose(pose_dict)["Head"]) - 2
-    return success, grounded_state_list, [len(ls) for ls in state_lists]
+    return success, grounded_state_list, manip_dict.dict
 
-def check_nav_state(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
+def check_nav_state(pose_list, graph, obj_ids, room_ids, mappings, radius=2.0):
     '''
     proposition-level trajectory for executing one action. For v2.3.0 only
     this function is the same as prop_level_traj() except this func returns 
@@ -816,14 +819,14 @@ def clean_state_list(state_list):
 
 ## for robot demo
 
-def state_change_by_step_spot(program, input_ltl, g, obj_mapping, pred_mapping, obj2id, init_loc, stopped=False):
+def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_mapping, obj2id, room2id, id2loc, stopped=False):
 
     NAV_ACTIONS = ["walk"]
     NAV_PRED = ["agent_at"]
     # first sort all predicates into nav and manip
     nav_prop2pred = {}
     manip_prop2pred = {}
-    for prop, pred in pred_mappings.items():
+    for prop, pred in pred_mapping.items():
         if any(x in pred for x in NAV_PRED):
             nav_prop2pred[prop] = pred
         else:
@@ -832,19 +835,19 @@ def state_change_by_step_spot(program, input_ltl, g, obj_mapping, pred_mapping, 
     nav_prop2obj = {}
     for prop, pred in nav_prop2pred.items():
         _, (placeholder) = prop_from_pred(pred)
-        nav_prop2obj[prop] = obj_mappings[placeholder[0]]
+        nav_prop2obj[prop] = obj_mapping[placeholder[0]]
     # {prop: (predicate, (object))}
     manip_prop2obj = {}
     for prop, pred in manip_prop2pred.items():
         p, placeholders = prop_from_pred(pred) # "agent_at", "A"
-        manip_prop2obj[prop] = (p, tuple([obj_mappings[placeholder] for placeholder in placeholders]))
+        manip_prop2obj[prop] = (p, tuple([obj_mapping[placeholder] for placeholder in placeholders]))
     
     # encode LTL as a DFA
     dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
     # categorize objs and rooms
     nav_mappings = {obj2id[obj]:prop for prop, obj in nav_prop2obj.items()}
-    # obj_ids = [obj2id[obj] for obj in nav_prop2obj.values() if not obj in room2id.keys()]
-    # room_ids = [obj2id[obj] for obj in nav_prop2obj.values() if obj in room2id.keys()]
+    obj_ids = [obj2id[obj] for obj in nav_prop2obj.values() if not obj in room2id.keys()]
+    room_ids = [obj2id[obj] for obj in nav_prop2obj.values() if obj in room2id.keys()]
 
     state_lists = []
     manip_dict = manipulation_dict()
@@ -854,18 +857,109 @@ def state_change_by_step_spot(program, input_ltl, g, obj_mapping, pred_mapping, 
 
     nav_state = init_nav_state
     manip_state = init_manip_state
+    curr_node = obj2id["origin"]
     for i, line in enumerate(program):
         # execute programs 0:i to get full pose
         step_program = program[:i+1]
         script_line = read_script_from_list_string([line])[0]
         act = script_line.action.name.lower()
         params = script_line.parameters
-        breakpoint()
 
         # generate prop level trajectory: e.g., ['a & b & !c', 'a & ! b & ! c']
         if any(x in line for x in NAV_ACTIONS): # nav action
             assert len(params) == 1
+            goal_node = obj2id[params[0].name]
             try:
-                prop_traj = check_nav_state(params[0], g, obj_ids, room_ids, nav_mappings, radius=2.0)
+                prop_traj = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=2.0)
             except:
                 breakpoint()
+            # append the same manip_states to nav_state for each element
+            state_list_i = [concat_props(traj_i  |manip_state) for traj_i in prop_traj]
+            state_lists.append(state_list_i)
+            # update states for nav props
+            nav_state = prop_traj[-1]
+            curr_node = goal_node
+        elif any(x in line for x in manip_dict.supported_acts): # manip action
+            manip_objs = tuple([param.name for param in params])
+            # breakpoint()
+            manip_dict.step(act, manip_objs)
+            print(manip_dict.dict)
+            manip_state = {}
+            # breakpoint()
+            # update mani_state
+            for prop, (pred, obj_tuple) in manip_prop2obj.items():
+                manip_state[prop] = check_state_dict(pred, obj_tuple, manip_dict.dict)
+            # append the nav state
+            # state_list.append(" & ".join([concat_props(manip_state), concat_props(nav_state)]))
+            state_lists.append([concat_props(nav_state | manip_state)])
+
+    if stopped:
+        state_lists.append(["stop"])
+    joined_state_list = clean_state_list(list(itertools.chain.from_iterable(state_lists)))
+    # breakpoint()
+
+    grounded_state_list = []
+    success = True
+
+    for state in joined_state_list:
+        action = state
+        valid, next_state = validate_next_action(dfa, curr_state, action, accepting_states)
+        if valid:
+            grounded_state_list.append(f"Safe: {action}")
+            curr_state = next_state
+        else:
+            grounded_state_list.append(f"Violated: {action}")
+            success = False
+            break
+    return success, grounded_state_list, [len(ls) for ls in state_lists]
+
+
+def check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, mappings, radius=2.0):
+    curr_loc = id2loc[curr_node]
+    init_state = {obj_id:hardcoded_truth_value_spot(curr_loc, obj_id, id2loc, radius) for obj_id in obj_ids}
+    init_state.update({room: hardcoded_truth_value_spot(curr_loc, room_id, id2loc, radius, room=True) for room_id in room_ids})
+    init_state_mapped = {mappings[k]:v for k, v in init_state.items()}
+
+    # plan a trajectory
+    nodes_list = nx.dijkstra_path(nx_graph, goal_node, curr_node)
+    pose_list = [id2loc[node] for node in nodes_list]
+
+    prop_traj = [init_state_mapped]
+    # record init truth values and only update when props changed
+    state_buffer = [b for b in init_state_mapped.values()]
+    for pose in pose_list[1:]:
+
+        state = {obj:hardcoded_truth_value_spot(pose, obj, id2loc,radius=radius) for obj in obj_ids}
+        state.update({room: hardcoded_truth_value_spot(pose, room, id2loc, radius=radius, room=True) for room in room_ids})
+        new_state = [b for b in state.values()]
+        if not state_buffer == new_state:
+            prop_traj.append({mappings[k]:v for k, v in state.items()})
+            state_buffer = new_state
+    return prop_traj
+
+def hardcoded_truth_value_spot(curr_loc, obj_id, id2loc, radius=0.5, room=False):
+
+    if room:
+        raise Exception("not implemented")
+    else:     
+        obj_loc = np.array(id2loc[obj_id])
+        curr_loc = np.array(curr_loc)
+        dist = np.linalg.norm(curr_loc - obj_loc)
+        return True if dist < radius else False
+
+def evaluate_completeness(manip_dict, goal_state):
+    '''
+    check if manip dict satisfy goal state
+    '''
+    for obj, states in goal_state.items():
+        # print(obj,states)
+        try:
+            for pred in states:
+                # print()
+                if manip_dict[obj][pred] == states[pred]:
+                    continue
+                else:
+                    return False
+        except:
+            return False
+    return True

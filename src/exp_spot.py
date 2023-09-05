@@ -27,15 +27,15 @@ with open(graph_fpath + '/graph', 'rb') as graph_file:
         f'Loaded graph has {len(graph.waypoints)} waypoints and {len(graph.edges)} edges'
     )
 objs = [waypoint for waypoint in graph.waypoints if not "waypoint" in waypoint.annotations.name]
-obj_dict = {obj.annotations.name: [obj.waypoint_tform_ko.position.x, obj.waypoint_tform_ko.position.y, obj.waypoint_tform_ko.position.z] for obj in objs}
+id2loc = {obj.id: [obj.waypoint_tform_ko.position.x, obj.waypoint_tform_ko.position.y, obj.waypoint_tform_ko.position.z] for obj in graph.waypoints}
 obj2id = {obj.annotations.name: obj.id for obj in objs}
+room2id = {}
 
 # convert spot nva graph to nx graph for planning
 connect_graph = nx.Graph()
 connect_graph.add_nodes_from([wp.id for wp in graph.waypoints])
 connect_graph.add_edges_from([(e.id.from_waypoint, e.id.to_waypoint) for e in graph.edges])
 # call nx.dijkstra_path() to plan a trajectory
-
 
 # test constraints
 constraints = ["you have to go to bedroom before picking up mail"]
@@ -71,7 +71,7 @@ embed_engine = GPT3(engine="text-embedding-ada-002")
 output = gpt4.generate(prompt)[0]
 print(output)
 # load graph and embeddings
-prompt = prompt + f"\n{output}"
+prompt = prompt + f" {output}"
 allowed_actions = load_from_file("virtualhome_v2.3.0/resources/allowed_actions_spot.json")
 act2embed = load_from_file("/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_spot.pkl")
 
@@ -99,11 +99,39 @@ while n_try < 10: # max step + replan time <=10
         act, obj_ls = get_action_and_obj(action_string)
         obj_ls = [f"{obj} (0)" for obj in obj_ls]
         dummy_program_line = f"{act} {' '.join(obj_ls)}"
+        program.append(dummy_program_line)
 
-    # this step ensure output is executable and renderable(?)
-    success, state_list, state_act_idx = state_change_by_step_spot(program, input_ltl, connect_graph, obj_mapping, pred_mapping, obj2id, stopped=stopped)
+    success, state_list, state_act_idx = state_change_by_step_spot(program, input_ltl, connect_graph, obj_mapping, pred_mapping, obj2id, room2id, id2loc, stopped=stopped)
     prompt += f" {output}"
 
     # masking unsafe action out
-    if invalid_action_mem == grounded_program_line:
+    if invalid_action_mem == dummy_program_line:
         continue
+
+    if not success:
+        invalid_action = action_string
+        invalid_state_list = state_list
+        reprompted_plan = f"\nError: {reprompt(gpt4, valid_action2states, invalid_action, invalid_state_list, constraints, grounded_pred_mapping)} The correct plan would be:"
+        program = program[:-1]
+        print("handling error by reprompting")
+        print(reprompted_plan)
+        prompt += reprompted_plan
+        invalid_action_mem = dummy_program_line
+        stopped = False
+    else:
+        if "DONE" in output: break
+        valid_action2states[action_string] = state_list
+        invalid_action_mem = None
+        idx += 1
+        # breakpoint()
+print("Programs:")
+[print(line) for line in program]
+print(prompt)
+
+# save_fpath = "results/spot_results.json"
+# if os.path.exists(save_fpath):
+#     saved_results = load_from_file(save_fpath)
+# else:
+#     saved_results = defaultdict(dict)
+# saved_results[0][0] = {"constraint": constraints, "program":program, "safe": success, "completed": None}
+# save_to_file(saved_results, save_fpath)

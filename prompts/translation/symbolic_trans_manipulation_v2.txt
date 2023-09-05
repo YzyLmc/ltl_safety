@@ -1,7 +1,7 @@
 Your task is to translate English utterances into linear temporal logic (LTL) formulas. LTL is a formal language that has been used for describing temporal task specifications. It consists of propositions and operators. In the following task, here are the propositions and operators we use:
-Propositions: {"A", "B"}
+Propositions: {"A", "B", "C", "D"}
 Operators: {"G": "Globally", "!": "Not", "X": "Next", "W": "Weak Until", "U": "Until", "i": "Indicate", "&": "And", "F":"Finally"}
-Predicates: {agent_at(), is_switchedon(), is_open(), is_grabbed(), is_touched()}
+Predicates: {agent_at(), is_switchedon(), is_open(), is_grabbed(), is_touched(), is_on(), is_in()}
 
 Utterance: never go to A
 LTL: G ! agent_at(A)
@@ -12,6 +12,9 @@ LTL: G ! is_switchedon(A)
 Utterance: please do not pick up A
 LTL: G ! is_grabbed(A)
 
+Utterance: never put A on B
+LTL: G ! is_on(A,B)
+
 Utterance: don't go to B until you go to A
 LTL: W ! agent_at(B) agent_at(A)
 
@@ -20,6 +23,9 @@ LTL: W ! is_grabbed(A) agent_at(B)
 
 Utterance: pick up A before going to B
 LTL: W ! agent_at(B) is_grabbed(A)
+
+Utterance: you cannot put A on B before grab C
+LTL: W ! is_on(A,B) is_grabbed(C)
 
 Utterance: if you  open A, you can never open B after that
 LTL: G i is_open(A) G ! is_open(B)
