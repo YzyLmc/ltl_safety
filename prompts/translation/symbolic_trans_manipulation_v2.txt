@@ -27,6 +27,9 @@ LTL: W ! agent_at(B) is_grabbed(A)
 Utterance: you cannot put A on B before grab C
 LTL: W ! is_on(A,B) is_grabbed(C)
 
+Utterance: don't put A in B if you haven't been to C
+LTL: W ! is_in(A,B) agent_at(C)
+
 Utterance: if you  open A, you can never open B after that
 LTL: G i is_open(A) G ! is_open(B)
 

@@ -259,6 +259,7 @@ def unify_formula(out_ltls, placeholder_maps, props=PROPS_OBJ):
     map_key_list = [list(map.keys()) for map in placeholder_maps]
     objs = set(list(itertools.chain.from_iterable(map_key_list)))
     unified_mapping = {obj: props[i] for i, obj in enumerate(objs)}
+    unified_mapping = dict(sorted(unified_mapping.items(), key=lambda item: len(item[0]), reverse=True))
     unified_ltl = concat_formula(out_ltls)
     for obj in unified_mapping.keys():
         while obj in unified_ltl:
@@ -267,6 +268,8 @@ def unify_formula(out_ltls, placeholder_maps, props=PROPS_OBJ):
     return unified_ltl, {v:k for k,v in unified_mapping.items()}
 
 def sub_predicate(unified_ltl, operators=OPERATORS, props=PROPS_PRED):
+    while ", " in unified_ltl:
+        unified_ltl = unified_ltl.replace(", ",",")
     ltl_split = unified_ltl.split()
     predicates = set([char for char in ltl_split if char not in operators])
     pred_map = {}

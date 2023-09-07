@@ -8,7 +8,7 @@ import argparse
 import os
 import openai
 from openai.embeddings_utils import cosine_similarity
-from utils import program2example, load_from_file, save_to_file, GPT4, get_action_and_obj, convert_old_program_to_new, read_pose, prop_level_traj, ltl2digraph, validate_next_action, progress_ltl, reprompt, state_change_by_step, convert_rooms, state_change_by_step_manipulation, manipulation_dict, evaluate_completeness
+from utils import program2example, load_from_file, save_to_file, GPT4, get_action_and_obj, convert_old_program_to_new, read_pose, prop_level_traj, ltl2digraph, validate_next_action, progress_ltl, reprompt, state_change_by_step, convert_rooms, state_change_by_step_manipulation, manipulation_dict, evaluate_completeness, program2nl
 from program_conversion import replace_new_obj_id
 from get_embed import GPT3
 from constraint_module import constraint_module
@@ -34,6 +34,7 @@ def main():
     init_position = [node for node in g['nodes'] if node["class_name"] == init_room][-1]['obj_transform']['position']
     comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
     s, g = comm.environment_graph()
+    breakpoint()
 
     room2id = {room["class_name"]: room["id"] for room in rooms}
     obj2id = {node["class_name"]: node["id"] for node in g["nodes"]}
@@ -86,7 +87,8 @@ def main():
     # construct prompt
     task_description = load_from_file(args.planning_ts_fpath)
     if args.append_obj_list:
-        obj_list = [obj for obj in obj2id if obj not in room2id or obj != "character"]
+        filter_list = ['character', 'floor', 'wall', 'ceiling']
+        obj_list = [obj for obj in obj2id if (obj not in room2id.keys()) and (obj not in filter_list)]
         task_description += f"\nObject: {obj_list}".replace("[", "{").replace("]", "}")
 
     example = program2example(lines)
@@ -151,11 +153,11 @@ def main():
         if args.safety_level == "full":
             # this step ensure output is executable and renderable(?)
             success, state_list, manip_dict = state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id, obj_mapping, pred_mapping, init_position, init_room, stopped=stopped)
-            prompt += f" {output}"
+            prompt += f" {program2nl([grounded_program_line])[0]}" if not output == "DONE" else f" {output}"
             if not success:
                 invalid_action = action_string
                 invalid_state_list = state_list
-                reprompted_plan = f"\nError: {reprompt(gpt4, valid_action2states, invalid_action, invalid_state_list, constraints, grounded_pred_mapping)} The correct plan would be:"
+                reprompted_plan = f"\nError: {reprompt(gpt4, valid_action2states, invalid_action, invalid_state_list, constraints, grounded_pred_mapping)} Maybe try walking to other objects in the object list first. The correct plan would be:"
                 program = program[:-1]
                 print("handling error by reprompting")
                 print(reprompted_plan)

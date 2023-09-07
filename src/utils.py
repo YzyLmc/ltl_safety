@@ -117,22 +117,22 @@ class GPT4:
         complete = False
         ntries = 0
         while not complete:
-            # try:
-            raw_responses = openai.ChatCompletion.create(
-                model=self.engine,
-                messages=prompt2msg(query_prompt),
-                temperature=self.temp,
-                n=self.n,
-                stop=self.stop,
-                max_tokens=self.max_tokens,
-            )
-            complete = True
-            # except:
-            #     sleep(30)
-            #     logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...")
-            #     # logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...\n{query_prompt}")
-            #     logging.info("OK continue")
-            #     ntries += 1
+            try:
+                raw_responses = openai.ChatCompletion.create(
+                    model=self.engine,
+                    messages=prompt2msg(query_prompt),
+                    temperature=self.temp,
+                    n=self.n,
+                    stop=self.stop,
+                    max_tokens=self.max_tokens,
+                )
+                complete = True
+            except:
+                sleep(30)
+                logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...")
+                # logging.info(f"{ntries}: waiting for the server. sleep for 30 sec...\n{query_prompt}")
+                logging.info("OK continue")
+                ntries += 1
         if self.n == 1:
             responses = [raw_responses["choices"][0]["message"]["content"].strip()]
         else:
@@ -331,6 +331,7 @@ def concat_props(prop_state):
     :returns formula: truth value of props in LTL formula
     '''
     return " & ".join([prop if truth_value else f'!{prop}' for prop, truth_value in prop_state.items()])
+    # return " & ".join([prop for prop, truth_value in prop_state.items() if truth_value ])
 
 def prop_level_state(graph, obj_ids, room_ids, mappings, radius=0.5):
     '''
@@ -446,6 +447,8 @@ def convert_to_nl(act, objs):
         return f"put {objs[0]} on {objs[1]}"
     elif act == "putin":
         return f"put {objs[0]} in {objs[1]}"
+    elif act == "puton":
+        return f"put {objs[0]} on {objs[1]}"
     elif act == "switchon":
         return f"switch on {objs[0]}"
     elif act == "switchoff":
@@ -463,12 +466,45 @@ def convert_to_nl(act, objs):
     elif not objs:
         return f"{act}"
 
+def program2nl(program_lines):
+    '''
+    translate program back to nl to append to the prompt
+    '''
+    script = read_script_from_list_string(program_lines)
+    example = []
+    for idx, script_line in enumerate(script):
+        act = script_line.action.name.lower()
+        params = script_line.parameters
+        if act == "walk":
+            example.append(f"walk to {params[0].name}")
+        elif act == "lookat":
+            example.append(f"look at {params[0].name}")
+        elif act == "plug":
+            example.append(f"plug in {params[0].name}")
+        elif act == "point":
+            example.append(f"point at {params[0].name}")
+        elif act == "put":
+            example.append(f"put {params[0].name} on {params[1].name}")
+        elif act == "putin":
+            example.append(f"put {params[0].name} in {params[1].name}")
+        elif act == "switchon":
+            example.append(f"switch on {params[0].name}")
+        elif act == "switchoff":
+            example.append(f"switch off {params[0].name}")
+        elif act == "lie":
+            example.append(f"lie on {params[0].name}")
+        elif act == "sleep":
+            example.append(f"sleep")
+        else:
+            assert(len(script_line.parameters) == 1)
+            example.append(f"{script_line.action.name.lower()} {script_line.parameters[0].name}.")
+    return example
+
 def program2example(program_lines):
     title = program_lines[:2]
     title[1] = "Description: " + title[1]
     script = read_script_from_list_string(program_lines)
     example = []
-    # breakpoint()
     for idx, script_line in enumerate(script):
         act = script_line.action.name.lower()
         params = script_line.parameters
@@ -519,8 +555,8 @@ def get_action_and_obj(output_line):
         # print(str_list)
         if "in" in str_list:
             return "[putin]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
-        else:
-            return "[put]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
+        elif "on" in str_list:
+            return "[putin]", [f"<{str_list[1]}>", f"<{str_list[3]}>"]
 
 def reprompt(translate_engine, valid_action2states, invalid_action, invalid_state_list, constraints, mappings, prompt_fpath="prompts/dialogue/explain_zeroshot_v2.txt"):
 
@@ -531,6 +567,14 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
             # capitalize states but not 'safe' or 'violated'
             state_list = state.split(":")
             state = ":".join([state_list[0], state_list[1].upper()])
+
+            # short_state_list = state_list[1].split(" & ")
+            # short_state_list = " & ".join([s.strip() for s in short_state_list if "!" not in s])
+            # state = ": ".join([state_list[0], short_state_list.upper()])
+            # if state == "":
+            #     state = ": ".join([state_list[0], "Null"])
+            # breakpoint()
+
             for prop in mappings.keys():
                 while prop.upper() in state:
                     state = state.replace(prop.upper(), mappings[prop])
@@ -545,7 +589,7 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
     if valid_action2states:
         valid_act = ""
 
-        for i, (action, state_list) in enumerate(valid_action2states.items()):
+        for i, (action, state_list) in enumerate(valid_action2states):
             header = f"\n\nValid action #{i+1}: {action}"
             valid_act_i = header
             valid_act_i += "\nState change:"
@@ -821,7 +865,7 @@ def clean_state_list(state_list):
 
 def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_mapping, obj2id, room2id, id2loc, stopped=False):
 
-    NAV_ACTIONS = ["walk"]
+    NAV_ACTIONS = ["walk", "find"]
     NAV_PRED = ["agent_at"]
     # first sort all predicates into nav and manip
     nav_prop2pred = {}
@@ -870,7 +914,7 @@ def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_ma
             assert len(params) == 1
             goal_node = obj2id[params[0].name]
             try:
-                prop_traj = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=2.0)
+                prop_traj = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=0.5)
             except:
                 breakpoint()
             # append the same manip_states to nav_state for each element
@@ -911,7 +955,7 @@ def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_ma
             grounded_state_list.append(f"Violated: {action}")
             success = False
             break
-    return success, grounded_state_list, [len(ls) for ls in state_lists]
+    return success, grounded_state_list, manip_dict.dict
 
 
 def check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, mappings, radius=2.0):
@@ -921,7 +965,7 @@ def check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2l
     init_state_mapped = {mappings[k]:v for k, v in init_state.items()}
 
     # plan a trajectory
-    nodes_list = nx.dijkstra_path(nx_graph, goal_node, curr_node)
+    nodes_list = nx.dijkstra_path(nx_graph, curr_node, goal_node)
     pose_list = [id2loc[node] for node in nodes_list]
 
     prop_traj = [init_state_mapped]

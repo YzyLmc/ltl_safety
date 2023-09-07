@@ -1,3 +1,3 @@
-Create a high-level plan for completing a household task using the allowed actions and objects, but you must obey the safety constraints. If certain constraints are violated, an error message will pop out, and you have to re-generate the plan accordingly. Don't forget to use DONE to indicate a task is completed.
-Allowed actions: {walk, grab, open, close, put on, put in, touch}
-Objects: {'television', 'mail_room', 'bedroom', 'office_table', 'mail_box', 'bed'}
+Create a high-level plan for completing a household task using the allowed actions and objects, but you must obey the safety constraints, and you can only execute one action at at each step in the similar format of the provided example. If certain constraints are violated, an error message will pop out, and you have to re-generate the plan accordingly, e.g., by trying to walk to different objects with "find" or locations with "walk" in the object list and then walk back, or unlocking the desired action by obeying the error message. Don't forget to use DONE to indicate a task is completed.
+Allowed actions: {walk, find, grab, open, close, put on, put in, switch on, switch off}
+Objects: {'pantry', 'mail_box', 'lamp', 'fridge', 'book_shelf', 'entrance', 'hallway', 'couch', 'coffee_machine', 'office_table', 'mail_room', 'bedside_table', 'statue', 'door', 'television', 'ironing_room', 'origin', 'sink'}

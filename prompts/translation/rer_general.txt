@@ -15,6 +15,9 @@ Propositions: big red room | key
 Utterance: you have to touch switch, four or more than four times
 Propositions: switch
 
+Utterance: pick up mail means you have to go to mail room in the future
+Propositions: mail | mail room
+
 Utterance: i want you to go into the yellow region
 Propositions: the yellow region
 
