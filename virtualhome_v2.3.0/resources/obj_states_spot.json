@@ -1,0 +1,151 @@
+{
+    "bedside_table": {
+        "grabbable": false,
+        "location": 11,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "book": {
+        "grabbable": true,
+        "location": 11,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "book_shelf": {
+        "grabbable": false,
+        "location": 4,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "coffee_machine": {
+        "grabbable": false,
+        "location": 8,
+        "onable": true,
+        "openable": false,
+        "receptacle": false,
+        "touchable": true
+    },
+    "couch": {
+        "grabbable": false,
+        "location": 7,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "door": {
+        "grabbable": false,
+        "location": 13,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "entrance": {
+        "grabbable": false,
+        "location": 5,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "fridge": {
+        "grabbable": false,
+        "location": 3,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "hallway": {
+        "grabbable": false,
+        "location": 6,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "ironing_room": {
+        "grabbable": false,
+        "location": 15,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "lamp": {
+        "grabbable": false,
+        "location": 2,
+        "openable": false,
+        "receptacle": false,
+        "touchable": true
+    },
+    "mail": {
+        "grabbable": true,
+        "location": 10,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "mail_box": {
+        "grabbable": false,
+        "location": 1,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "mail_room": {
+        "grabbable": false,
+        "location": 10,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "office_table": {
+        "grabbable": false,
+        "location": 9,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "origin": {
+        "grabbable": false,
+        "location": 16,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "pantry": {
+        "grabbable": false,
+        "location": 0,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "phone": {
+        "grabbable": true,
+        "location": 9,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "sink": {
+        "grabbable": false,
+        "location": 17,
+        "openable": false,
+        "receptacle": true,
+        "touchable": false
+    },
+    "statue": {
+        "grabbable": false,
+        "location": 12,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    },
+    "television": {
+        "grabbable": false,
+        "location": 14,
+        "onable": true,
+        "openable": false,
+        "receptacle": false,
+        "touchable": false
+    }
+}
