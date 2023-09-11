@@ -1,0 +1,7 @@
+Put mail into the mailbox
+go to mail_room, find and take mail, and go to mailbox, and put it into the mailbox
+
+[FIND] <mail> (0)
+[GRAB] <mail> (0)
+[WALK] <mail_box> (0)
+[PUTIN] <mail> (0) <mailbox> (0)

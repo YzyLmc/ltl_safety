@@ -1,0 +1,8 @@
+Put phone on the couch
+Go to office table, pick up the phone, go to couch, put phone on the couch
+
+[WALK] <office_table> (0)
+[FIND] <phone> (0)
+[GRAB] <phone> (0)
+[WALK] <couch> (0)
+[PUTIN] <phone> (0) <couch> (0)

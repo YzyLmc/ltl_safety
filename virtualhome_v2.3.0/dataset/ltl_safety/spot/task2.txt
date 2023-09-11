@@ -1,0 +1,8 @@
+Put book on the bookshelf
+Go to bedside table, find and take book from the bedside table, go to bookshelf, place it on bookshelf
+
+[WALK] <bedside_table> (0)
+[FIND] <book> (0)
+[GRAB] <book> (0)
+[WALK] <bookshelf> (0)
+[PUTIN] <book> (0) <bookshelf> (0)

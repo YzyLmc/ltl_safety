@@ -1,0 +1,373 @@
+{
+    "task1": {
+        "10": {
+            "sub_trans": {
+                "placeholder": [
+                    {
+                        "couch": "A",
+                        "mail": "B"
+                    },
+                    {
+                        "book_shelf": "A"
+                    },
+                    {
+                        "office_table": "B",
+                        "television": "A"
+                    },
+                    {
+                        "couch": "A",
+                        "television": "B"
+                    },
+                    {
+                        "mail": "A",
+                        "mail_box": "C",
+                        "phone": "B"
+                    },
+                    {
+                        "ironing_room": "B",
+                        "office_table": "A"
+                    },
+                    {
+                        "mail": "A",
+                        "mail_box": "B"
+                    },
+                    {
+                        "ironing_room": "D",
+                        "mail": "A",
+                        "mail_box": "C",
+                        "phone": "B"
+                    },
+                    {
+                        "book": "A",
+                        "book_shelf": "B"
+                    },
+                    {
+                        "couch": "A"
+                    }
+                ],
+                "sym_ltl": [
+                    "W ! is_grabbed(B) agent_at(A)",
+                    "G ! agent_at(A)",
+                    "G i agent_at(B) F agent_at(A)",
+                    "W ! agent_at(A) agent_at(B)",
+                    "G i is_in(A,C) F is_grabbed(B)",
+                    "G i agent_at(A) F agent_at(B)",
+                    "W ! is_in(A,B) agent_at(B)",
+                    "G i is_in(A,C) F is_on(B,D)",
+                    "G ! is_on(A,B)",
+                    "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                ],
+                "sym_utt": [
+                    "don't pick up B before going to A",
+                    "always avoid A",
+                    "you have to visit A later if you have visited the B",
+                    "don't go to A if you haven't been to B",
+                    "you have to pick up B in the future if you have put A in the C",
+                    "you must go to B if you have been to A",
+                    "you cannot put A in the B if you haven't been to B",
+                    "you have to put the B on the D in the future if you have put A in the C",
+                    "don't put A on the B",
+                    "you can visit A at most three times"
+                ]
+            },
+            "unified_trans": {
+                "grounded_pred": {
+                    "a": "agent_at(mail_box)",
+                    "b": "agent_at(book_shelf)",
+                    "c": "agent_at(television)",
+                    "d": "agent_at(office_table)",
+                    "h": "is_in(mail,mail_box)",
+                    "j": "agent_at(ironing_room)",
+                    "k": "agent_at(couch)",
+                    "l": "is_on(phone,ironing_room)",
+                    "n": "is_grabbed(mail)",
+                    "o": "is_grabbed(phone)",
+                    "p": "is_on(book,book_shelf)"
+                },
+                "object": {
+                    "A": "office_table",
+                    "B": "book",
+                    "C": "couch",
+                    "D": "ironing_room",
+                    "H": "book_shelf",
+                    "J": "mail",
+                    "K": "phone",
+                    "L": "mail_box",
+                    "N": "television"
+                },
+                "predicate": {
+                    "a": "agent_at(L)",
+                    "b": "agent_at(H)",
+                    "c": "agent_at(N)",
+                    "d": "agent_at(A)",
+                    "h": "is_in(J,L)",
+                    "j": "agent_at(D)",
+                    "k": "agent_at(C)",
+                    "l": "is_on(K,D)",
+                    "n": "is_grabbed(J)",
+                    "o": "is_grabbed(K)",
+                    "p": "is_on(B,H)"
+                },
+                "unified_ltl": "& & & & & & & & & W ! n k G ! b G i d F c W ! k c G i h F o G i d F j W ! h a G i h F l G ! p ! F & k U k & ! k U ! k F & k U k & ! k U ! k F & k U k & ! k U ! k F k"
+            }
+        }
+    },
+    "task2": {
+        "10": {
+            "sub_trans": {
+                "placeholder": [
+                    {
+                        "bedside_table": "B",
+                        "book_shelf": "A"
+                    },
+                    {
+                        "book": "A",
+                        "coffee_machine": "B"
+                    },
+                    {
+                        "book": "C",
+                        "book_shelf": "B",
+                        "television": "A"
+                    },
+                    {
+                        "hallway": "A",
+                        "statue": "B"
+                    },
+                    {
+                        "lamp": "B",
+                        "television": "A"
+                    },
+                    {
+                        "book": "B",
+                        "book_shelf": "A",
+                        "mail": "D",
+                        "office_table": "C"
+                    },
+                    {
+                        "book": "A",
+                        "mail_box": "B"
+                    },
+                    {
+                        "phone": "A"
+                    },
+                    {
+                        "hallway": "B",
+                        "television": "A"
+                    },
+                    {
+                        "hallway": "A"
+                    }
+                ],
+                "sym_ltl": [
+                    "W ! agent_at(B) agent_at(A)",
+                    "W ! is_grabbed(A) is_switchedon(B)",
+                    "G i is_on(C,B) F agent_at(A)",
+                    "G i agent_at(A) F agent_at(B)",
+                    "G i agent_at(B) F agent_at(A)",
+                    "G i is_on(B,A) F is_on(D,C)",
+                    "G ! is_in(A,B)",
+                    "G ! is_grabbed(A)",
+                    "G i agent_at(B) F agent_at(A)",
+                    "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                ],
+                "sym_utt": [
+                    "don't go to B before going to A",
+                    "you have to turn on B before picking up the A",
+                    "you have to go to A if you have put C on B",
+                    "you have to go to B in the future if you have been to A",
+                    "going to B means you have to visit A afterward",
+                    "you have to put D on C later if you have put B on A",
+                    "never put A in B",
+                    "never pick up A",
+                    "you have to go to A later if you have been to B",
+                    "you can visit A at most three times"
+                ]
+            },
+            "unified_trans": {
+                "grounded_pred": {
+                    "a": "agent_at(television)",
+                    "b": "is_on(mail,office_table)",
+                    "c": "agent_at(book_shelf)",
+                    "d": "agent_at(hallway)",
+                    "h": "is_grabbed(book)",
+                    "j": "agent_at(bedside_table)",
+                    "k": "agent_at(statue)",
+                    "l": "agent_at(lamp)",
+                    "n": "is_in(book,mail_box)",
+                    "o": "is_switchedon(coffee_machine)",
+                    "p": "is_on(book,book_shelf)",
+                    "q": "is_grabbed(phone)"
+                },
+                "object": {
+                    "A": "television",
+                    "B": "phone",
+                    "C": "office_table",
+                    "D": "coffee_machine",
+                    "H": "lamp",
+                    "J": "statue",
+                    "K": "bedside_table",
+                    "L": "hallway",
+                    "N": "book",
+                    "O": "mail",
+                    "P": "book_shelf",
+                    "Q": "mail_box"
+                },
+                "predicate": {
+                    "a": "agent_at(A)",
+                    "b": "is_on(O,C)",
+                    "c": "agent_at(P)",
+                    "d": "agent_at(L)",
+                    "h": "is_grabbed(N)",
+                    "j": "agent_at(K)",
+                    "k": "agent_at(J)",
+                    "l": "agent_at(H)",
+                    "n": "is_in(N,Q)",
+                    "o": "is_switchedon(D)",
+                    "p": "is_on(N,P)",
+                    "q": "is_grabbed(B)"
+                },
+                "unified_ltl": "& & & & & & & & & W ! j c W ! h o G i p F a G i d F k G i l F a G i p F b G ! n G ! q G i d F a ! F & d U d & ! d U ! d F & d U d & ! d U ! d F & d U d & ! d U ! d F d"
+            }
+        },
+        "5": {
+            "sub_trans": {
+                "placeholder": [
+                    {
+                        "bedside_table": "B",
+                        "book_shelf": "A"
+                    },
+                    {
+                        "book": "A",
+                        "coffee_machine": "B"
+                    },
+                    {
+                        "book": "B",
+                        "book_shelf": "A",
+                        "television": "C"
+                    },
+                    {
+                        "hallway": "B",
+                        "statue": "A"
+                    },
+                    {
+                        "lamp": "B",
+                        "television": "A"
+                    }
+                ],
+                "sym_ltl": [
+                    "W ! agent_at(B) agent_at(A)",
+                    "W ! is_grabbed(A) is_switchedon(B)",
+                    "G i is_on(B,A) F agent_at(C)",
+                    "G i agent_at(B) F agent_at(A)",
+                    "G i agent_at(B) F agent_at(A)"
+                ],
+                "sym_utt": [
+                    "don't go to B before going to A",
+                    "you have to turn on B before picking up the A",
+                    "you have to go to C if you have put B on A",
+                    "you have to go to A in the future if you have been to B",
+                    "going to B means you have to visit A afterward"
+                ]
+            },
+            "unified_trans": {
+                "grounded_pred": {
+                    "a": "agent_at(bedside_table)",
+                    "b": "agent_at(lamp)",
+                    "c": "is_grabbed(book)",
+                    "d": "agent_at(statue)",
+                    "h": "is_switchedon(coffee_machine)",
+                    "j": "agent_at(hallway)",
+                    "k": "agent_at(book_shelf)",
+                    "l": "agent_at(television)",
+                    "n": "is_on(book,book_shelf)"
+                },
+                "object": {
+                    "A": "hallway",
+                    "B": "book",
+                    "C": "coffee_machine",
+                    "D": "statue",
+                    "H": "television",
+                    "J": "bedside_table",
+                    "K": "lamp",
+                    "L": "book_shelf"
+                },
+                "predicate": {
+                    "a": "agent_at(J)",
+                    "b": "agent_at(K)",
+                    "c": "is_grabbed(B)",
+                    "d": "agent_at(D)",
+                    "h": "is_switchedon(C)",
+                    "j": "agent_at(A)",
+                    "k": "agent_at(L)",
+                    "l": "agent_at(H)",
+                    "n": "is_on(B,L)"
+                },
+                "unified_ltl": "& & & & W ! a k W ! c h G i n F l G i j F d G i b F l"
+            }
+        },
+        "abortion": {
+            "sub_trans": {
+                "placeholder": [
+                    {
+                        "book_shelf": "A",
+                        "coffee_machine": "B"
+                    },
+                    {
+                        "bedside_table": "B",
+                        "coffee_machine": "A"
+                    },
+                    {
+                        "bedside_table": "B",
+                        "book_shelf": "A"
+                    },
+                    {
+                        "book": "B",
+                        "mail_box": "A"
+                    },
+                    {
+                        "phone": "A"
+                    }
+                ],
+                "sym_ltl": [
+                    "W ! agent_at(B) agent_at(A)",
+                    "W ! agent_at(B) agent_at(A)",
+                    "W ! agent_at(A) agent_at(B)",
+                    "G ! is_in(B,A)",
+                    "G ! is_grabbed(A)"
+                ],
+                "sym_utt": [
+                    "don't go to B before going to A",
+                    "you have to go to A before visiting B",
+                    "you have to go to B before going to A",
+                    "never put B in A",
+                    "never pick up A"
+                ]
+            },
+            "unified_trans": {
+                "grounded_pred": {
+                    "a": "agent_at(coffee_machine)",
+                    "b": "is_grabbed(phone)",
+                    "c": "is_in(book,mail_box)",
+                    "d": "agent_at(book_shelf)",
+                    "h": "agent_at(bedside_table)"
+                },
+                "object": {
+                    "A": "book",
+                    "B": "book_shelf",
+                    "C": "coffee_machine",
+                    "D": "phone",
+                    "H": "mail_box",
+                    "J": "bedside_table"
+                },
+                "predicate": {
+                    "a": "agent_at(C)",
+                    "b": "is_grabbed(D)",
+                    "c": "is_in(A,H)",
+                    "d": "agent_at(B)",
+                    "h": "agent_at(J)"
+                },
+                "unified_ltl": "& & & & W ! a d W ! h a W ! d h G ! c G ! b"
+            }
+        }
+    }
+}

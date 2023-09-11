@@ -106,7 +106,7 @@ def prompt2msg(query_prompt):
     return msg
 
 class GPT4:
-    def __init__(self, engine="gpt-4-0613", temp=0.00000001, max_tokens=128, n=1, stop=['\n']):
+    def __init__(self, engine="gpt-4-0613", temp=0.0, max_tokens=128, n=1, stop=['\n']):
         self.engine = engine
         self.temp = temp
         self.max_tokens = max_tokens
@@ -369,7 +369,7 @@ def prop_level_traj(pose_list, graph, obj_ids, room_ids, mappings, radius=0.5):
             state_buffer = new_state
     return [concat_props(prop_state) for prop_state in prop_traj]
 
-def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, env_num=0,stopped=False):
+def state_change_by_step(comm, program, input_ltl, obj_ids, room_ids, mappings, init_position, init_room, env_num=0, stopped=False):
     """
     navigational constraints only for vh env
     """
@@ -564,20 +564,22 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
         state_eng_list = []
         # inverse_mappings = {v:k for k,v in mappings.items()}
         for state in state_list:
-            # capitalize states but not 'safe' or 'violated'
-            state_list = state.split(":")
-            state = ":".join([state_list[0], state_list[1].upper()])
+            if not "stop" in state:
+                # capitalize states but not 'safe' or 'violated'
+                state_list = state.split(":")
+                state = state_list[1].upper()
 
-            # short_state_list = state_list[1].split(" & ")
-            # short_state_list = " & ".join([s.strip() for s in short_state_list if "!" not in s])
-            # state = ": ".join([state_list[0], short_state_list.upper()])
-            # if state == "":
-            #     state = ": ".join([state_list[0], "Null"])
-            # breakpoint()
+                # short_state_list = state_list[1].split(" & ")
+                # short_state_list = " & ".join([s.strip() for s in short_state_list if "!" not in s])
+                # state = ": ".join([state_list[0], short_state_list.upper()])
+                # if state == "":
+                #     state = ": ".join([state_list[0], "Null"])
+                # breakpoint()
 
-            for prop in mappings.keys():
-                while prop.upper() in state:
-                    state = state.replace(prop.upper(), mappings[prop])
+                for prop in mappings.keys():
+                    while prop.upper() in state:
+                        state = state.replace(prop.upper(), mappings[prop])
+                state = ":".join([state_list[0], state])
             state_eng_list.append(state)
         return state_eng_list
 
@@ -658,7 +660,7 @@ class manipulation_dict():
     dictionary for tracking states of object for manipulation actions only; navigational action are handled by hardcoded_truth_value_vh
     """
     def __init__(self, objs=None):
-        self.action2pred = {'switchon': 'is_switchedon', 'open': 'is_open', 'grab': 'is_grabbed', 'touch': 'is_touched', 'putin': 'is_in', 'puton': 'is_on'}
+        self.action2pred = {'switchon': 'is_switchedon', 'open': 'is_open', 'grab': 'is_grabbed', 'touch': 'is_touched', 'putin': 'is_in', 'puton': 'is_in'}
         self.supported_acts = [act for act in self.action2pred.keys()]
         self.supported_acts.extend(["switchoff", "close"])
         if objs:
@@ -914,7 +916,7 @@ def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_ma
             assert len(params) == 1
             goal_node = obj2id[params[0].name]
             try:
-                prop_traj = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=0.5)
+                prop_traj, nodes_list = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=0.5)
             except:
                 breakpoint()
             # append the same manip_states to nav_state for each element
@@ -932,7 +934,7 @@ def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_ma
             # breakpoint()
             # update mani_state
             for prop, (pred, obj_tuple) in manip_prop2obj.items():
-                manip_state[prop] = check_state_dict(pred, obj_tuple, manip_dict.dict)
+                manip_state[prop] = check_state_dict_spot(pred, obj_tuple, manip_dict.dict)
             # append the nav state
             # state_list.append(" & ".join([concat_props(manip_state), concat_props(nav_state)]))
             state_lists.append([concat_props(nav_state | manip_state)])
@@ -991,6 +993,26 @@ def hardcoded_truth_value_spot(curr_loc, obj_id, id2loc, radius=0.5, room=False)
         dist = np.linalg.norm(curr_loc - obj_loc)
         return True if dist < radius else False
 
+def check_state_dict_spot(pred, obj_tuple, state_dict):
+    """
+    :params obj_tuple: (obj) or (obj_1, obj_2)
+    return truth value by checking state dictionary.
+    only is_in, no is_on
+    """
+    #pred_to_action = {"is_switchedon": "switchon", "is_open":"open", "is_grabbed": "grab", "is_touched": "touch", "is_in": "putin", "is_on":"puton"}
+    if len(obj_tuple) == 2:
+        if pred == "is_on": pred = "is_in" # robo demo equivalent actions
+        (obj_1, obj_2) = obj_tuple
+        return state_dict[obj_1][pred] == obj_2 if pred in state_dict[obj_1] else False
+    elif len(obj_tuple) == 1:
+        # action = pred_to_action[pred]
+        if pred == "is_switchedon": pred = "is_touched" # robo demo equivalent actions
+        obj = obj_tuple[0]
+        return state_dict[obj][pred] if pred in state_dict[obj] else False
+    # predicates like standup and sit and sleep are recorded at the same level of objs #1
+    elif len(obj_tuple) == 0:
+        return state_dict[pred] if pred in state_dict else False
+
 def evaluate_completeness(manip_dict, goal_state):
     '''
     check if manip dict satisfy goal state
@@ -1001,6 +1023,26 @@ def evaluate_completeness(manip_dict, goal_state):
             for pred in states:
                 # print()
                 if manip_dict[obj][pred] == states[pred]:
+                    continue
+                else:
+                    return False
+        except:
+            return False
+    return True
+
+def evaluate_completeness_spot(manip_dict, goal_state):
+    '''
+    check if manip dict satisfy goal state, in robot demo `is_on` => `is_in`
+    '''
+    def on2in(pred):
+        if pred == "is_on": pred = "is_in"
+        return pred
+
+
+    for obj, states in goal_state.items():
+        try:
+            for pred in states:
+                if manip_dict[obj][on2in(pred)] == states[pred]:
                     continue
                 else:
                     return False

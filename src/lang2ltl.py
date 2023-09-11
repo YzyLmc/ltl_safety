@@ -102,7 +102,7 @@ def translate_modular(ground_utts, trans_module, objs_per_utt, trans_modular_pro
     trans_modular_prompt = load_from_file(trans_modular_prompt_fpath)
     placeholder_maps, placeholder_maps_inv = [], []
     for objs in objs_per_utt:
-        placeholder_map, placeholder_map_inv = build_placeholder_map(objs, props=["A", "B", "C"])
+        placeholder_map, placeholder_map_inv = build_placeholder_map(objs, props=["A", "B", "C", "D"])
         placeholder_maps.append(placeholder_map)
         placeholder_maps_inv.append(placeholder_map_inv)
     symbolic_utts, _ = substitute(ground_utts, placeholder_maps, is_utt=True)  # replace names by symbols
@@ -175,7 +175,8 @@ def substitute_single_word(in_str, sub_map):
     """
     # breakpoint()
 
-    sub_map = sorted(sub_map.items(), key=lambda kv: len(kv[0]), reverse=True)  # start substitution with long strings
+    # sub_map = sorted(sub_map.items(), key=lambda kv: len(kv[0]), reverse=True)  # start substitution with long strings
+    sub_map = sorted(sub_map.items(), key=lambda item: len(item[0]), reverse=True)
     subs_done = set()
 
     # swap every k with a unique number
@@ -204,8 +205,8 @@ def substitute_single_letter(in_str, sub_map):
     """
     in_str_list = nltk.word_tokenize(in_str)
     # in_str_list = in_str.split(" ")
-    sub_map = sorted(sub_map.items(), key=lambda kv: len(kv[0]), reverse=True)  # start substitution with long strings
-
+    # sub_map = sorted(sub_map.items(), key=lambda kv: len(kv[0]), reverse=True)  # start substitution with long strings
+    sub_map = sorted(sub_map.items(), key=lambda item: len(item[0]), reverse=True)
     # Record indices of all keys in sub_map in *original* input_str.
     key2indices = defaultdict(list)
     for k, _ in sub_map:

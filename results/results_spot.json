@@ -1,0 +1,19 @@
+{
+    "0": {
+        "0": {
+            "completed": null,
+            "constraint": [
+                "you have to go to bedroom before picking up mail"
+            ],
+            "program": [
+                "[walk] <office_table> (0)",
+                "[walk] <mail_room> (0)",
+                "[walk] <bedroom> (0)",
+                "[grab] <mail> (0)",
+                "[walk] <mail_box> (0)",
+                "[putin] <mail> (0) <mail_box> (0)"
+            ],
+            "safe": true
+        }
+    }
+}

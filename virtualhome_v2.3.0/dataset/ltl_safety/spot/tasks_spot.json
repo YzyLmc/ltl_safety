@@ -1,0 +1,62 @@
+{
+    "task1": {
+        "constraints": {
+            "10": [
+                "don't pick up mail before going to couch",
+                "always avoid bookshelf",
+                "you have to visit television later if you have visited the office table",
+                "don't go to couch if you haven't been to television",
+                "you have to pick up phone in the future if you have put mail in the mail box",
+                "you must go to ironing room if you have been to office table",
+                "you cannot put mail in the mail box if you haven't been to mail box",
+                "you have to put the phone on the ironing board in the future if you have put mail in the mail box",
+                "don't put book on the bookshelf",
+                "you can visit couch at most three times"
+            ]
+        },
+        "goal_state": {
+            "mail": {
+                "is_in": "mail_box"
+            }
+        },
+        "instruction": "drop mail into the mail box"
+    },
+    "task2": {
+        "constraints":{
+            "10":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to turn on coffee machine before picking up the book",
+                "you have to go to television if you have put book on bookshelf",
+                "you have to go to statue in the future if you have been to hallway",
+                "going to lamp means you have to visit television afterward",
+                "you have to put mail on office table later if you have put book on bookshelf",
+                "never put book in mail box",
+                "never pick up phone",
+                "you have to go to television later if you have been to hallway",
+                "you can visit hallway at most three times"
+            ],
+            "5":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to turn on coffee machine before picking up the book",
+                "you have to go to television if you have put book on bookshelf",
+                "you have to go to statue in the future if you have been to hallway",
+                "going to lamp means you have to visit television afterward"
+            ],
+            "abortion":[
+                "don't go to coffee machine before going to bookshelf",
+                "you have to go to coffee machine before visiting bedside table",
+                "you have to go to bedside table before going to bookshelf",
+                "never put book in mail box",
+                "never pick up phone"
+            ]
+            
+
+        },
+        "goal_state": {
+            "book": {
+                "is_on": "book_shelf"
+            }
+        },
+        "instruction": "deliver the book to the bookshelf"
+    }
+}

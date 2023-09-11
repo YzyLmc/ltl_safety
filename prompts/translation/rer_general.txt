@@ -1,24 +1,27 @@
 Your task is to repeat exact strings from the given utterance which possibly refer to certain objeccts or locations.
 
-Utterance: move to red room
-Propositions: red room
+Utterance: move to red room means you have to put phone on the couch
+Propositions: red room | phone | couch
 
-Utterance: grab apple and go to classroom
-Propositions: apple | classroom
+Utterance: grab apple and go to classroom, and place apple on desk, and then go to mail_box
+Propositions: apple | classroom | desk | mail_box
 
-Utterance: visit Cutler Majestic Theater
-Propositions: Cutler Majestic Theater
+Utterance: visit Cutler Majestic Theater, and then Thayer street
+Propositions: Cutler Majestic Theater| Thayer street
 
-Utterance: robot c move to big red room and then pick up key
-Propositions: big red room | key
+Utterance: robot move to big red room and then pick up key and place it on the bedside_table
+Propositions: big red room | key | bedside_table
 
 Utterance: you have to touch switch, four or more than four times
 Propositions: switch
 
-Utterance: pick up mail means you have to go to mail room in the future
+Utterance: pick up mail means you have to put mail in the mail room in the future
 Propositions: mail | mail room
 
-Utterance: i want you to go into the yellow region
-Propositions: the yellow region
+Utterance: I want you to go into the yellow region and then put apple on office_table and then pick up the phone
+Propositions: the yellow region | apple | office_table | phone
 
-Utterance:
+Utterance: walk to mail, pick up the mail, go to livingroom, and then to the mail room, put mail in mail room
+Propositions: mail | livingroom | mail room
+
+Utterance: 

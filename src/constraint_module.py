@@ -20,7 +20,7 @@ class constraint_module():
             constraints = self.encode_constraints(constraint_strs)
             self.dfa, self.accepting_states, self.init_state = ltl2digraph(self. encode_constraints(constraints))
 
-    def encode_constraints(self, constraint_strs, manipulation=True, prompt_fpath="prompts/translation/rer_general.txt", trans_modular_prompt_fpath="prompts/translation/symbolic_trans_manipulation_v2.txt", obj_embed_fpath="/users/zyang157/data/zyang157/virtualhome/obj_embeds/0_spot.pkl"):
+    def encode_constraints(self, constraint_strs, log_subformulas=False, manipulation=True, prompt_fpath="prompts/translation/rer_general.txt", trans_modular_prompt_fpath="prompts/translation/symbolic_trans_manipulation_v2.txt", obj_embed_fpath="/users/zyang157/data/zyang157/virtualhome/obj_embeds/0_spot.pkl"):
         '''
         convert a list of language constraints and returns final formula with prop map
         '''
@@ -46,7 +46,11 @@ class constraint_module():
         if manipulation:
             unified_ltl, pred_mapping = sub_predicate(unified_ltl)
             self.pred_mapping = pred_mapping
-        return unified_ltl, obj_mapping, pred_mapping if manipulation else None
+        # breakpoint()
+        if log_subformulas:
+            return sym_utts, sym_ltls, out_ltls, placeholder_maps, unified_ltl, obj_mapping, pred_mapping if manipulation else None
+        else:
+            return unified_ltl, obj_mapping, pred_mapping if manipulation else None
 
     def action_pruning(self, start, trajs):
         '''

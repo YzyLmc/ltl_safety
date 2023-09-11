@@ -121,6 +121,7 @@ def main():
     invalid_action_mem = None
     stopped = False
     idx = 0
+    reprompted =False
     while n_try < args.max_step: # max step + replan time <=10
         prompt += f"\n{idx}."
         output = gpt4.generate(prompt)[0]
@@ -164,11 +165,13 @@ def main():
                 prompt += reprompted_plan
                 invalid_action_mem = grounded_program_line
                 stopped = False
+                reprompted = True
             else:
                 if "DONE" in output: break
                 valid_action2states[action_string] = state_list
                 invalid_action_mem = None
                 idx += 1
+                reprompted = False
 
             # breakpoint()
         else: # null or bad safety constraints
@@ -204,12 +207,13 @@ if __name__ == "__main__":
     parser.add_argument("--safety_level", default="full", choices=["full", "bad", "null"], help="full for safety chip, bad for input everything together, null for no safety constraints")
     # parser.add_argument("--no_safety", default=False, action='store_true', help="for baseline with no safety constraints specified")
     # parser.add_argument("--bad_safety", default=False, action='store_true', help="for baseline with no safety constraints specified")
+    parser.add_argument("--task_file_fpath", type=str, default="virtualhome_v2.3.0/dataset/ltl_safety/vh/task_vh.json")
     parser.add_argument("--init_room", type=str, default="bedroom", help="initial room for spawning agent")
     parser.add_argument("--planning_ts_fpath", type=str, default="prompts/planning/planning_with_cons_v2.txt", help="task specification for planning")
     parser.add_argument("--example_fname", type=str, default="0_10", help="name of the text file for tasks")
     parser.add_argument("--task", type=str, default="Put salmon in Fridge", help="natural language of high level goal")
-    parser.add_argument("--max_step", type=int, default=10, help="natural language of high level goal")
-    parser.add_argument("--saved_results_fpath", type=str, default="results/vh_results.json", help="filepath for saved experiment results")
+    parser.add_argument("--max_step", type=int, default=20, help="max step of generation")
+    parser.add_argument("--saved_results_fpath", type=str, default="results/results_vh.json", help="filepath for saved experiment results")
     args = parser.parse_args()
 
     main()
