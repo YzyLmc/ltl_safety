@@ -19,6 +19,9 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2
 
+random.seed(123)
+np.random.seed(123)
+
 def main():
     graph_fpath = "robot/downloaded_graph"
     with open(graph_fpath + '/graph', 'rb') as graph_file:
@@ -262,11 +265,12 @@ def main():
     print(prompt)
 
     # evaluate completeness
-    goal_state = {'mail': {'is_in': 'mail_box'}}
+    # goal_state = {'mail': {'is_in': 'mail_box'}}
     goal_state = task_dict["goal_state"]
     complete = evaluate_completeness_spot(manip_dict, goal_state)
 
-    save_fpath = "results/spot_results.json"
+    # save_fpath = "results/spot_results.json"
+    save_fpath = args.saved_results_fpath
     if os.path.exists(save_fpath):
         saved_results = load_from_file(save_fpath)
     else:
@@ -283,7 +287,7 @@ def main():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--safety_level", default="full", choices=["full", "bad", "null"], help="full for safety chip, bad for input everything together, null for no safety constraints")
+    parser.add_argument("--safety_level", default="full", choices=["full", "bad"], help="full for safety chip, bad for input everything together, null for no safety constraints")
     parser.add_argument("--planning_ts_fpath", type=str, default="prompts/planning/planning_spot_v1.txt", help="task specification for planning")
     parser.add_argument("--example_fname", type=str, default="task1", help="name of the text file for tasks")
     parser.add_argument("--constraint_num", type=str, default='10', help='number of constraints applied')

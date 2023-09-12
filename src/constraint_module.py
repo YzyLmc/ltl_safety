@@ -20,7 +20,7 @@ class constraint_module():
             constraints = self.encode_constraints(constraint_strs)
             self.dfa, self.accepting_states, self.init_state = ltl2digraph(self. encode_constraints(constraints))
 
-    def encode_constraints(self, constraint_strs, log_subformulas=False, manipulation=True, prompt_fpath="prompts/translation/rer_general.txt", trans_modular_prompt_fpath="prompts/translation/symbolic_trans_manipulation_v2.txt", obj_embed_fpath="/users/zyang157/data/zyang157/virtualhome/obj_embeds/0_spot.pkl"):
+    def encode_constraints(self, constraint_strs, log_subformulas=False, manipulation=True, prompt_fpath="prompts/translation/rer_general.txt", trans_modular_prompt_fpath="prompts/translation/symbolic_trans_manipulation_v2.txt", obj_embed_fpath="/users/zyang157/data/zyang157/virtualhome/obj_embeds/spot_0.pkl"):
         '''
         convert a list of language constraints and returns final formula with prop map
         '''
@@ -28,7 +28,7 @@ class constraint_module():
         prompt = load_from_file(prompt_fpath)
         obj_embeds = load_from_file(obj_embed_fpath)
         names, utt2res = rer(self.translator, prompt, constraint_strs)
-        # resolution is skipped temporarily
+        # resolution
         re2grounds = {}
         for obj in names:
             obj_embed = self.embed_engine.get_embedding(obj)
@@ -58,19 +58,19 @@ class constraint_module():
         :params str start:
         :params list(str) trajs: 
         '''
-        dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
-        state_list = []
-        success = True
-        for state in prop_traj:
-            action = state
-            stopped = True if state == prop_traj[-1] else False
-            if validate_next_action(dfa, curr_state, action, accepting_states,stopped=stopped):
-                state_list.append(f"Safe: {action}")
-                curr_state = progress_ltl(dfa, curr_state, action)
-            else:
-                state_list.append(f"Violated: {action}")
-                success = False
-                break
+        # dfa, accepting_states, curr_state = ltl2digraph(input_ltl)
+        # state_list = []
+        # success = True
+        # for state in prop_traj:
+        #     action = state
+        #     stopped = True if state == prop_traj[-1] else False
+        #     if validate_next_action(dfa, curr_state, action, accepting_states,stopped=stopped):
+        #         state_list.append(f"Safe: {action}")
+        #         curr_state = progress_ltl(dfa, curr_state, action)
+        #     else:
+        #         state_list.append(f"Violated: {action}")
+        #         success = False
+        #         break
         pass
 
     def agent_query(self, trajectory, invalid_action, agent_prompt):

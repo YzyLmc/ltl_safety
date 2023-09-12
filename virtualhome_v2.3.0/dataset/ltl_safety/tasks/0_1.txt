@@ -1,7 +1,7 @@
-Go to wash basin
+Go to toliet
 Travel through the house and locate the bathroom, and proceed to the wash basin.
 
 
 [WALK] <bathroom> (11)
-[WALK] <wash basin> (45)
-[FIND] <wash basin> (45)
+[WALK] <toliet> (45)
+[FIND] <toliet> (45)

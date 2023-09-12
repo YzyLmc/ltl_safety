@@ -193,7 +193,7 @@ def ltl2digraph(formula: str):
     """
 
     # Spot Automaton Code
-    aut = spot.translate(formula, 'BA', 'complete', 'state-based')
+    aut = spot.translate(formula, 'complete', 'state-based')
     nodelist = defaultdict(dict)
     bdd = aut.get_dict()
 
@@ -257,6 +257,7 @@ def validate_next_action(dfa, curr_dfa_state, traj_state, accepting_states):
     """
     
     if traj_state == "stop":
+        # print(curr_dfa_state, accepting_states)
         return True if curr_dfa_state in accepting_states else False, curr_dfa_state
     else:
         next_state = progress_ltl(dfa, curr_dfa_state, traj_state)
@@ -309,10 +310,12 @@ def hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False):
         return all(-h <= p <= h for p, h in zip(local_point, half_size))
 
     obj = [node for node in graph['nodes'] if node['id'] == obj_id][0]
-    rotation_matrix = R.from_quat(obj["obj_transform"]["rotation"]).as_matrix()
+    rotation = obj["obj_transform"]["rotation"]
+    rotation = [0.0, 0.0, 0.0, 1.0]
+    rotation_matrix = R.from_quat(rotation).as_matrix()
     if room:
         bb_center = np.array(obj["bounding_box"]["center"])
-        bb_size = np.array(obj["bounding_box"]["size"])#  - np.array([1, 1, 1]) # make bb smaller
+        bb_size = np.array(obj["bounding_box"]["size"])  - np.array([0.5, 0.5, 0.5]) # make bb smaller
         # return is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
         is_inside = is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
         # print(cur_loc, is_inside)
@@ -613,7 +616,7 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
     for state in state_eng:
         invalid_act += f"\n{state}"
     prompt = f"{task_description}\n{constraints}\n{valid_act}\n\n{invalid_act}\n\nReason of violation:"
-    breakpoint()
+    # breakpoint()
     return translate_engine.generate(prompt)[0]
 
 ## truth value function for manipulation tasks
@@ -765,14 +768,16 @@ def state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id,
         pose_list = read_pose(pose_dict)["Head"]
         # split the pose list to only contains pose for step i
         pose_list = pose_list[pose_end_idx:]
-        # pose_end_idx = len(read_pose(pose_dict)["Head"])
         script_line = read_script_from_list_string([line])[0]
         act = script_line.action.name.lower()
         params = script_line.parameters
+        # print(len(pose_list), pose_end_idx)
         # breakpoint()
 
         # generate prop level trajectory: e.g., ['a & b & !c', 'a & ! b & ! c']
         if any(x in line for x in NAV_ACTIONS): # nav action
+            if len(read_pose(pose_dict)["Head"]) > 2: 
+                pose_end_idx = len(read_pose(pose_dict)["Head"]) - 2
             try:
                 prop_traj = check_nav_state(pose_list, g, obj_ids, room_ids, nav_mappings)
             except:
@@ -820,8 +825,7 @@ def state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id,
             grounded_state_list.append(f"Violated: {action}")
             success = False
             break
-    if success: 
-        pose_end_idx = len(read_pose(pose_dict)["Head"]) - 2
+        
     return success, grounded_state_list, manip_dict.dict
 
 def check_nav_state(pose_list, graph, obj_ids, room_ids, mappings, radius=2.0):
@@ -839,6 +843,7 @@ def check_nav_state(pose_list, graph, obj_ids, room_ids, mappings, radius=2.0):
     init_state_mapped = {mappings[k]:v for k, v in init_state.items()}
 
     prop_traj = [init_state_mapped]
+    # breakpoint()
     # record init truth values and only update when props changed
     state_buffer = [b for b in init_state_mapped.values()]
     for pose in pose_list[1:]:
@@ -916,7 +921,7 @@ def state_change_by_step_spot(program, input_ltl, nx_graph, obj_mapping, pred_ma
             assert len(params) == 1
             goal_node = obj2id[params[0].name]
             try:
-                prop_traj, nodes_list = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=0.5)
+                prop_traj = check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2loc, nav_mappings, radius=0.5)
             except:
                 breakpoint()
             # append the same manip_states to nav_state for each element
@@ -969,7 +974,6 @@ def check_nav_state_spot(goal_node, nx_graph, curr_node, obj_ids, room_ids, id2l
     # plan a trajectory
     nodes_list = nx.dijkstra_path(nx_graph, curr_node, goal_node)
     pose_list = [id2loc[node] for node in nodes_list]
-
     prop_traj = [init_state_mapped]
     # record init truth values and only update when props changed
     state_buffer = [b for b in init_state_mapped.values()]

@@ -6,10 +6,10 @@
                 "always avoid bookshelf",
                 "you have to visit television later if you have visited the office table",
                 "don't go to couch if you haven't been to television",
-                "you have to pick up phone in the future if you have put mail in the mail box",
+                "you have to pick up phone in the future if you have been to couch",
                 "you must go to ironing room if you have been to office table",
                 "you cannot put mail in the mail box if you haven't been to mail box",
-                "you have to put the phone on the ironing board in the future if you have put mail in the mail box",
+                "you have to put the phone on the ironing board in the future if you have been to couch",
                 "don't put book on the bookshelf",
                 "you can visit couch at most three times"
             ]

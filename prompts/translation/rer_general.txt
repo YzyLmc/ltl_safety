@@ -1,4 +1,4 @@
-Your task is to repeat exact strings from the given utterance which possibly refer to certain objeccts or locations.
+Your task is to repeat exact strings from the given utterance which possibly refer to certain objects or locations.
 
 Utterance: move to red room means you have to put phone on the couch
 Propositions: red room | phone | couch

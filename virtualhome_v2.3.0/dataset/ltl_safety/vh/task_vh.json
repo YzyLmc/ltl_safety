@@ -1,1 +1,76 @@
-{"rooms":{"0":{"0_10":{"5":{"constraints":["you have to enter bathroom before kitchen", "you have to enter living room right after entering kitchen", "entering bathroom means you have to visit living room once", "you can only go to kitchen twice", "don't go to bedroom more than two times"],"goal_state": {"salmon": {"is_in": "fridge"}}, "init_room":"bedroom"}}}}}
+{
+    "rooms": {
+        "0": {
+            "0_1": {
+                "constraints": {
+                    "5": [
+                        "you have to enter living room before bathroom",
+                        "you have to enter bedroom before going into living room",
+                        "you have to go to kitchen right after living room",
+                        "go to living room means you have to go to kitchen in the future",
+                        "you can only go to kitchen twice"
+                    ],
+                    "4": [
+                        "you have to enter living room before bathroom",
+                        "you have to enter bedroom before going into living room",
+                        "go to living room means you have to go to kitchen in the future",
+                        "you can only go to kitchen twice"
+                    ],
+                    "3": [
+                        "you have to enter living room before bathroom",
+                        "you have to go to kitchen right after living room",
+                        "go to living room means you have to go to kitchen in the future"
+                    ],
+                    "2": [
+                        "you have to enter living room before bathroom",
+                        "you have to go to kitchen right after living room"
+                    ],
+                    "1": [
+                        "go to living room means you have to go to kitchen in the future"
+                    ]
+
+                },
+                "goal_state": {},
+                "init_room": "bedroom",
+                "instruction": "Walk to toilet"
+            },
+            "0_10": {
+                "constraints": {
+                    "1": [
+                        "you have to enter bathroom before kitchen"
+                    ],
+                    "2": [
+                        "entering bathroom means you have to visit living room once",
+                        "you can only go to kitchen twice"
+                    ],
+                    "3": [
+                        "you have to enter living room right after entering kitchen",
+                        "entering bathroom means you have to visit living room once",
+                        "don't go to bedroom more than two times"
+                    ],
+                    "4": [
+                        "you have to enter bathroom before kitchen",
+                        "you have to enter living room in the future if you have entered kitchen",
+                        "entering bathroom means you have to visit living room once",
+                        "you can only go to kitchen twice",
+                        "don't go to bedroom more than three times"
+                    ],
+                    "5": [
+                        "you have to enter bathroom before kitchen",
+                        "you have to enter living room right after entering kitchen",
+                        "entering bathroom means you have to visit living room once",
+                        "you can only go to kitchen twice",
+                        "don't go to bedroom more than two times"
+                    ]
+                },
+                "goal_state": {
+                    "salmon": {
+                        "is_in": "fridge"
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Put salmon in Fridge"
+            }
+        }
+    }
+}

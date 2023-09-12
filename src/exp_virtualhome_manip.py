@@ -21,6 +21,12 @@ random.seed(123)
 np.random.seed(123)
 
 def main():
+    # load dataset
+    dataset = load_from_file(args.dataset_fpath)
+    task_dict = dataset[args.exp][args.env_num][args.example_fname]
+    constraints = task_dict["constraints"][args.constraint_num] # 1 - 5
+
+
     # start vh simulator
     EXEC_FNAME= "/users/zyang157/data/zyang157/virtualhome/exec_v2.3.0/linux_exec.v2.3.0.x86_64"
     comm = comm_unity.UnityCommunication(file_name=EXEC_FNAME, no_graphics=True, logging=False)
@@ -28,16 +34,49 @@ def main():
     
     # spawn agent
     s, g = comm.environment_graph()
-    init_room = args.init_room
+    init_room = task_dict['init_room']
     rooms = [node for node in g['nodes'] if node["category"] == "Rooms"]
     assert init_room in [room["class_name"] for room in rooms]
     init_position = [node for node in g['nodes'] if node["class_name"] == init_room][-1]['obj_transform']['position']
     comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
     s, g = comm.environment_graph()
-    breakpoint()
-
+    # breakpoint()
     room2id = {room["class_name"]: room["id"] for room in rooms}
     obj2id = {node["class_name"]: node["id"] for node in g["nodes"]}
+
+    # save translation
+    translation_result = load_from_file(args.translation_result_fpath)
+    if args.exp not in translation_result:
+        translation_result[args.exp] = {}
+    if args.env_num not in translation_result[args.exp]:
+        translation_result[args.exp][args.env_num] = {}
+    if args.example_fname not in translation_result[args.exp][args.env_num]:
+        translation_result[args.exp][args.env_num][args.example_fname] = {}
+    if args.constraint_num not in translation_result[args.exp][args.env_num][args.example_fname]:
+        translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = {}
+    if translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num]:
+        trans = translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num]
+        pred_mapping = trans["unified_trans"]["predicate"]
+        obj_mapping = trans["unified_trans"]["object"]
+        grounded_pred_mapping = trans["unified_trans"]["grounded_pred"]
+        input_ltl = trans["unified_trans"]["unified_ltl"]
+    else:
+        obj_embed_fpath = f"{args.obj_embed_prefix}vh_{args.env_num}.pkl"
+        cm = constraint_module()
+        sym_utts, sym_ltls, out_ltls, placeholder_maps, input_ltl, obj_mapping, pred_mapping = cm.encode_constraints(constraints, log_subformulas=True, obj_embed_fpath=obj_embed_fpath)
+        grounded_pred_mapping = {}
+        for prop, pred in pred_mapping.items():
+            for placeholder, obj in obj_mapping.items():
+                pred = pred.replace(placeholder, obj)
+            grounded_pred_mapping[prop] = pred
+        trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
+    # take_num = len(translation_result[args.example_fname][args.constraint_num]
+        translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = trans
+        save_to_file(translation_result, args.translation_result_fpath)
+    
+    # breakpoint()
+
+
     # test constraints
     # constraints = ["you have to go to living room before pick up salmon"]
     # constraints = ["you have to put pie in fridge before pick up salmon"]
@@ -47,10 +86,10 @@ def main():
     # input_ltl = '& W ! c d G i b F a'
     # pred_mapping = {'a': 'agent_at(B)', 'b': 'is_grabbed(A)', 'c': 'is_in(A,D)', 'd': 'is_in(C,D)'}
     # obj_mapping = {'A': 'salmon', 'B': 'livingroom', 'C': 'pie', 'D': 'fridge'}
-    constraints = ["always avoid kitchen table", "always avoid tv stand", "always avoid chair"]
-    input_ltl = '& & G ! b G ! a G ! c'
-    pred_mapping = {'a': 'agent_at(A)', 'b': 'agent_at(B)', 'c': 'agent_at(C)'}
-    obj_mapping = {'A': 'tvstand', 'B': 'kitchentable', 'C': 'chair'}
+    # constraints = ["always avoid kitchen table", "always avoid tv stand", "always avoid chair"]
+    # input_ltl = '& & G ! b G ! a G ! c'
+    # pred_mapping = {'a': 'agent_at(A)', 'b': 'agent_at(B)', 'c': 'agent_at(C)'}
+    # obj_mapping = {'A': 'tvstand', 'B': 'kitchentable', 'C': 'chair'}
     # constraints = ["you have to put apple in fridge before putting salmon in fridge", "you have to enter bathroom before entering kitchen", "don't go to living room if you have put apple in fridge"]
     # cm = constraint_module()
     # input_ltl, obj_mapping, pred_mapping = cm.encode_constraints(constraints)
@@ -96,7 +135,7 @@ def main():
     prompt = task_description+ "\n\n" + example + "\n"
 
     # give goal according to each prompt
-    dummy_query = args.task
+    dummy_query = task_dict["instruction"]
     # generate description at first step
     if args.safety_level == "bad":
         prompt += f"\n{dummy_query}\nConstraints: {constraints}\nDescription:"
@@ -110,14 +149,14 @@ def main():
     print(output)
     # load graph and embeddings
     prompt = prompt + f"\n{output}"
-    graph_dict_path = "virtualhome_v2.3.0/env_graphs/TestScene1_graph.json"
-    graph_dict = load_from_file(graph_dict_path)
+    # graph_dict_path = "virtualhome_v2.3.0/env_graphs/TestScene1_graph.json"
+    # graph_dict = load_from_file(graph_dict_path)
     allowed_actions = load_from_file("virtualhome_v2.3.0/resources/allowed_actions.json")
-    act2embed = load_from_file("/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_vh.pkl")
+    act2embed = load_from_file(f"{args.act_embed_prefix}_{args.env_num}.pkl")
 
     n_try = 0
     program = []
-    valid_action2states = OrderedDict()
+    valid_action2states = []
     invalid_action_mem = None
     stopped = False
     idx = 0
@@ -168,7 +207,7 @@ def main():
                 reprompted = True
             else:
                 if "DONE" in output: break
-                valid_action2states[action_string] = state_list
+                valid_action2states.append((action_string,state_list))
                 invalid_action_mem = None
                 idx += 1
                 reprompted = False
@@ -194,26 +233,32 @@ def main():
     else:
         saved_results = defaultdict(dict)
     result = {"constraint": constraints, "program":program, "safe": success, "completed": complete, "safety_level": args.safety_level}
-    if args.example_fname in saved_results[str(args.env_num)]:
-        saved_results[str(args.env_num)][args.example_fname].append(result)
+    if args.exp not in saved_results:
+        saved_results[args.exp] = {}
+    if str(args.env_num) not in saved_results[args.exp]:
+        saved_results[args.exp] = {}
+    if args.example_fname in saved_results[args.exp][str(args.env_num)]:
+        saved_results[args.exp][str(args.env_num)][args.example_fname].append(result)
     else:
-        saved_results[str(args.env_num)][args.example_fname] = [result]
+        saved_results[args.exp][str(args.env_num)][args.example_fname] = [result]
     save_to_file(saved_results, args.saved_results_fpath)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env_num", type=int, default=0)
+    parser.add_argument("--exp", type=str, choices=["rooms", "mobile_manip"])
+    parser.add_argument("--env_num", type=str, default='0', choices=['0', '1', '2', '3', '4'])
     parser.add_argument("--append_obj_list", action="store_true", help="append the full list of objects in the env in the task specification")
     parser.add_argument("--safety_level", default="full", choices=["full", "bad", "null"], help="full for safety chip, bad for input everything together, null for no safety constraints")
-    # parser.add_argument("--no_safety", default=False, action='store_true', help="for baseline with no safety constraints specified")
-    # parser.add_argument("--bad_safety", default=False, action='store_true', help="for baseline with no safety constraints specified")
-    parser.add_argument("--task_file_fpath", type=str, default="virtualhome_v2.3.0/dataset/ltl_safety/vh/task_vh.json")
-    parser.add_argument("--init_room", type=str, default="bedroom", help="initial room for spawning agent")
+    parser.add_argument("--dataset_fpath", type=str, default="virtualhome_v2.3.0/dataset/ltl_safety/vh/task_vh.json")
     parser.add_argument("--planning_ts_fpath", type=str, default="prompts/planning/planning_with_cons_v2.txt", help="task specification for planning")
     parser.add_argument("--example_fname", type=str, default="0_10", help="name of the text file for tasks")
-    parser.add_argument("--task", type=str, default="Put salmon in Fridge", help="natural language of high level goal")
-    parser.add_argument("--max_step", type=int, default=20, help="max step of generation")
+    parser.add_argument("--constraint_num", type=str, default='5', help='number of constraints applied')
+    parser.add_argument("--max_step", type=int, default=25, help="max step of generation")
     parser.add_argument("--saved_results_fpath", type=str, default="results/results_vh.json", help="filepath for saved experiment results")
+    parser.add_argument("--translation_result_fpath", type=str, default="results/translation_vh.json")
+    parser.add_argument("--act_embed_prefix", type=str, default="/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_vh")
+    parser.add_argument("--act_list", type=str, default="virtualhome_v2.3.0/resources/allowed_actions.json")
+    parser.add_argument("--obj_embed_prefix", default="/users/zyang157/data/zyang157/virtualhome/obj_embeds/")
     args = parser.parse_args()
 
     main()

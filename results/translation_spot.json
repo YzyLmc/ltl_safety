@@ -19,27 +19,25 @@
                         "television": "B"
                     },
                     {
-                        "mail": "A",
-                        "mail_box": "C",
-                        "phone": "B"
+                        "couch": "B",
+                        "phone": "A"
                     },
                     {
-                        "ironing_room": "B",
-                        "office_table": "A"
+                        "ironing_room": "A",
+                        "office_table": "B"
                     },
                     {
                         "mail": "A",
                         "mail_box": "B"
                     },
                     {
-                        "ironing_room": "D",
-                        "mail": "A",
-                        "mail_box": "C",
+                        "couch": "C",
+                        "ironing_room": "A",
                         "phone": "B"
                     },
                     {
-                        "book": "A",
-                        "book_shelf": "B"
+                        "book": "B",
+                        "book_shelf": "A"
                     },
                     {
                         "couch": "A"
@@ -50,11 +48,11 @@
                     "G ! agent_at(A)",
                     "G i agent_at(B) F agent_at(A)",
                     "W ! agent_at(A) agent_at(B)",
-                    "G i is_in(A,C) F is_grabbed(B)",
-                    "G i agent_at(A) F agent_at(B)",
+                    "G i agent_at(B) F is_grabbed(A)",
+                    "G i agent_at(B) F agent_at(A)",
                     "W ! is_in(A,B) agent_at(B)",
-                    "G i is_in(A,C) F is_on(B,D)",
-                    "G ! is_on(A,B)",
+                    "G i agent_at(C) F is_on(B,A)",
+                    "G ! is_on(B,A)",
                     "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
                 ],
                 "sym_utt": [
@@ -62,53 +60,53 @@
                     "always avoid A",
                     "you have to visit A later if you have visited the B",
                     "don't go to A if you haven't been to B",
-                    "you have to pick up B in the future if you have put A in the C",
-                    "you must go to B if you have been to A",
+                    "you have to pick up A in the future if you have been to B",
+                    "you must go to A if you have been to B",
                     "you cannot put A in the B if you haven't been to B",
-                    "you have to put the B on the D in the future if you have put A in the C",
-                    "don't put A on the B",
+                    "you have to put the B on the A in the future if you have been to C",
+                    "don't put B on the A",
                     "you can visit A at most three times"
                 ]
             },
             "unified_trans": {
                 "grounded_pred": {
-                    "a": "agent_at(mail_box)",
-                    "b": "agent_at(book_shelf)",
-                    "c": "agent_at(television)",
-                    "d": "agent_at(office_table)",
-                    "h": "is_in(mail,mail_box)",
+                    "a": "agent_at(book_shelf)",
+                    "b": "agent_at(television)",
+                    "c": "is_on(phone,ironing_room)",
+                    "d": "is_in(mail,mail_box)",
+                    "h": "agent_at(mail_box)",
                     "j": "agent_at(ironing_room)",
-                    "k": "agent_at(couch)",
-                    "l": "is_on(phone,ironing_room)",
-                    "n": "is_grabbed(mail)",
-                    "o": "is_grabbed(phone)",
-                    "p": "is_on(book,book_shelf)"
+                    "k": "agent_at(office_table)",
+                    "l": "is_on(book,book_shelf)",
+                    "n": "is_grabbed(phone)",
+                    "o": "is_grabbed(mail)",
+                    "p": "agent_at(couch)"
                 },
                 "object": {
-                    "A": "office_table",
-                    "B": "book",
+                    "A": "book_shelf",
+                    "B": "ironing_room",
                     "C": "couch",
-                    "D": "ironing_room",
-                    "H": "book_shelf",
-                    "J": "mail",
-                    "K": "phone",
+                    "D": "mail",
+                    "H": "phone",
+                    "J": "book",
+                    "K": "office_table",
                     "L": "mail_box",
                     "N": "television"
                 },
                 "predicate": {
-                    "a": "agent_at(L)",
-                    "b": "agent_at(H)",
-                    "c": "agent_at(N)",
-                    "d": "agent_at(A)",
-                    "h": "is_in(J,L)",
-                    "j": "agent_at(D)",
-                    "k": "agent_at(C)",
-                    "l": "is_on(K,D)",
-                    "n": "is_grabbed(J)",
-                    "o": "is_grabbed(K)",
-                    "p": "is_on(B,H)"
+                    "a": "agent_at(A)",
+                    "b": "agent_at(N)",
+                    "c": "is_on(H,B)",
+                    "d": "is_in(D,L)",
+                    "h": "agent_at(L)",
+                    "j": "agent_at(B)",
+                    "k": "agent_at(K)",
+                    "l": "is_on(J,A)",
+                    "n": "is_grabbed(H)",
+                    "o": "is_grabbed(D)",
+                    "p": "agent_at(C)"
                 },
-                "unified_ltl": "& & & & & & & & & W ! n k G ! b G i d F c W ! k c G i h F o G i d F j W ! h a G i h F l G ! p ! F & k U k & ! k U ! k F & k U k & ! k U ! k F & k U k & ! k U ! k F k"
+                "unified_ltl": "& & & & & & & & & W ! o p G ! a G i k F b W ! p b G i p F n G i k F j W ! d h G i p F c G ! l ! F & p U p & ! p U ! p F & p U p & ! p U ! p F & p U p & ! p U ! p F p"
             }
         }
     },

@@ -1,11 +1,11 @@
-Put apple in Fridge
-take apple and put them in the fridge
+Put salmon in Fridge
+take salmon and put them in the fridge
 
 
 [WALK] <kitchen> (205)
-[WALK] <apple> (319)
-[FIND] <apple> (319)
-[GRAB] <apple> (319)
+[WALK] <salmon> (319)
+[FIND] <salmon> (319)
+[GRAB] <salmon> (319)
 [FIND] <fridge> (305)
 [OPEN] <fridge> (305)
-[PUTIN] <apple> (319) <fridge> (305)
+[PUTIN] <salmon> (319) <fridge> (305)

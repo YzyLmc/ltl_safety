@@ -106,7 +106,6 @@ def translate_modular(ground_utts, trans_module, objs_per_utt, trans_modular_pro
         placeholder_maps.append(placeholder_map)
         placeholder_maps_inv.append(placeholder_map_inv)
     symbolic_utts, _ = substitute(ground_utts, placeholder_maps, is_utt=True)  # replace names by symbols
-
     symbolic_ltls = []
     for idx, sym_utt in enumerate(symbolic_utts):
         logging.info(f"Symbolic Translation: {idx}/{len(symbolic_utts)}")
