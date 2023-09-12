@@ -547,6 +547,10 @@ def get_action_and_obj(output_line):
     elif len(str_list) == 3:
         if "at" in str_list:
             return "[lookat]", [f"<{str_list[2]}>"]
+        elif "turn" in str_list:
+            return "[turnto]", [f"<{str_list[2]}>"]
+        elif "type" in str_list:
+            return "[type]", [f"<{str_list[-1]}>"]
         elif "switch" in str_list:
             if "on" in str_list:
                 return "[switchon]", [f"<{str_list[2]}>"]
@@ -771,17 +775,20 @@ def state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id,
         script_line = read_script_from_list_string([line])[0]
         act = script_line.action.name.lower()
         params = script_line.parameters
-        # print(len(pose_list), pose_end_idx)
+        # print(len(read_pose(pose_dict)["Head"]), pose_end_idx)
         # breakpoint()
 
         # generate prop level trajectory: e.g., ['a & b & !c', 'a & ! b & ! c']
         if any(x in line for x in NAV_ACTIONS): # nav action
             if len(read_pose(pose_dict)["Head"]) > 2: 
-                pose_end_idx = len(read_pose(pose_dict)["Head"]) - 2
+                pose_end_idx = len(read_pose(pose_dict)["Head"]) - 2 
             try:
                 prop_traj = check_nav_state(pose_list, g, obj_ids, room_ids, nav_mappings)
             except:
-                breakpoint()
+                # breakpoint()
+                pose_list = [read_pose(pose_dict)["Head"][-1]]
+                prop_traj = check_nav_state(pose_list, g, obj_ids, room_ids, nav_mappings)
+                # breakpoint()
             # it returns [{prop: bool,...} ,...]
 
             # append the same manip_states to nav_state for each element

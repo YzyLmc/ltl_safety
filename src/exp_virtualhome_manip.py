@@ -163,6 +163,7 @@ def main():
     idx = 0
     reprompted =False
     while n_try < args.max_step: # max step + replan time <=10
+        n_try += 1
         prompt += f"\n{idx}."
         output = gpt4.generate(prompt)[0]
         print(output)
@@ -226,7 +227,8 @@ def main():
     print(prompt)
 
     # evaluate completeness
-    goal_state = {'salmon': {'is_in': 'fridge'}}
+    # goal_state = {'salmon': {'is_in': 'fridge'}}
+    goal_state = task_dict['goal_state']
     complete = evaluate_completeness(manip_dict, goal_state)
     if args.log:
         if os.path.exists(args.saved_results_fpath):
@@ -237,7 +239,7 @@ def main():
         if args.exp not in saved_results:
             saved_results[args.exp] = {}
         if str(args.env_num) not in saved_results[args.exp]:
-            saved_results[args.exp] = {}
+            saved_results[args.exp][str(args.env_num)] = {}
         if args.example_fname in saved_results[args.exp][str(args.env_num)]:
             saved_results[args.exp][str(args.env_num)][args.example_fname].append(result)
         else:

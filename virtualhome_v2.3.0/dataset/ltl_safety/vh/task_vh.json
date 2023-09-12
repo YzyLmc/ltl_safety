@@ -3,12 +3,17 @@
         "0": {
             "0_1": {
                 "constraints": {
-                    "5": [
+                    "1": [
+                        "go to living room means you have to go to kitchen in the future"
+                    ],
+                    "2": [
                         "you have to enter living room before bathroom",
-                        "you have to enter bedroom before going into living room",
+                        "you have to go to kitchen right after living room"
+                    ],
+                    "3": [
+                        "you have to enter living room before bathroom",
                         "you have to go to kitchen right after living room",
-                        "go to living room means you have to go to kitchen in the future",
-                        "you can only go to kitchen twice"
+                        "go to living room means you have to go to kitchen in the future"
                     ],
                     "4": [
                         "you have to enter living room before bathroom",
@@ -16,19 +21,13 @@
                         "go to living room means you have to go to kitchen in the future",
                         "you can only go to kitchen twice"
                     ],
-                    "3": [
+                    "5": [
                         "you have to enter living room before bathroom",
+                        "you have to enter bedroom before going into living room",
                         "you have to go to kitchen right after living room",
-                        "go to living room means you have to go to kitchen in the future"
-                    ],
-                    "2": [
-                        "you have to enter living room before bathroom",
-                        "you have to go to kitchen right after living room"
-                    ],
-                    "1": [
-                        "go to living room means you have to go to kitchen in the future"
+                        "go to living room means you have to go to kitchen in the future",
+                        "you can only go to kitchen twice"
                     ]
-
                 },
                 "goal_state": {},
                 "init_room": "bedroom",
@@ -70,7 +69,78 @@
                 },
                 "init_room": "bedroom",
                 "instruction": "Put salmon in Fridge"
+            },
+            "0_2": {
+                "constraints": {
+                    "1": [
+                        "you have to enter bathroom before living room"
+                    ],
+                    "2": [
+                        "don't enter bathroom before bedroom",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
+                    "3": [
+                        "you have to enter bathroom before living room",
+                        "don't enter bathroom before bedroom",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
+                    "4": [
+                        "don't enter bathroom before bedroom",
+                        "you can go to bedroom at most twice",
+                        "you cannot go to bathroom if you have visited kitchen",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
+                    "5": [
+                        "you have to enter bathroom before living room",
+                        "don't enter bathroom before bedroom",
+                        "you can go to bedroom at most twice",
+                        "you cannot go to bathroom if you have visited kitchen",
+                        "don't enter living room if you haven't enter kitchen"
+                    ]
+                },
+                "goal_state": {
+                    "computer": {
+                        "is_switchedon": false
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Write email on computer"
             }
         }
+    },
+    "mobile_manip":{"0": {
+        "0_1": {
+            "constraints": {
+                "1": [
+                    "go to bedroom means you have to pick up apple in the future"
+                ],
+                "2": [
+                    "you have to enter living room before bathroom",
+                    "you have to go to kitchen right after living room"
+                ],
+                "3": [
+                    "you have to enter living room before bathroom",
+                    "you have to go to kitchen right after living room",
+                    "go to living room means you have to go to kitchen in the future"
+                ],
+                "4": [
+                    "you have to enter living room before bathroom",
+                    "you have to enter bedroom before going into living room",
+                    "go to living room means you have to go to kitchen in the future",
+                    "you can only go to kitchen twice"
+                ],
+                "5": [
+                    "you have to enter living room before bathroom",
+                    "you have to enter bedroom before going into living room",
+                    "you have to go to kitchen right after living room",
+                    "go to living room means you have to go to kitchen in the future",
+                    "you can only go to kitchen twice"
+                ]
+            },
+            "goal_state": {},
+            "init_room": "bedroom",
+            "instruction": "Walk to toilet"
+        }
     }
+}
 }

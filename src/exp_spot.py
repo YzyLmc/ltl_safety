@@ -198,6 +198,7 @@ def main():
     idx = 0
     reprompted =False
     while n_try < args.max_step: # max step + replan time <=25
+        n_try += 1
         prompt += f"\n{idx}."
         output = gpt4.generate(prompt)[0]
         print(output)
