@@ -69,10 +69,11 @@ def main():
             for placeholder, obj in obj_mapping.items():
                 pred = pred.replace(placeholder, obj)
             grounded_pred_mapping[prop] = pred
-        trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
-    # take_num = len(translation_result[args.example_fname][args.constraint_num]
-        translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = trans
-        save_to_file(translation_result, args.translation_result_fpath)
+        if args.log:
+            trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
+        # take_num = len(translation_result[args.example_fname][args.constraint_num]
+            translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = trans
+            save_to_file(translation_result, args.translation_result_fpath)
     
     # breakpoint()
 
@@ -227,21 +228,21 @@ def main():
     # evaluate completeness
     goal_state = {'salmon': {'is_in': 'fridge'}}
     complete = evaluate_completeness(manip_dict, goal_state)
-
-    if os.path.exists(args.saved_results_fpath):
-        saved_results = load_from_file(args.saved_results_fpath)
-    else:
-        saved_results = defaultdict(dict)
-    result = {"constraint": constraints, "program":program, "safe": success, "completed": complete, "safety_level": args.safety_level}
-    if args.exp not in saved_results:
-        saved_results[args.exp] = {}
-    if str(args.env_num) not in saved_results[args.exp]:
-        saved_results[args.exp] = {}
-    if args.example_fname in saved_results[args.exp][str(args.env_num)]:
-        saved_results[args.exp][str(args.env_num)][args.example_fname].append(result)
-    else:
-        saved_results[args.exp][str(args.env_num)][args.example_fname] = [result]
-    save_to_file(saved_results, args.saved_results_fpath)
+    if args.log:
+        if os.path.exists(args.saved_results_fpath):
+            saved_results = load_from_file(args.saved_results_fpath)
+        else:
+            saved_results = defaultdict(dict)
+        result = {"constraint": constraints, "program":program, "safe": success, "completed": complete, "safety_level": args.safety_level}
+        if args.exp not in saved_results:
+            saved_results[args.exp] = {}
+        if str(args.env_num) not in saved_results[args.exp]:
+            saved_results[args.exp] = {}
+        if args.example_fname in saved_results[args.exp][str(args.env_num)]:
+            saved_results[args.exp][str(args.env_num)][args.example_fname].append(result)
+        else:
+            saved_results[args.exp][str(args.env_num)][args.example_fname] = [result]
+        save_to_file(saved_results, args.saved_results_fpath)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -259,6 +260,7 @@ if __name__ == "__main__":
     parser.add_argument("--act_embed_prefix", type=str, default="/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_vh")
     parser.add_argument("--act_list", type=str, default="virtualhome_v2.3.0/resources/allowed_actions.json")
     parser.add_argument("--obj_embed_prefix", default="/users/zyang157/data/zyang157/virtualhome/obj_embeds/")
+    parser.add_argument("--log", default=True)
     args = parser.parse_args()
 
     main()

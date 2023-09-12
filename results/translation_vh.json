@@ -2,6 +2,177 @@
     "rooms": {
         "0": {
             "0_1": {
+                "1": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "kitchen": "A",
+                                "livingroom": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "G i agent_at(B) F agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "go to B means you have to go to A in the future"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "kitchen"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "agent_at(B)"
+                        },
+                        "unified_ltl": "G i a F b"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "kitchen": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "G i agent_at(A) X agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you have to go to B right after A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(kitchen)",
+                            "c": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bathroom",
+                            "C": "kitchen"
+                        },
+                        "predicate": {
+                            "a": "agent_at(B)",
+                            "b": "agent_at(C)",
+                            "c": "agent_at(A)"
+                        },
+                        "unified_ltl": "& W ! a c G i c X b"
+                    }
+                },
+                "3": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "kitchen": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "kitchen": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "G i agent_at(A) X agent_at(B)",
+                            "G i agent_at(A) F agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you have to go to B right after A",
+                            "go to A means you have to go to B in the future"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(livingroom)",
+                            "c": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "kitchen",
+                            "C": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(C)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & W ! a b G i b X c G i b F c"
+                    }
+                },
+                "4": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "bedroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "kitchen": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "kitchen": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "G i agent_at(A) F agent_at(B)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you have to enter B before going into A",
+                            "go to A means you have to go to B in the future",
+                            "you can only go to A twice"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "agent_at(bathroom)",
+                            "c": "agent_at(bedroom)",
+                            "d": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bathroom",
+                            "C": "bedroom",
+                            "D": "kitchen"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "agent_at(B)",
+                            "c": "agent_at(C)",
+                            "d": "agent_at(D)"
+                        },
+                        "unified_ltl": "& & & W ! b a W ! a c G i a F d ! F & d U d & ! d U ! d F & d U d & ! d U ! d F d"
+                    }
+                },
                 "5": {
                     "sub_trans": {
                         "placeholder": [
