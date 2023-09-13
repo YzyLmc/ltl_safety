@@ -72,15 +72,15 @@
             "11_9": {
                 "constraints": {
                     "5": [
-                        "don't switch on the radio if you haven't put salmon in the firdge",
-                        "you can open fridge at most twice",
-                        "don't enter bedroom if you haven't been to living room",
-                        "if you open fridge you have to close the fridge in the future",
-                        "always avoid couch"
+                        "if you switch on the computer you will have to put salmon in the fridge in the future",
+                        "put pie in the fridge before turning on the computer",
+                        "you can visit bathroom at most twice",
+                        "you have to go to bathroom later if you close the frigde",
+                        "you have to visit toilet before visiting kitchen"
                     ]
                 },
                 "goal_state": {
-                    "television": {
+                    "computer": {
                         "is_on": true
                     }
                 },
@@ -90,14 +90,14 @@
             "3_3": {
                 "constraints": {
                     "5": [
-                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "don't switch on the radio if you haven't put salmon in the fridge",
                         "you can open fridge at most twice",
                         "don't enter bedroom if you haven't been to living room",
                         "if you open fridge you have to close the fridge in the future",
                         "always avoid couch"
                     ],
                     "4": [
-                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "don't switch on the radio if you haven't put salmon in the fridge",
                         "don't enter bedroom if you haven't been to living room",
                         "if you open fridge you have to close the fridge in the future",
                         "always avoid couch"
@@ -108,7 +108,7 @@
                         "if you open fridge you have to close the fridge in the future"
                     ],
                     "2": [
-                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "don't switch on the radio if you haven't put salmon in the fridge",
                         "if you open fridge you have to close the fridge in the future"
                     ],
                     "1": [

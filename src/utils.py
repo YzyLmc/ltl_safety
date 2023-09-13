@@ -551,6 +551,8 @@ def get_action_and_obj(output_line):
             return "[turnto]", [f"<{str_list[2]}>"]
         elif "type" in str_list:
             return "[type]", [f"<{str_list[-1]}>"]
+        elif "back" in str_list:
+            return "[putback]", [f"<{str_list[-1]}>"]
         elif "switch" in str_list:
             if "on" in str_list:
                 return "[switchon]", [f"<{str_list[2]}>"]
