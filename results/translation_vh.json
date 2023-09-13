@@ -501,6 +501,244 @@
                         "unified_ltl": "& & & & W ! j h W ! d c G i h G ! d W ! k a W ! b ! k"
                     }
                 }
+            },
+            "3_3": {
+                "1": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "sofa": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "G ! agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "always avoid A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(sofa)"
+                        },
+                        "object": {
+                            "A": "sofa"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)"
+                        },
+                        "unified_ltl": "G ! a"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "fridge": "C",
+                                "radio": "A",
+                                "salmon": "B"
+                            },
+                            {
+                                "fridge": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! is_switchedon(A) is_in(B,C)",
+                            "G i is_open(A) F ! is_open(A)"
+                        ],
+                        "sym_utt": [
+                            "don't switch on the A if you haven't put B in the C",
+                            "if you open A you have to close the A in the future"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_open(fridge)",
+                            "b": "is_switchedon(radio)",
+                            "c": "is_in(salmon,fridge)"
+                        },
+                        "object": {
+                            "A": "fridge",
+                            "B": "salmon",
+                            "C": "radio"
+                        },
+                        "predicate": {
+                            "a": "is_open(A)",
+                            "b": "is_switchedon(C)",
+                            "c": "is_in(B,A)"
+                        },
+                        "unified_ltl": "& W ! b c G i a F ! a"
+                    }
+                },
+                "3": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "bedroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "fridge": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "! F & is_open(A) U is_open(A) & ! is_open(A) U ! is_open(A) F & is_open(A) U is_open(A) & ! is_open(A) U ! is_open(A) F is_open(A)",
+                            "W ! agent_at(B) agent_at(A)",
+                            "G i is_open(A) F ! is_open(A)"
+                        ],
+                        "sym_utt": [
+                            "you can open A at most twice",
+                            "don't enter B if you haven't been to A",
+                            "if you open A you have to close the A in the future"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_open(fridge)",
+                            "b": "agent_at(livingroom)",
+                            "c": "agent_at(bedroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bedroom",
+                            "C": "fridge"
+                        },
+                        "predicate": {
+                            "a": "is_open(C)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & ! F & a U a & ! a U ! a F & a U a & ! a U ! a F a W ! c b G i a F ! a"
+                    }
+                },
+                "4": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "fridge": "B",
+                                "radio": "A",
+                                "salmon": "C"
+                            },
+                            {
+                                "bedroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "sofa": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! is_switchedon(A) is_in(C,B)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "G i is_open(A) F ! is_open(A)",
+                            "G ! agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "don't switch on the A if you haven't put C in the B",
+                            "don't enter A if you haven't been to B",
+                            "if you open A you have to close the A in the future",
+                            "always avoid A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "is_switchedon(radio)",
+                            "c": "agent_at(bedroom)",
+                            "d": "is_open(fridge)",
+                            "h": "agent_at(sofa)",
+                            "j": "is_in(salmon,fridge)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "radio",
+                            "C": "bedroom",
+                            "D": "fridge",
+                            "H": "sofa",
+                            "J": "salmon"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "is_switchedon(B)",
+                            "c": "agent_at(C)",
+                            "d": "is_open(D)",
+                            "h": "agent_at(H)",
+                            "j": "is_in(J,D)"
+                        },
+                        "unified_ltl": "& & & W ! b j W ! c a G i d F ! d G ! h"
+                    }
+                },
+                "5": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "fridge": "B",
+                                "radio": "C",
+                                "salmon": "A"
+                            },
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "bedroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "sofa": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! is_switchedon(C) is_in(A,B)",
+                            "! F & is_open(A) U is_open(A) & ! is_open(A) U ! is_open(A) F & is_open(A) U is_open(A) & ! is_open(A) U ! is_open(A) F is_open(A)",
+                            "W ! agent_at(B) agent_at(A)",
+                            "G i is_open(A) F ! is_open(A)",
+                            "G ! agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "don't switch on the C if you haven't put A in the B",
+                            "you can open A at most twice",
+                            "don't enter B if you haven't been to A",
+                            "if you open A you have to close the A in the future",
+                            "always avoid A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "is_switchedon(radio)",
+                            "c": "is_in(salmon,fridge)",
+                            "d": "agent_at(bedroom)",
+                            "h": "agent_at(sofa)",
+                            "j": "is_open(fridge)"
+                        },
+                        "object": {
+                            "A": "salmon",
+                            "B": "fridge",
+                            "C": "radio",
+                            "D": "bedroom",
+                            "H": "sofa",
+                            "J": "livingroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(J)",
+                            "b": "is_switchedon(C)",
+                            "c": "is_in(A,B)",
+                            "d": "agent_at(D)",
+                            "h": "agent_at(H)",
+                            "j": "is_open(B)"
+                        },
+                        "unified_ltl": "& & & & W ! b c ! F & j U j & ! j U ! j F & j U j & ! j U ! j F j W ! d a G i j F ! j G ! h"
+                    }
+                }
             }
         }
     },
@@ -682,8 +920,8 @@
                     "sub_trans": {
                         "placeholder": [
                             {
-                                "bathroom": "A",
-                                "livingroom": "B"
+                                "bathroom": "B",
+                                "livingroom": "A"
                             },
                             {
                                 "bedroom": "A",
@@ -698,49 +936,44 @@
                                 "livingroom": "B"
                             },
                             {
-                                "kitchen": "A"
-                            },
-                            {
-                                "bedroom": "A"
+                                "bathroom": "A"
                             }
                         ],
                         "sym_ltl": [
-                            "W ! agent_at(A) agent_at(B)",
+                            "W ! agent_at(B) agent_at(A)",
                             "W ! agent_at(B) agent_at(A)",
                             "G i agent_at(B) X agent_at(A)",
                             "G i agent_at(B) F agent_at(A)",
-                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
-                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
                         ],
                         "sym_utt": [
-                            "you have to enter B before A",
+                            "you have to enter A before B",
                             "you have to enter A before going into B",
                             "you have to go to A right after B",
                             "go to B means you have to go to A in the future",
-                            "you can only go to A twice",
-                            "don't go to A more than two times"
+                            "you can only go to A once"
                         ]
                     },
                     "unified_trans": {
                         "grounded_pred": {
-                            "a": "agent_at(bathroom)",
-                            "b": "agent_at(livingroom)",
-                            "c": "agent_at(kitchen)",
-                            "d": "agent_at(bedroom)"
+                            "a": "agent_at(livingroom)",
+                            "b": "agent_at(bathroom)",
+                            "c": "agent_at(bedroom)",
+                            "d": "agent_at(kitchen)"
                         },
                         "object": {
-                            "A": "bedroom",
-                            "B": "bathroom",
-                            "C": "kitchen",
-                            "D": "livingroom"
+                            "A": "kitchen",
+                            "B": "bedroom",
+                            "C": "livingroom",
+                            "D": "bathroom"
                         },
                         "predicate": {
-                            "a": "agent_at(B)",
+                            "a": "agent_at(C)",
                             "b": "agent_at(D)",
-                            "c": "agent_at(C)",
+                            "c": "agent_at(B)",
                             "d": "agent_at(A)"
                         },
-                        "unified_ltl": "& & & & & W ! a b W ! b d G i b X c G i b F c ! F & c U c & ! c U ! c F & c U c & ! c U ! c F c ! F & d U d & ! d U ! d F & d U d & ! d U ! d F d"
+                        "unified_ltl": "& & & & W ! b a W ! a c G i a X d G i a F d ! F & b U b & ! b U ! b F b"
                     }
                 }
             },

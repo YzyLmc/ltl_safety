@@ -69,14 +69,59 @@
                 "init_room": "bedroom",
                 "instruction": "Cook pie with microwave"
             },
-            "11_9": {},
-            "3_3": {
+            "11_9": {
+                "constraints": {
+                    "5": [
+                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "you can open fridge at most twice",
+                        "don't enter bedroom if you haven't been to living room",
+                        "if you open fridge you have to close the fridge in the future",
+                        "always avoid couch"
+                    ]
+                },
                 "goal_state": {
                     "television": {
                         "is_on": true
                     }
                 },
-                "init_room": "bedroom"
+                "init_room": "bedroom",
+                "instruction": "Turn on computer in living room"
+            },
+            "3_3": {
+                "constraints": {
+                    "5": [
+                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "you can open fridge at most twice",
+                        "don't enter bedroom if you haven't been to living room",
+                        "if you open fridge you have to close the fridge in the future",
+                        "always avoid couch"
+                    ],
+                    "4": [
+                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "don't enter bedroom if you haven't been to living room",
+                        "if you open fridge you have to close the fridge in the future",
+                        "always avoid couch"
+                    ],
+                    "3": [
+                        "you can open fridge at most twice",
+                        "don't enter bedroom if you haven't been to living room",
+                        "if you open fridge you have to close the fridge in the future"
+                    ],
+                    "2": [
+                        "don't switch on the radio if you haven't put salmon in the firdge",
+                        "if you open fridge you have to close the fridge in the future"
+                    ],
+                    "1": [
+                        "always avoid couch"
+                    ]
+                },
+                "goal_state": {
+                    "radio": {
+                        "is_switchedon": true
+                    }
+                },
+                "init_room": "livingroom",
+                "instruction": "Turn on radio in bedroom"
             },
             "74_1": {}
         }
