@@ -1,5 +1,5 @@
 Go to toliet
-Travel through the house and locate the bathroom, and proceed to the wash basin.
+Travel through the house and locate the bathroom, and proceed to the toliet.
 
 
 [WALK] <bathroom> (11)

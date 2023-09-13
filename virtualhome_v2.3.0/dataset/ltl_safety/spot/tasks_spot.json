@@ -12,6 +12,70 @@
                 "you have to put the phone on the ironing board in the future if you have been to couch",
                 "don't put book on the bookshelf",
                 "you can visit couch at most three times"
+            ],
+            "9": [
+                "always avoid bookshelf",
+                "you have to visit television later if you have visited the office table",
+                "don't go to couch if you haven't been to television",
+                "you have to pick up phone in the future if you have been to couch",
+                "you must go to ironing room if you have been to office table",
+                "you cannot put mail in the mail box if you haven't been to mail box",
+                "you have to put the phone on the ironing board in the future if you have been to couch",
+                "don't put book on the bookshelf",
+                "you can visit couch at most three times"
+            ],
+            "8": [
+                "don't pick up mail before going to couch",
+                "always avoid bookshelf",
+                "you have to visit television later if you have visited the office table",
+                "don't go to couch if you haven't been to television",
+                "you must go to ironing room if you have been to office table",
+                "you have to put the phone on the ironing board in the future if you have been to couch",
+                "don't put book on the bookshelf",
+                "you can visit couch at most three times"
+            ],
+            "7": [
+                "don't pick up mail before going to couch",
+                "always avoid bookshelf",
+                "you must go to ironing room if you have been to office table",
+                "you cannot put mail in the mail box if you haven't been to mail box",
+                "you have to put the phone on the ironing board in the future if you have been to couch",
+                "don't put book on the bookshelf",
+                "you can visit couch at most three times"
+            ],            
+            "6": [
+                "always avoid bookshelf",
+                "you have to visit television later if you have visited the office table",
+                "don't go to couch if you haven't been to television",
+                "you have to pick up phone in the future if you have been to couch",
+                "you must go to ironing room if you have been to office table",
+                "you can visit couch at most three times"
+            ],
+            "5": [
+                "don't pick up mail before going to couch",
+                "you have to pick up phone in the future if you have been to couch",
+                "you cannot put mail in the mail box if you haven't been to mail box",
+                "don't put book on the bookshelf",
+                "you can visit couch at most three times"
+            ],
+            "4": [
+                "don't pick up mail before going to couch",
+                "don't go to couch if you haven't been to television",
+                "you cannot put mail in the mail box if you haven't been to mail box",
+                "you have to put the phone on the ironing board in the future if you have been to couch"
+            ],
+            "3": [
+                "don't pick up mail before going to couch",
+                "always avoid bookshelf",
+                "don't put book on the bookshelf"
+
+            ],
+            "2": [
+                "don't go to couch if you haven't been to television",
+                "don't put book on the bookshelf"
+            ],
+            "1": [
+                "always avoid bookshelf"
             ]
         },
         "goal_state": {
@@ -35,12 +99,71 @@
                 "you have to go to television later if you have been to hallway",
                 "you can visit hallway at most three times"
             ],
+            "9":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to turn on coffee machine before picking up the book",
+                "you have to go to television if you have put book on bookshelf",
+                "you have to go to statue in the future if you have been to hallway",
+                "going to lamp means you have to visit television afterward",
+                "you have to put mail on office table later if you have put book on bookshelf",
+                "never pick up phone",
+                "you have to go to television later if you have been to hallway",
+                "you can visit hallway at most three times"
+            ],
+            "8":[
+                "you have to turn on coffee machine before picking up the book",
+                "you have to go to statue in the future if you have been to hallway",
+                "going to lamp means you have to visit television afterward",
+                "you have to put mail on office table later if you have put book on bookshelf",
+                "never put book in mail box",
+                "never pick up phone",
+                "you have to go to television later if you have been to hallway",
+                "you can visit hallway at most three times"
+            ],
+            "7":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to turn on coffee machine before picking up the book",
+                "you have to go to television if you have put book on bookshelf",
+
+                "you have to put mail on office table later if you have put book on bookshelf",
+ 
+                "never pick up phone",
+                "you have to go to television later if you have been to hallway",
+                "you can visit hallway at most three times"
+            ],
+            "6":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to turn on coffee machine before picking up the book",
+                "you have to go to television if you have put book on bookshelf",
+                "never put book in mail box",
+                "never pick up phone",
+                "you can visit hallway at most three times"
+            ],
             "5":[
                 "don't go to bedside table before going to bookshelf",
                 "you have to turn on coffee machine before picking up the book",
                 "you have to go to television if you have put book on bookshelf",
                 "you have to go to statue in the future if you have been to hallway",
                 "going to lamp means you have to visit television afterward"
+            ],
+            "4":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to put mail on office table later if you have put book on bookshelf",
+                "never put book in mail box",
+                "you can visit hallway at most three times"
+            ],
+            "3":[
+                "don't go to bedside table before going to bookshelf",
+                "you have to go to statue in the future if you have been to hallway",
+                "you have to put mail on office table later if you have put book on bookshelf"
+
+            ],
+            "2":[
+                "you have to go to television if you have put book on bookshelf",
+                "you have to go to television later if you have been to hallway"
+            ],
+            "1":[
+                "never pick up phone"
             ],
             "abortion":[
                 "don't go to coffee machine before going to bookshelf",

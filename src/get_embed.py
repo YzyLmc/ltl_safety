@@ -163,40 +163,40 @@ if __name__ == "__main__":
     # allowed_actions.extend(zero_arg_acts)
 
     # objs = ['pantry', 'mail_box', 'lamp', 'fridge', 'book_shelf', 'entrance', 'hallway', 'couch', 'coffee_machine', 'office_table', 'mail_room', 'bedside_table', 'statue', 'door', 'television', 'ironing_room', 'origin', 'sink']
-    obj_dict = {
-        "pantry": {"location": 0, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        "mail_box": {"location": 1, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        "lamp": {"location": 2, "grabbable":False, "receptacle":False, "touchable": True, "openable":False},
-        'fridge': {"location": 3, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
-        'book_shelf': {"location": 4, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        'entrance': {"location": 5, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
-        'hallway': {"location": 6, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
-        'couch': {"location": 7, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        'coffee_machine': {"location": 8, "grabbable":False, "receptacle":False, "touchable":True, "openable":False, "onable": True},
-        'office_table': {"location": 9, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        'mail_room': {"location": 10, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        'bedside_table': {"location": 11, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        'statue': {"location": 12, "grabbable":False, "receptacle":False, "touchable": False, "openable":False},
-        'door': {"location": 13, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
-        'television': {"location": 14, "grabbable":False, "receptacle":False, "touchable":False, "openable":False, "onable":True},
-        'ironing_room': {"location": 15, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
-        'origin': {"location": 16, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
-        'sink': {"location": 17, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    # obj_dict = {
+    #     "pantry": {"location": 0, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     "mail_box": {"location": 1, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     "lamp": {"location": 2, "grabbable":False, "receptacle":False, "touchable": True, "openable":False},
+    #     'fridge': {"location": 3, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
+    #     'book_shelf': {"location": 4, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     'entrance': {"location": 5, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
+    #     'hallway': {"location": 6, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
+    #     'couch': {"location": 7, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     'coffee_machine': {"location": 8, "grabbable":False, "receptacle":False, "touchable":True, "openable":False, "onable": True},
+    #     'office_table': {"location": 9, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     'mail_room': {"location": 10, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     'bedside_table': {"location": 11, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     'statue': {"location": 12, "grabbable":False, "receptacle":False, "touchable": False, "openable":False},
+    #     'door': {"location": 13, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
+    #     'television': {"location": 14, "grabbable":False, "receptacle":False, "touchable":False, "openable":False, "onable":True},
+    #     'ironing_room': {"location": 15, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
+    #     'origin': {"location": 16, "grabbable":False, "receptacle":False, "touchable":False, "openable":False},
+    #     'sink': {"location": 17, "grabbable":False, "receptacle":True, "touchable":False, "openable":False},
 
-        'book': {"location": 11, "grabbable":True, "receptacle":False, "touchable":False, "openable":False},
-        'phone': {"location": 9, "grabbable":True, "receptacle":False, "touchable":False, "openable":False},
-        'mail': {"location": 10, "grabbable":True, "receptacle":False, "touchable":False, "openable":False},
-    }
+    #     'book': {"location": 11, "grabbable":True, "receptacle":False, "touchable":False, "openable":False},
+    #     'phone': {"location": 9, "grabbable":True, "receptacle":False, "touchable":False, "openable":False},
+    #     'mail': {"location": 10, "grabbable":True, "receptacle":False, "touchable":False, "openable":False},
+    # }
 
-    allowed_actions = build_allowed_actions(obj_dict)
-    obj_state_fpath = "virtualhome_v2.3.0/resources/obj_states_spot.json"
-    save_to_file(obj_dict, obj_state_fpath)
-    breakpoint()
-    action_fpath = "virtualhome_v2.3.0/resources/allowed_actions_spot.json"
-    save_to_file(allowed_actions, action_fpath)
-    # generate and save embeddings
-    save_fpath = "/users/zyang157/data/zyang157/virtualhome/"
-    _, save_fpath = generate_embeds(args.model, save_fpath, action_fpath, args.embed_engine)
+    # allowed_actions = build_allowed_actions(obj_dict)
+    # obj_state_fpath = "virtualhome_v2.3.0/resources/obj_states_spot.json"
+    # save_to_file(obj_dict, obj_state_fpath)
+    # breakpoint()
+    # action_fpath = "virtualhome_v2.3.0/resources/allowed_actions_spot.json"
+    # save_to_file(allowed_actions, action_fpath)
+    # # generate and save embeddings
+    # save_fpath = "/users/zyang157/data/zyang157/virtualhome/"
+    # _, save_fpath = generate_embeds(args.model, save_fpath, action_fpath, args.embed_engine)
     
 ## action embedding for VH
     # # env_dpath = os.path.join("data", args.env)
@@ -210,13 +210,21 @@ if __name__ == "__main__":
     #     # print(f"{idx}: embeddings generated by model: {args.model}-{args.embed_engine}\nstored at: {save_fpath}\n")
     # _, save_fpath = generate_embeds(args.model, save_fpath, action_fpath, args.embed_engine)
 
-# ## obj embedding for VH
-#     obj_list_0 = ['bathroom', 'bedroom', 'livingroom', 'kitchen', 'rug', 'curtains', 'ceilinglamp', 'walllamp', 'bathtub', 'towelrack', 'wallshelf', 'stall', 'toilet', 'bathroomcabinet', 'bathroomcounter', 'faucet', 'door', 'doorjamb', 'towel', 'perfume', 'deodorant', 'hairproduct', 'facecream', 'plate', 'toothpaste', 'painkillers', 'waterglass', 'toothbrush', 'barsoap', 'candle', 'window', 'lightswitch', 'washingmachine', 'tablelamp', 'nightstand', 'bookshelf', 'chair', 'desk', 'bed', 'coffeetable', 'closet', 'hanger', 'closetdrawer', 'clothesshirt', 'clothespants', 'clothespile', 'mouse', 'mousemat', 'keyboard', 'computer', 'cpuscreen', 'radio', 'wallpictureframe', 'orchid', 'pillow', 'cellphone', 'photoframe', 'book', 'box', 'mug', 'cupcake', 'wineglass', 'slippers', 'folder', 'garbagecan', 'tvstand', 'kitchentable', 'bench', 'kitchencabinet', 'kitchencounter', 'kitchencounterdrawer', 'sink', 'powersocket', 'wallphone', 'tv', 'clock', 'washingsponge', 'dishwashingliquid', 'fryingpan', 'cutleryknife', 'cutleryfork', 'dishbowl', 'condimentbottle', 'condimentshaker', 'paper', 'stovefan', 'fridge', 'coffeemaker', 'coffeepot', 'toaster', 'breadslice', 'stove', 'oventray', 'microwave', 'bananas', 'whippedcream', 'pie', 'bellpepper', 'salmon', 'chips', 'candybar', 'chocolatesyrup', 'crackers', 'creamybuns', 'cereal', 'sofa', 'cabinet', 'apple', 'lime', 'peach', 'plum', 'remotecontrol']
-#     obj_list_fpath = "virtualhome_v2.3.0/resources/obj_list_0.json"
-#     save_to_file(obj_list_0, obj_list_fpath)
-#     # generate and save embeddings
-#     save_fpath = "/users/zyang157/data/zyang157/virtualhome/"
-#     _, save_fpath = generate_embeds(args.model, save_fpath, obj_list_fpath, args.embed_engine,custom_filename=f"{save_fpath}obj_embeds/0_vh.pkl")
+## obj embedding for VH env 0
+    # obj_list_0 = ['bathroom', 'bedroom', 'livingroom', 'kitchen', 'rug', 'curtains', 'ceilinglamp', 'walllamp', 'bathtub', 'towelrack', 'wallshelf', 'stall', 'toilet', 'bathroomcabinet', 'bathroomcounter', 'faucet', 'door', 'doorjamb', 'towel', 'perfume', 'deodorant', 'hairproduct', 'facecream', 'plate', 'toothpaste', 'painkillers', 'waterglass', 'toothbrush', 'barsoap', 'candle', 'window', 'lightswitch', 'washingmachine', 'tablelamp', 'nightstand', 'bookshelf', 'chair', 'desk', 'bed', 'coffeetable', 'closet', 'hanger', 'closetdrawer', 'clothesshirt', 'clothespants', 'clothespile', 'mouse', 'mousemat', 'keyboard', 'computer', 'cpuscreen', 'radio', 'wallpictureframe', 'orchid', 'pillow', 'cellphone', 'photoframe', 'book', 'box', 'mug', 'cupcake', 'wineglass', 'slippers', 'folder', 'garbagecan', 'tvstand', 'kitchentable', 'bench', 'kitchencabinet', 'kitchencounter', 'kitchencounterdrawer', 'sink', 'powersocket', 'wallphone', 'tv', 'clock', 'washingsponge', 'dishwashingliquid', 'fryingpan', 'cutleryknife', 'cutleryfork', 'dishbowl', 'condimentbottle', 'condimentshaker', 'paper', 'stovefan', 'fridge', 'coffeemaker', 'coffeepot', 'toaster', 'breadslice', 'stove', 'oventray', 'microwave', 'bananas', 'whippedcream', 'pie', 'bellpepper', 'salmon', 'chips', 'candybar', 'chocolatesyrup', 'crackers', 'creamybuns', 'cereal', 'sofa', 'cabinet', 'apple', 'lime', 'peach', 'plum', 'remotecontrol']
+    # obj_list_fpath = "virtualhome_v2.3.0/resources/obj_list_0.json"
+    # save_to_file(obj_list_0, obj_list_fpath)
+    # # generate and save embeddings
+    # save_fpath = "/users/zyang157/data/zyang157/virtualhome/"
+    # _, save_fpath = generate_embeds(args.model, save_fpath, obj_list_fpath, args.embed_engine,custom_filename=f"{save_fpath}obj_embeds/0_vh.pkl")
+## obj embedding for VH env 1
+    # obj_list_0 = ['bathroom', 'bedroom', 'livingroom', 'kitchen', 'rug', 'curtains', 'ceilinglamp', 'walllamp', 'bathtub', 'towelrack', 'wallshelf', 'stall', 'toilet', 'bathroomcabinet', 'bathroomcounter', 'faucet', 'door', 'doorjamb', 'towel', 'perfume', 'deodorant', 'hairproduct', 'facecream', 'plate', 'toothpaste', 'painkillers', 'waterglass', 'toothbrush', 'barsoap', 'candle', 'window', 'lightswitch', 'washingmachine', 'tablelamp', 'nightstand', 'bookshelf', 'chair', 'desk', 'bed', 'coffeetable', 'closet', 'hanger', 'closetdrawer', 'clothesshirt', 'clothespants', 'clothespile', 'mouse', 'mousemat', 'keyboard', 'computer', 'cpuscreen', 'radio', 'wallpictureframe', 'orchid', 'pillow', 'cellphone', 'photoframe', 'book', 'box', 'mug', 'cupcake', 'wineglass', 'slippers', 'folder', 'garbagecan', 'tvstand', 'kitchentable', 'bench', 'kitchencabinet', 'kitchencounter', 'kitchencounterdrawer', 'sink', 'powersocket', 'wallphone', 'tv', 'clock', 'washingsponge', 'dishwashingliquid', 'fryingpan', 'cutleryknife', 'cutleryfork', 'dishbowl', 'condimentbottle', 'condimentshaker', 'paper', 'stovefan', 'fridge', 'coffeemaker', 'coffeepot', 'toaster', 'breadslice', 'stove', 'oventray', 'microwave', 'bananas', 'whippedcream', 'pie', 'bellpepper', 'salmon', 'chips', 'candybar', 'chocolatesyrup', 'crackers', 'creamybuns', 'cereal', 'sofa', 'cabinet', 'apple', 'lime', 'peach', 'plum', 'remotecontrol']
+    obj_list_1 = ['bathroom', 'bedroom', 'kitchen', 'livingroom', 'toilet', 'stall', 'bathroomcabinet', 'bathroomcounter', 'sink', 'faucet', 'curtains', 'toothbrush', 'waterglass', 'barsoap', 'deodorant', 'facecream', 'hairproduct', 'toothpaste', 'toiletpaper', 'rug', 'wallpictureframe', 'walllamp', 'ceilinglamp', 'doorjamb', 'door', 'lightswitch', 'washingmachine', 'window', 'nightstand', 'desk', 'chair', 'bookshelf', 'bed', 'sofa', 'coffeetable', 'cabinet', 'computer', 'cpuscreen', 'keyboard', 'mouse', 'mousemat', 'radio', 'mug', 'book', 'photoframe', 'box', 'paper', 'papertray', 'cellphone', 'folder', 'apple', 'bananas', 'lime', 'peach', 'plum', 'dishbowl', 'pillow', 'tablelamp', 'wallphone', 'powersocket', 'cutleryknife', 'knifeblock', 'fryingpan', 'cookingpot', 'plate', 'dishwashingliquid', 'condimentshaker', 'clothespile', 'garbagecan', 'candle', 'bench', 'kitchentable', 'tvstand', 'kitchencabinet', 'kitchencounter', 'kitchencounterdrawer', 'stovefan', 'fridge', 'stove', 'oventray', 'dishwasher', 'coffeemaker', 'coffeepot', 'toaster', 'breadslice', 'microwave', 'chicken', 'cutlets', 'creamybuns', 'chips', 'chocolatesyrup', 'poundcake', 'closet', 'tv', 'orchid', 'hanger', 'clothesshirt', 'clothespants', 'remotecontrol']
+    obj_list_fpath = "virtualhome_v2.3.0/resources/obj_list_1.json"
+    save_to_file(obj_list_1, obj_list_fpath)
+    # generate and save embeddings
+    save_fpath = "/users/zyang157/data/zyang157/virtualhome/"
+    _, save_fpath = generate_embeds(args.model, save_fpath, obj_list_fpath, args.embed_engine,custom_filename=f"{save_fpath}obj_embeds/vh_1.pkl")
 
 ## obj embedding for robot demo
     # # objs_spot_0 = ['pantry', 'mail_box', 'lamp', 'fridge', 'book_shelf', 'entrance', 'hallway', 'couch', 'coffee_machine', 'office_table', 'mail_room', 'bedside_table', 'statue', 'door', 'television', 'ironing_room', 'origin', 'sink']

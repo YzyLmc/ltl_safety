@@ -1,4 +1,86 @@
 {
+    "mobile_manip": {
+        "0": {
+            "0_1": {
+                "constraints": {
+                    "1": [
+                        "go to bathroom means you have to go to put apple in the fridge later"
+                    ],
+                    "2": [
+                        "if you open the fridge you need to close the fridge later",
+                        "you can only go to bathroom twice"
+                    ],
+                    "3": [
+                        "you have to enter living room before bathroom",
+                        "you have to pick up apple before placing the apple into fridge",
+                        "if you open the fridge you need to close the fridge later"
+                    ],
+                    "4": [
+                        "you have to enter living room before bathroom",
+                        "you have to pick up apple before placing the apple into fridge",
+                        "if you open the fridge you need to close the fridge later",
+                        "go to bathroom means you have to go to put apple in the fridge later"
+                    ],
+                    "5": [
+                        "you have to enter living room before bathroom",
+                        "you have to pick up apple before placing the apple into fridge",
+                        "if you open the fridge you need to close the fridge later",
+                        "go to bathroom means you have to go to put apple in the fridge later",
+                        "you can only go to bathroom twice"
+                    ]
+                },
+                "goal_state": {},
+                "init_room": "bedroom",
+                "instruction": "Walk to toilet"
+            },
+            "0_9": {
+                "constraints": {
+                    "1": [
+                        "close the fridge before you open the microwave up"
+                    ],
+                    "2": [
+                        "entering bathroom means you cannot visit living room even once",
+                        "don't open fridge before picking up salmon"
+                    ],
+                    "3": [
+                        "you have to enter bathroom before kitchen",
+                        "entering bathroom means you cannot visit living room even once",
+                        "don't open fridge before picking up salmon"
+                    ],
+                    "4": [
+                        "you have to enter bathroom before kitchen",
+                        "you must go to couch before entering living room",
+                        "don't open fridge before picking up salmon",
+                        "close the fridge before you open the microwave up"
+                    ],
+                    "5": [
+                        "you have to enter bathroom before kitchen",
+                        "you must go to couch before entering living room",
+                        "entering bathroom means you cannot visit living room even once",
+                        "don't open fridge before picking up salmon",
+                        "close the fridge before you open the microwave up"
+                    ]
+                },
+                "goal_state": {
+                    "pie": {
+                        "is_in": "microwave"
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Cook pie with microwave"
+            },
+            "11_9": {},
+            "3_3": {
+                "goal_state": {
+                    "television": {
+                        "is_on": true
+                    }
+                },
+                "init_room": "bedroom"
+            },
+            "74_1": {}
+        }
+    },
     "rooms": {
         "0": {
             "0_1": {
@@ -26,7 +108,7 @@
                         "you have to enter bedroom before going into living room",
                         "you have to go to kitchen right after living room",
                         "go to living room means you have to go to kitchen in the future",
-                        "you can only go to kitchen twice"
+                        "you can only go to bathroom once"
                     ]
                 },
                 "goal_state": {},
@@ -105,42 +187,91 @@
                 },
                 "init_room": "bedroom",
                 "instruction": "Write email on computer"
+            },
+            "0_5": {
+                "constraints": {
+                    "1": [
+                        "you have to enter bathroom before living room"
+                    ],
+                    "2": [
+                        "you can only go to bathroom once",
+                        "go to bathroom means you have to visit kitchen"
+                    ],
+                    "3": [
+                        "you can only go to bathroom once",
+                        "you have to visit bedroom at most two times",
+                        "you cannot go to bathroom if kitchen is visited"
+                    ],
+                    "4": [
+                        "you have to enter bathroom before living room",
+                        "you can only go to bathroom once",
+                        "go to bathroom means you have to visit kitchen",
+                        "you have to visit bedroom at most two times"
+                    ],
+                    "5": [
+                        "you have to enter bathroom before living room",
+                        "you can only go to bathroom once",
+                        "go to bathroom means you have to visit kitchen",
+                        "you have to visit bedroom at most two times",
+                        "you cannot go to bathroom if kitchen is visited"
+                    ]
+                },
+                "goal_state": {},
+                "init_room": "kitchen",
+                "instruction": "Browse on computer by my desk"
+            },
+            "0_7": {
+                "constraints": {
+                    "1": [
+                        "don't go to bedroom if you haven't been to living room"
+                    ],
+                    "2": [
+                        "you have to visit kitchen at most two times",
+                        "you have to visit bedroom if you ever been to bathroom"
+                    ],
+                    "3": [
+                        "you cannot go to bedroom before kitchen",
+                        "don't go to bedroom if you haven't been to living room",
+                        "you must visit kitchen right after living room"
+                    ],
+                    "4": [
+                        "you have to visit kitchen at most two times",
+                        "you cannot go to bedroom before kitchen",
+                        "don't go to bedroom if you haven't been to living room",
+                        "you must visit kitchen right after living room"
+                    ],
+                    "5": [
+                        "you have to visit kitchen at most two times",
+                        "you cannot go to bedroom before kitchen",
+                        "you have to visit bedroom if you ever been to bathroom",
+                        "don't go to bedroom if you haven't been to living room",
+                        "you must visit kitchen right after living room"
+                    ]
+                },
+                "goal_state": {},
+                "init_room": "kitchen",
+                "instruction": "Go to sleep in bedroom"
+            }
+        },
+        "1": {
+            "0_2": {
+                "constraints": {
+                    "5": [
+                        "you have to enter bathroom before living room",
+                        "don't enter bathroom before bedroom",
+                        "you can go to bedroom at most twice",
+                        "you cannot go to bathroom if you have visited kitchen",
+                        "don't enter living room if you haven't enter kitchen"
+                    ]
+                },
+                "goal_state": {
+                    "computer": {
+                        "is_switchedon": false
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Write email on computer"
             }
         }
-    },
-    "mobile_manip":{"0": {
-        "0_1": {
-            "constraints": {
-                "1": [
-                    "go to bedroom means you have to pick up apple in the future"
-                ],
-                "2": [
-                    "you have to enter living room before bathroom",
-                    "you have to go to kitchen right after living room"
-                ],
-                "3": [
-                    "you have to enter living room before bathroom",
-                    "you have to go to kitchen right after living room",
-                    "go to living room means you have to go to kitchen in the future"
-                ],
-                "4": [
-                    "you have to enter living room before bathroom",
-                    "you have to enter bedroom before going into living room",
-                    "go to living room means you have to go to kitchen in the future",
-                    "you can only go to kitchen twice"
-                ],
-                "5": [
-                    "you have to enter living room before bathroom",
-                    "you have to enter bedroom before going into living room",
-                    "you have to go to kitchen right after living room",
-                    "go to living room means you have to go to kitchen in the future",
-                    "you can only go to kitchen twice"
-                ]
-            },
-            "goal_state": {},
-            "init_room": "bedroom",
-            "instruction": "Walk to toilet"
-        }
     }
-}
 }

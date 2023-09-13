@@ -1,0 +1,12 @@
+Start computer
+Walk to living room, sit in desk chair, press power button, let computer power on
+
+
+[WALK] <livingroom> (1.319)
+[WALK] <chair> (1.356)
+[FIND] <chair> (1.356)
+[SIT] <chair> (1.356)
+[FIND] <computer> (1.417)
+[TURNTO] <computer> (1.417)
+[LOOKAT] <computer> (1.417)
+[SWITCHON] <computer> (1.417)

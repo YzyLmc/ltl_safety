@@ -1,0 +1,8 @@
+Set pillow on couch
+Find pillow , put the pillow on the couch in a pile. Leave it there.
+
+
+[FIND] <pillow> (1000)
+[GRAB] <pillow> (1000)
+[WALK] <couch> (107)
+[PUTIN] <pillow> (1000) <couch> (107)

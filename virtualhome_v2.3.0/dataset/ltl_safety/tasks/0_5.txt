@@ -2,7 +2,7 @@ Browse internet
 I go to the office and sit in a chair, I turn on the computer and grab the mouse. I type on the keyboard and starting working on the computer.
 
 
-[WALK] <living_room> (335)
+[WALK] <livingroom> (335)
 [WALK] <desk> (108)
 [FIND] <desk> (108)
 [FIND] <chair> (107)

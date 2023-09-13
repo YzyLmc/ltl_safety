@@ -1,0 +1,7 @@
+Turn on TV
+Walk over to living room and then to tv and press power button to turn it on
+
+
+[WALK] <livingroom> (319)
+[WALK] <television> (410)
+[SWITCHON] <television> (410)

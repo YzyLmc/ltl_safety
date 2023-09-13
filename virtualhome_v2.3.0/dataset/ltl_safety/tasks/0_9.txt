@@ -1,13 +1,16 @@
-Cook an apple
-Walk Into Kitchen. Open Refrigerator. Grab apple. Walk to Microwave. Insert apple into microwave. Cook until warm.
+Cook an pie
+Walk Into Kitchen. Open Refrigerator. Grab pie. Walk to Microwave. Insert pie into microwave. Turn microwave on and then turn off.
 
 
 [WALK] <kitchen> (205)
 [WALK] <fridge> (305)
 [OPEN] <fridge> (305)
-[FIND] <apple> (319)
-[GRAB] <apple> (319)
+[FIND] <pie> (319)
+[GRAB] <pie> (319)
 [CLOSE] <fridge> (305)
 [WALK] <microwave> (313)
+[OPEN] <microwave> (313)
+[PUTIN] <pie> (319) <microwave> (313)
+[CLOSE] <microwave> (313)
 [SWITCHON] <microwave> (313)
 [SWITCHOFF] <microwave> (313)

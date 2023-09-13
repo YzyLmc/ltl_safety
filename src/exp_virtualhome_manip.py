@@ -69,7 +69,7 @@ def main():
             for placeholder, obj in obj_mapping.items():
                 pred = pred.replace(placeholder, obj)
             grounded_pred_mapping[prop] = pred
-        if args.log:
+        if not args.no_log:
             trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
         # take_num = len(translation_result[args.example_fname][args.constraint_num]
             translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = trans
@@ -153,7 +153,8 @@ def main():
     # graph_dict_path = "virtualhome_v2.3.0/env_graphs/TestScene1_graph.json"
     # graph_dict = load_from_file(graph_dict_path)
     allowed_actions = load_from_file("virtualhome_v2.3.0/resources/allowed_actions.json")
-    act2embed = load_from_file(f"{args.act_embed_prefix}_{args.env_num}.pkl")
+    # act2embed = load_from_file(f"{args.act_embed_prefix}_{args.env_num}.pkl")
+    act2embed = load_from_file(f"{args.act_embed_prefix}_0.pkl")
 
     n_try = 0
     program = []
@@ -230,7 +231,7 @@ def main():
     # goal_state = {'salmon': {'is_in': 'fridge'}}
     goal_state = task_dict['goal_state']
     complete = evaluate_completeness(manip_dict, goal_state)
-    if args.log:
+    if not args.no_log:
         if os.path.exists(args.saved_results_fpath):
             saved_results = load_from_file(args.saved_results_fpath)
         else:
@@ -262,7 +263,7 @@ if __name__ == "__main__":
     parser.add_argument("--act_embed_prefix", type=str, default="/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_vh")
     parser.add_argument("--act_list", type=str, default="virtualhome_v2.3.0/resources/allowed_actions.json")
     parser.add_argument("--obj_embed_prefix", default="/users/zyang157/data/zyang157/virtualhome/obj_embeds/")
-    parser.add_argument("--log", default=True)
+    parser.add_argument("--no_log", action='store_true')
     args = parser.parse_args()
 
     main()

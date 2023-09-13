@@ -7,30 +7,498 @@
                         "placeholder": [
                             {
                                 "apple": "B",
-                                "bedroom": "A"
+                                "bathroom": "C",
+                                "fridge": "A"
                             }
                         ],
                         "sym_ltl": [
-                            "G i agent_at(A) F is_grabbed(B)"
+                            "G i agent_at(C) F is_in(B,A)"
                         ],
                         "sym_utt": [
-                            "go to A means you have to pick up B in the future"
+                            "go to C means you have to go to put B in the A later"
                         ]
                     },
                     "unified_trans": {
                         "grounded_pred": {
-                            "a": "agent_at(bedroom)",
-                            "b": "is_grabbed(apple)"
+                            "a": "is_in(apple,fridge)",
+                            "b": "agent_at(bathroom)"
                         },
                         "object": {
-                            "A": "bedroom",
-                            "B": "apple"
+                            "A": "fridge",
+                            "B": "apple",
+                            "C": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "is_in(B,A)",
+                            "b": "agent_at(C)"
+                        },
+                        "unified_ltl": "G i b F a"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "bathroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "G i is_open(A) F ! is_open(A)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "if you open A you need to close A later",
+                            "you can only go to A twice"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "is_open(fridge)"
+                        },
+                        "object": {
+                            "A": "bathroom",
+                            "B": "fridge"
                         },
                         "predicate": {
                             "a": "agent_at(A)",
-                            "b": "is_grabbed(B)"
+                            "b": "is_open(B)"
                         },
-                        "unified_ltl": "G i a F b"
+                        "unified_ltl": "& G i b F ! b ! F & a U a & ! a U ! a F & a U a & ! a U ! a F a"
+                    }
+                },
+                "3": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "apple": "B",
+                                "fridge": "A"
+                            },
+                            {
+                                "fridge": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)",
+                            "W ! is_in(B,A) is_grabbed(B)",
+                            "G i is_open(A) F ! is_open(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter B before A",
+                            "you have to pick up B before placing the B into A",
+                            "if you open A you need to close A later"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_in(apple,fridge)",
+                            "b": "agent_at(bathroom)",
+                            "c": "is_open(fridge)",
+                            "d": "is_grabbed(apple)",
+                            "h": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "bathroom",
+                            "B": "fridge",
+                            "C": "livingroom",
+                            "D": "apple"
+                        },
+                        "predicate": {
+                            "a": "is_in(D,B)",
+                            "b": "agent_at(A)",
+                            "c": "is_open(B)",
+                            "d": "is_grabbed(D)",
+                            "h": "agent_at(C)"
+                        },
+                        "unified_ltl": "& & W ! b h W ! a d G i c F ! c"
+                    }
+                },
+                "4": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "apple": "B",
+                                "fridge": "A"
+                            },
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "apple": "C",
+                                "bathroom": "B",
+                                "fridge": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)",
+                            "W ! is_in(B,A) is_grabbed(B)",
+                            "G i is_open(A) F ! is_open(A)",
+                            "G i agent_at(B) F is_in(C,A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter B before A",
+                            "you have to pick up B before placing the B into A",
+                            "if you open A you need to close A later",
+                            "go to B means you have to go to put C in the A later"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "is_in(apple,fridge)",
+                            "c": "is_grabbed(apple)",
+                            "d": "is_open(fridge)",
+                            "h": "agent_at(bathroom)"
+                        },
+                        "object": {
+                            "A": "fridge",
+                            "B": "bathroom",
+                            "C": "livingroom",
+                            "D": "apple"
+                        },
+                        "predicate": {
+                            "a": "agent_at(C)",
+                            "b": "is_in(D,A)",
+                            "c": "is_grabbed(D)",
+                            "d": "is_open(A)",
+                            "h": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & & W ! h a W ! b c G i d F ! d G i h F b"
+                    }
+                },
+                "5": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "apple": "A",
+                                "fridge": "B"
+                            },
+                            {
+                                "fridge": "A"
+                            },
+                            {
+                                "apple": "B",
+                                "bathroom": "A",
+                                "fridge": "C"
+                            },
+                            {
+                                "bathroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)",
+                            "W ! is_in(A,B) is_grabbed(A)",
+                            "G i is_open(A) F ! is_open(A)",
+                            "G i agent_at(A) F is_in(B,C)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter B before A",
+                            "you have to pick up A before placing the A into B",
+                            "if you open A you need to close A later",
+                            "go to A means you have to go to put B in the C later",
+                            "you can only go to A twice"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "agent_at(bathroom)",
+                            "c": "is_in(apple,fridge)",
+                            "d": "is_open(fridge)",
+                            "h": "is_grabbed(apple)"
+                        },
+                        "object": {
+                            "A": "bathroom",
+                            "B": "fridge",
+                            "C": "apple",
+                            "D": "livingroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(D)",
+                            "b": "agent_at(A)",
+                            "c": "is_in(C,B)",
+                            "d": "is_open(B)",
+                            "h": "is_grabbed(C)"
+                        },
+                        "unified_ltl": "& & & & W ! b a W ! c h G i d F ! d G i b F c ! F & b U b & ! b U ! b F & b U b & ! b U ! b F b"
+                    }
+                }
+            },
+            "0_9": {
+                "1": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "fridge": "A",
+                                "microwave": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! is_open(B) ! is_open(A)"
+                        ],
+                        "sym_utt": [
+                            "close the A before you open the B up"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_open(microwave)",
+                            "b": "is_open(fridge)"
+                        },
+                        "object": {
+                            "A": "fridge",
+                            "B": "microwave"
+                        },
+                        "predicate": {
+                            "a": "is_open(B)",
+                            "b": "is_open(A)"
+                        },
+                        "unified_ltl": "W ! a ! b"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "fridge": "A",
+                                "salmon": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "G i agent_at(B) G ! agent_at(A)",
+                            "W ! is_open(A) is_grabbed(B)"
+                        ],
+                        "sym_utt": [
+                            "entering B means you cannot visit A even once",
+                            "don't open A before picking up B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "is_open(fridge)",
+                            "c": "agent_at(bathroom)",
+                            "d": "is_grabbed(salmon)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "fridge",
+                            "C": "bathroom",
+                            "D": "salmon"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "is_open(B)",
+                            "c": "agent_at(C)",
+                            "d": "is_grabbed(D)"
+                        },
+                        "unified_ltl": "& G i c G ! a W ! b d"
+                    }
+                },
+                "3": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "bathroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "fridge": "A",
+                                "salmon": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "G i agent_at(A) G ! agent_at(B)",
+                            "W ! is_open(A) is_grabbed(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "entering A means you cannot visit B even once",
+                            "don't open A before picking up B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_open(fridge)",
+                            "b": "agent_at(bathroom)",
+                            "c": "is_grabbed(salmon)",
+                            "d": "agent_at(livingroom)",
+                            "h": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "fridge",
+                            "B": "bathroom",
+                            "C": "salmon",
+                            "D": "kitchen",
+                            "H": "livingroom"
+                        },
+                        "predicate": {
+                            "a": "is_open(A)",
+                            "b": "agent_at(B)",
+                            "c": "is_grabbed(C)",
+                            "d": "agent_at(H)",
+                            "h": "agent_at(D)"
+                        },
+                        "unified_ltl": "& & W ! h b G i b G ! d W ! a c"
+                    }
+                },
+                "4": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "livingroom": "B",
+                                "sofa": "A"
+                            },
+                            {
+                                "fridge": "A",
+                                "salmon": "B"
+                            },
+                            {
+                                "fridge": "B",
+                                "microwave": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "W ! agent_at(B) agent_at(A)",
+                            "W ! is_open(A) is_grabbed(B)",
+                            "W ! is_open(A) ! is_open(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you must go to A before entering B",
+                            "don't open A before picking up B",
+                            "close the B before you open the A up"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_open(microwave)",
+                            "b": "agent_at(kitchen)",
+                            "c": "agent_at(bathroom)",
+                            "d": "is_grabbed(salmon)",
+                            "h": "is_open(fridge)",
+                            "j": "agent_at(sofa)",
+                            "k": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "microwave",
+                            "B": "salmon",
+                            "C": "bathroom",
+                            "D": "fridge",
+                            "H": "livingroom",
+                            "J": "kitchen",
+                            "K": "sofa"
+                        },
+                        "predicate": {
+                            "a": "is_open(A)",
+                            "b": "agent_at(J)",
+                            "c": "agent_at(C)",
+                            "d": "is_grabbed(B)",
+                            "h": "is_open(D)",
+                            "j": "agent_at(K)",
+                            "k": "agent_at(H)"
+                        },
+                        "unified_ltl": "& & & W ! b c W ! k j W ! h d W ! a ! h"
+                    }
+                },
+                "5": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "livingroom": "A",
+                                "sofa": "B"
+                            },
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "fridge": "A",
+                                "salmon": "B"
+                            },
+                            {
+                                "fridge": "A",
+                                "microwave": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "G i agent_at(B) G ! agent_at(A)",
+                            "W ! is_open(A) is_grabbed(B)",
+                            "W ! is_open(B) ! is_open(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you must go to B before entering A",
+                            "entering B means you cannot visit A even once",
+                            "don't open A before picking up B",
+                            "close the A before you open the B up"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "is_grabbed(salmon)",
+                            "b": "is_open(microwave)",
+                            "c": "agent_at(sofa)",
+                            "d": "agent_at(livingroom)",
+                            "h": "agent_at(bathroom)",
+                            "j": "agent_at(kitchen)",
+                            "k": "is_open(fridge)"
+                        },
+                        "object": {
+                            "A": "kitchen",
+                            "B": "bathroom",
+                            "C": "livingroom",
+                            "D": "microwave",
+                            "H": "sofa",
+                            "J": "fridge",
+                            "K": "salmon"
+                        },
+                        "predicate": {
+                            "a": "is_grabbed(K)",
+                            "b": "is_open(D)",
+                            "c": "agent_at(H)",
+                            "d": "agent_at(C)",
+                            "h": "agent_at(B)",
+                            "j": "agent_at(A)",
+                            "k": "is_open(J)"
+                        },
+                        "unified_ltl": "& & & & W ! j h W ! d c G i h G ! d W ! k a W ! b ! k"
                     }
                 }
             }
@@ -515,6 +983,80 @@
                 }
             },
             "0_2": {
+                "1": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter B before A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(B)",
+                            "b": "agent_at(A)"
+                        },
+                        "unified_ltl": "W ! b a"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "bedroom": "B"
+                            },
+                            {
+                                "kitchen": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)",
+                            "W ! agent_at(A) agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "don't enter A before B",
+                            "don't enter A if you haven't enter B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "agent_at(kitchen)",
+                            "c": "agent_at(bathroom)",
+                            "d": "agent_at(bedroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bathroom",
+                            "C": "bedroom",
+                            "D": "kitchen"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "agent_at(D)",
+                            "c": "agent_at(B)",
+                            "d": "agent_at(C)"
+                        },
+                        "unified_ltl": "& W ! c d W ! a b"
+                    }
+                },
                 "3": {
                     "sub_trans": {
                         "placeholder": [
@@ -676,6 +1218,524 @@
                             "d": "agent_at(C)"
                         },
                         "unified_ltl": "& & & & W ! b a W ! a c ! F & c U c & ! c U ! c F & c U c & ! c U ! c F c G i d G ! a W ! b d"
+                    }
+                }
+            },
+            "0_5": {
+                "1": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter B before A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(B)",
+                            "b": "agent_at(A)"
+                        },
+                        "unified_ltl": "W ! b a"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A"
+                            },
+                            {
+                                "bathroom": "B",
+                                "kitchen": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(B) F agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you can only go to A once",
+                            "go to B means you have to visit A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "kitchen",
+                            "B": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(B)",
+                            "b": "agent_at(A)"
+                        },
+                        "unified_ltl": "& ! F & a U a & ! a U ! a F a G i a F b"
+                    }
+                },
+                "3": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A"
+                            },
+                            {
+                                "bedroom": "A"
+                            },
+                            {
+                                "bathroom": "B",
+                                "kitchen": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(A) G ! agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you can only go to A once",
+                            "you have to visit A at most two times",
+                            "you cannot go to B if A is visited"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(bedroom)",
+                            "c": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "bedroom",
+                            "B": "kitchen",
+                            "C": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(C)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & ! F & a U a & ! a U ! a F a ! F & b U b & ! b U ! b F & b U b & ! b U ! b F b G i c G ! a"
+                    }
+                },
+                "4": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "bathroom": "A"
+                            },
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "bedroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(A) F agent_at(B)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you can only go to A once",
+                            "go to A means you have to visit B",
+                            "you have to visit A at most two times"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bedroom)",
+                            "b": "agent_at(bathroom)",
+                            "c": "agent_at(livingroom)",
+                            "d": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "bathroom",
+                            "B": "kitchen",
+                            "C": "bedroom",
+                            "D": "livingroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(C)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(D)",
+                            "d": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & & W ! c b ! F & b U b & ! b U ! b F b G i b F d ! F & a U a & ! a U ! a F & a U a & ! a U ! a F a"
+                    }
+                },
+                "5": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "bathroom": "A"
+                            },
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "bedroom": "A"
+                            },
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(A) F agent_at(B)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(B) G ! agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter A before B",
+                            "you can only go to A once",
+                            "go to A means you have to visit B",
+                            "you have to visit A at most two times",
+                            "you cannot go to A if B is visited"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(kitchen)",
+                            "b": "agent_at(bedroom)",
+                            "c": "agent_at(bathroom)",
+                            "d": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "kitchen",
+                            "B": "bedroom",
+                            "C": "bathroom",
+                            "D": "livingroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "agent_at(B)",
+                            "c": "agent_at(C)",
+                            "d": "agent_at(D)"
+                        },
+                        "unified_ltl": "& & & & W ! d c ! F & c U c & ! c U ! c F c G i c F a ! F & b U b & ! b U ! b F & b U b & ! b U ! b F b G i a G ! c"
+                    }
+                }
+            },
+            "0_7": {
+                "1": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bedroom": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(B) agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "don't go to B if you haven't been to A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(livingroom)",
+                            "b": "agent_at(bedroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bedroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "agent_at(B)"
+                        },
+                        "unified_ltl": "W ! b a"
+                    }
+                },
+                "2": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "kitchen": "A"
+                            },
+                            {
+                                "bathroom": "A",
+                                "bedroom": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(A) F agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to visit A at most two times",
+                            "you have to visit B if you ever been to A"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bathroom)",
+                            "b": "agent_at(bedroom)",
+                            "c": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "kitchen",
+                            "B": "bathroom",
+                            "C": "bedroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(B)",
+                            "b": "agent_at(C)",
+                            "c": "agent_at(A)"
+                        },
+                        "unified_ltl": "& ! F & c U c & ! c U ! c F & c U c & ! c U ! c F c G i a F b"
+                    }
+                },
+                "3": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bedroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "bedroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "kitchen": "A",
+                                "livingroom": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "G i agent_at(B) X agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you cannot go to A before B",
+                            "don't go to A if you haven't been to B",
+                            "you must visit A right after B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(kitchen)",
+                            "b": "agent_at(bedroom)",
+                            "c": "agent_at(livingroom)"
+                        },
+                        "object": {
+                            "A": "bedroom",
+                            "B": "kitchen",
+                            "C": "livingroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(B)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(C)"
+                        },
+                        "unified_ltl": "& & W ! b a W ! b c G i c X a"
+                    }
+                },
+                "4": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "kitchen": "A"
+                            },
+                            {
+                                "bedroom": "B",
+                                "kitchen": "A"
+                            },
+                            {
+                                "bedroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "kitchen": "A",
+                                "livingroom": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "W ! agent_at(B) agent_at(A)",
+                            "W ! agent_at(B) agent_at(A)",
+                            "G i agent_at(B) X agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to visit A at most two times",
+                            "you cannot go to B before A",
+                            "don't go to B if you haven't been to A",
+                            "you must visit A right after B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bedroom)",
+                            "b": "agent_at(livingroom)",
+                            "c": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "kitchen",
+                            "C": "bedroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(C)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & & ! F & c U c & ! c U ! c F & c U c & ! c U ! c F c W ! a c W ! a b G i b X c"
+                    }
+                },
+                "5": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "kitchen": "A"
+                            },
+                            {
+                                "bedroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "bathroom": "B",
+                                "bedroom": "A"
+                            },
+                            {
+                                "bedroom": "A",
+                                "livingroom": "B"
+                            },
+                            {
+                                "kitchen": "A",
+                                "livingroom": "B"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "G i agent_at(B) F agent_at(A)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "G i agent_at(B) X agent_at(A)"
+                        ],
+                        "sym_utt": [
+                            "you have to visit A at most two times",
+                            "you cannot go to A before B",
+                            "you have to visit A if you ever been to B",
+                            "don't go to A if you haven't been to B",
+                            "you must visit A right after B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bedroom)",
+                            "b": "agent_at(livingroom)",
+                            "c": "agent_at(bathroom)",
+                            "d": "agent_at(kitchen)"
+                        },
+                        "object": {
+                            "A": "bedroom",
+                            "B": "kitchen",
+                            "C": "livingroom",
+                            "D": "bathroom"
+                        },
+                        "predicate": {
+                            "a": "agent_at(A)",
+                            "b": "agent_at(C)",
+                            "c": "agent_at(D)",
+                            "d": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & & & ! F & d U d & ! d U ! d F & d U d & ! d U ! d F d W ! a d G i c F a W ! a b G i b X d"
+                    }
+                }
+            }
+        },
+        "1": {
+            "0_2": {
+                "5": {
+                    "sub_trans": {
+                        "placeholder": [
+                            {
+                                "bathroom": "B",
+                                "livingroom": "A"
+                            },
+                            {
+                                "bathroom": "A",
+                                "bedroom": "B"
+                            },
+                            {
+                                "bedroom": "A"
+                            },
+                            {
+                                "bathroom": "A",
+                                "kitchen": "B"
+                            },
+                            {
+                                "kitchen": "B",
+                                "livingroom": "A"
+                            }
+                        ],
+                        "sym_ltl": [
+                            "W ! agent_at(A) agent_at(B)",
+                            "W ! agent_at(A) agent_at(B)",
+                            "! F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F & agent_at(A) U agent_at(A) & ! agent_at(A) U ! agent_at(A) F agent_at(A)",
+                            "G i agent_at(B) G ! agent_at(A)",
+                            "W ! agent_at(A) agent_at(B)"
+                        ],
+                        "sym_utt": [
+                            "you have to enter B before A",
+                            "don't enter A before B",
+                            "you can go to A at most twice",
+                            "you cannot go to A if you have visited B",
+                            "don't enter A if you haven't enter B"
+                        ]
+                    },
+                    "unified_trans": {
+                        "grounded_pred": {
+                            "a": "agent_at(bedroom)",
+                            "b": "agent_at(livingroom)",
+                            "c": "agent_at(kitchen)",
+                            "d": "agent_at(bathroom)"
+                        },
+                        "object": {
+                            "A": "livingroom",
+                            "B": "bathroom",
+                            "C": "bedroom",
+                            "D": "kitchen"
+                        },
+                        "predicate": {
+                            "a": "agent_at(C)",
+                            "b": "agent_at(A)",
+                            "c": "agent_at(D)",
+                            "d": "agent_at(B)"
+                        },
+                        "unified_ltl": "& & & & W ! b d W ! d a ! F & a U a & ! a U ! a F & a U a & ! a U ! a F a G i c G ! d W ! b c"
                     }
                 }
             }
