@@ -1,8 +1,8 @@
 Write an email
-I walk to the livingroom then find the computer and sit in the chair. I switch on the computer and start typing the email. I switch the computer off.
+I walk to the bedroom then find the computer and sit in the chair. I switch on the computer and start typing the email. I switch the computer off.
 
 
-[WALK] <livingroom> (335)
+[WALK] <bedroom> (335)
 [WALK] <computer> (174)
 [FIND] <computer> (174)
 [FIND] <chair> (107)

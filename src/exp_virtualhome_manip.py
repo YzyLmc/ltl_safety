@@ -29,7 +29,7 @@ def main():
 
     # start vh simulator
     EXEC_FNAME= "/users/zyang157/data/zyang157/virtualhome/exec_v2.3.0/linux_exec.v2.3.0.x86_64"
-    comm = comm_unity.UnityCommunication(file_name=EXEC_FNAME, no_graphics=True, logging=False)
+    comm = comm_unity.UnityCommunication(file_name=EXEC_FNAME, no_graphics=True, logging=False, port=args.port)
     comm.reset(args.env_num)
     
     # spawn agent
@@ -37,13 +37,14 @@ def main():
     init_room = task_dict['init_room']
     rooms = [node for node in g['nodes'] if node["category"] == "Rooms"]
     assert init_room in [room["class_name"] for room in rooms]
-    init_position = [node for node in g['nodes'] if node["class_name"] == init_room][-1]['obj_transform']['position']
-    comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
+    init_position = [node for node in g['nodes'] if node["class_name"] == init_room][-1]['bounding_box']['center']
+    # comm.add_character('Chars/Female2', position=init_position, initial_room=init_room)
+    comm.add_character('Chars/Female2', initial_room=init_room)
     s, g = comm.environment_graph()
-    # breakpoint()
+
     room2id = {room["class_name"]: room["id"] for room in rooms}
     obj2id = {node["class_name"]: node["id"] for node in g["nodes"]}
-
+    # breakpoint()
     # save translation
     translation_result = load_from_file(args.translation_result_fpath)
     if args.exp not in translation_result:
@@ -69,11 +70,15 @@ def main():
             for placeholder, obj in obj_mapping.items():
                 pred = pred.replace(placeholder, obj)
             grounded_pred_mapping[prop] = pred
+        trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
         if not args.no_log:
-            trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
-        # take_num = len(translation_result[args.example_fname][args.constraint_num]
+    # take_num = len(translation_result[args.example_fname][args.constraint_num]
             translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = trans
             save_to_file(translation_result, args.translation_result_fpath)
+        else:
+            print('sym_utts', sym_utts)
+            print('sym_ltls', sym_ltls)
+            print('placeholder_maps', placeholder_maps)
     
     # breakpoint()
 
@@ -150,10 +155,7 @@ def main():
     print(output)
     # load graph and embeddings
     prompt = prompt + f"\n{output}"
-    # graph_dict_path = "virtualhome_v2.3.0/env_graphs/TestScene1_graph.json"
-    # graph_dict = load_from_file(graph_dict_path)
     allowed_actions = load_from_file("virtualhome_v2.3.0/resources/allowed_actions.json")
-    # act2embed = load_from_file(f"{args.act_embed_prefix}_{args.env_num}.pkl")
     act2embed = load_from_file(f"{args.act_embed_prefix}_0.pkl")
 
     n_try = 0
@@ -179,13 +181,13 @@ def main():
                 sims = {o: cosine_similarity(e, action_string_embed) for o, e in act2embed.items()}
                 sims_sorted = sorted(sims.items(), key=lambda kv: kv[1], reverse=True)
                 action_string = list(dict(sims_sorted[:1]).keys())[0]
+                print('action_string', action_string)
             act, obj_ls = get_action_and_obj(action_string)
             obj_ls = [f"{obj} (0)" for obj in obj_ls]
             dummy_program_line = f"{act} {' '.join(obj_ls)}"
             dummy_program_line = convert_rooms(dummy_program_line)
             # ground output action string into program
             try:
-                # grounded_program_line = replace_new_obj_id([dummy_program_line], graph_dict)[0]
                 grounded_program_line = replace_new_obj_id([dummy_program_line], g)[0]
                 program.extend(convert_old_program_to_new([grounded_program_line]))
             except:
@@ -194,14 +196,14 @@ def main():
             if invalid_action_mem == grounded_program_line:
                 continue
         if args.safety_level == "full":
-            # this step ensure output is executable and renderable(?)
-            success, state_list, manip_dict = state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id, obj_mapping, pred_mapping, init_position, init_room, stopped=stopped)
+            # this step ensure output is executable and renderable (?)
+            success, state_list, manip_dict = state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id, obj_mapping, pred_mapping, init_position, init_room, stopped=stopped, env_num=args.env_num)
             prompt += f" {program2nl([grounded_program_line])[0]}" if not output == "DONE" else f" {output}"
             if not success:
                 invalid_action = action_string
                 invalid_state_list = state_list
                 reprompted_plan = f"\nError: {reprompt(gpt4, valid_action2states, invalid_action, invalid_state_list, constraints, grounded_pred_mapping)} Maybe try walking to other objects in the object list first. The correct plan would be:"
-                program = program[:-1]
+                program = program[:-1] if not "DONE" in output else program
                 print("handling error by reprompting")
                 print(reprompted_plan)
                 prompt += reprompted_plan
@@ -246,6 +248,9 @@ def main():
         else:
             saved_results[args.exp][str(args.env_num)][args.example_fname] = [result]
         save_to_file(saved_results, args.saved_results_fpath)
+    else:
+        print("completed", complete)
+        print("safe", success)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -264,6 +269,7 @@ if __name__ == "__main__":
     parser.add_argument("--act_list", type=str, default="virtualhome_v2.3.0/resources/allowed_actions.json")
     parser.add_argument("--obj_embed_prefix", default="/users/zyang157/data/zyang157/virtualhome/obj_embeds/")
     parser.add_argument("--no_log", action='store_true')
+    parser.add_argument("--port", type=str, default="8080", help="port number for unity, if you want to run multiple simulation in parallel")
     args = parser.parse_args()
 
     main()

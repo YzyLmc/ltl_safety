@@ -1,5 +1,8 @@
 {
     "mobile_manip": {
+        "1":{"0_0":{"constraints":{"5":["you have to go to living room before open firdge",
+    ""]
+        }}},
         "0": {
             "0_1": {
                 "constraints": {
@@ -71,17 +74,35 @@
             },
             "11_9": {
                 "constraints": {
+                    "1": [
+                        "you have to go to bathroom later if you have closed the frigde"
+                    ],
+                    "2": [
+                        "pick up apple before turning on the computer",
+                        "go to bathroom later if you have been to living room"
+                    ],
+                    "3": [
+                        "if you switch on the computer you will have to pick up salmon in the future",
+                        "you have to go to bathroom later if you have closed the frigde",
+                        "you have to visit toilet after visiting kitchen"
+                    ],
+                    "4": [
+                        "if you switch on the computer you will have to pick up salmon in the future",
+                        "pick up apple before turning on the computer",
+                        "go to bathroom later if you have been to living room",
+                        "you have to visit toilet after visiting kitchen"
+                    ],
                     "5": [
-                        "if you switch on the computer you will have to put salmon in the fridge in the future",
-                        "put pie in the fridge before turning on the computer",
-                        "you can visit bathroom at most twice",
-                        "you have to go to bathroom later if you close the frigde",
-                        "you have to visit toilet before visiting kitchen"
+                        "if you switch on the computer you will have to pick up salmon in the future",
+                        "pick up apple before turning on the computer",
+                        "go to bathroom later if you have been to living room",
+                        "you have to go to bathroom later if you have closed the frigde",
+                        "you have to visit toilet after visiting kitchen"
                     ]
                 },
                 "goal_state": {
                     "computer": {
-                        "is_on": true
+                        "is_switchedon": true
                     }
                 },
                 "init_room": "bedroom",
@@ -89,12 +110,17 @@
             },
             "3_3": {
                 "constraints": {
-                    "5": [
+                    "1": [
+                        "always avoid couch"
+                    ],
+                    "2": [
                         "don't switch on the radio if you haven't put salmon in the fridge",
+                        "if you open fridge you have to close the fridge in the future"
+                    ],
+                    "3": [
                         "you can open fridge at most twice",
                         "don't enter bedroom if you haven't been to living room",
-                        "if you open fridge you have to close the fridge in the future",
-                        "always avoid couch"
+                        "if you open fridge you have to close the fridge in the future"
                     ],
                     "4": [
                         "don't switch on the radio if you haven't put salmon in the fridge",
@@ -102,16 +128,11 @@
                         "if you open fridge you have to close the fridge in the future",
                         "always avoid couch"
                     ],
-                    "3": [
+                    "5": [
+                        "don't switch on the radio if you haven't put salmon in the fridge",
                         "you can open fridge at most twice",
                         "don't enter bedroom if you haven't been to living room",
-                        "if you open fridge you have to close the fridge in the future"
-                    ],
-                    "2": [
-                        "don't switch on the radio if you haven't put salmon in the fridge",
-                        "if you open fridge you have to close the fridge in the future"
-                    ],
-                    "1": [
+                        "if you open fridge you have to close the fridge in the future",
                         "always avoid couch"
                     ]
                 },
@@ -123,7 +144,42 @@
                 "init_room": "livingroom",
                 "instruction": "Turn on radio in bedroom"
             },
-            "74_1": {}
+            "74_1": {
+                "constraints": {
+                    "5": [
+                        "put salmon in fridge before going to bed room",
+                        "you have to put pie in fridge later if you have been to bed",
+                        "don't put pillow on sofa if you haven't been to bath room",
+                        "you can visit bathroom for three times at most",
+                        "you have to go to livingroom later if you have been to sofa"
+                    ],
+                    "4": [
+                        "put salmon in fridge before going to bed room",
+                        "you have to put pie in fridge later if you have been to bed",
+                        "you can visit bathroom for three times at most",
+                        "you have to go to livingroom later if you have been to sofa"
+                    ],
+                    "3": [
+                        "put salmon in fridge before going to bed room",
+                        "don't put pillow on sofa if you haven't been to bath room",
+                        "you have to go to livingroom later if you have been to sofa"
+                    ],
+                    "2": [
+                        "put salmon in fridge before going to bed room",
+                        "you have to put pie in fridge later if you have been to bed"
+                    ],
+                    "1": [
+                        "don't put pillow on sofa if you haven't been to bath room"
+                    ]
+                },
+                "goal_state": {
+                    "pillow": {
+                        "is_in": "sofa"
+                    }
+                },
+                "init_room": "kitchen",
+                "instruction": "Put pillow on sofa"
+            }
         }
     },
     "rooms": {
@@ -302,11 +358,11 @@
             "0_2": {
                 "constraints": {
                     "5": [
-                        "you have to enter bathroom before living room",
-                        "don't enter bathroom before bedroom",
+                        "you have to enter bathroom before bedroom",
+                        "don't enter bathroom before living room",
                         "you can go to bedroom at most twice",
-                        "you cannot go to bathroom if you have visited kitchen",
-                        "don't enter living room if you haven't enter kitchen"
+                        "you cannot go to bathroom if you have visited bedroom",
+                        "don't enter bedroom if you haven't enter living room"
                     ]
                 },
                 "goal_state": {
@@ -314,8 +370,81 @@
                         "is_switchedon": false
                     }
                 },
-                "init_room": "bedroom",
+                "init_room": "kitchen",
                 "instruction": "Write email on computer"
+            },
+            "12_2": {
+                "constraints": {
+                    "5": [
+                        "don't go to bedroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom too in the future",
+                        "you can visit kitchen at most three times",
+                        "don't go to bedroom before bathroom is visited",
+                        "go to kitchen means you have to go to bedroom in the future"
+                    ]
+                },
+                "goal_state": {
+                    "init_room": "",
+                    "instruction": "",
+                    "lightswitch": {
+                        "is_switchedon": true
+                    }
+                },
+                "instruction": "Turn the lightswitch on"
+            },
+            "71_1": {
+                "constraints": {
+                    "5": [
+                        "avoid bathroom at any time",
+                        "you have to go to bathroom if you have been to bedroom",
+                        "go to kitchen means you have to go to living room in the future",
+                        "you can go to living room for at most three times",
+                        "never go to kitchen if you haven't been to living room"
+                    ]
+                },
+                "goal_state": {
+                    "coffee_maker": {
+                        "is_switchedon": true
+                    },
+                    "instruction": "Turn on coffee maker"
+                },
+                "init_room": "livingroom"
+            },
+            "7_1": {
+                "constraints": {
+                    "5": [
+                        "you have to enter bathroom before living room",
+                        "don't enter bathroom before bedroom",
+                        "you can go to bathroom for at most three times",
+                        "you have to go to kitchen if you have entered living room",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "4": [
+                        "you have to enter bathroom before living room",
+                        "don't enter bathroom before bedroom",
+                        "you can go to bathroom for at most three times",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "3": [
+                        "you can go to bathroom for at most three times",
+                        "you have to go to kitchen if you have entered living room",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "2": [
+                        "you can go to bathroom for at most three times",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "1": [
+                        "you have to enter bathroom before living room"
+                    ]
+                },
+                "goal_state": {
+                    "computer": {
+                        "is_switchedon": true
+                    }
+                },
+                "init_room": "kitchen",
+                "instruction": "Browse on internet with computer in the chair"
             }
         }
     }

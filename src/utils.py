@@ -315,7 +315,7 @@ def hardcoded_truth_value_vh(cur_loc, obj_id, graph, radius=0.5, room=False):
     rotation_matrix = R.from_quat(rotation).as_matrix()
     if room:
         bb_center = np.array(obj["bounding_box"]["center"])
-        bb_size = np.array(obj["bounding_box"]["size"])  - np.array([0.5, 0.5, 0.5]) # make bb smaller
+        bb_size = np.array(obj["bounding_box"]["size"])  # - np.array([0.5, 0.5, 0.5]) # make bb smaller
         # return is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
         is_inside = is_point_inside_rotated_rectangular(bb_center, bb_size, rotation_matrix, cur_loc)
         # print(cur_loc, is_inside)
@@ -622,7 +622,7 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
     for state in state_eng:
         invalid_act += f"\n{state}"
     prompt = f"{task_description}\n{constraints}\n{valid_act}\n\n{invalid_act}\n\nReason of violation:"
-    # breakpoint()
+    breakpoint()
     return translate_engine.generate(prompt)[0]
 
 ## truth value function for manipulation tasks
@@ -654,6 +654,7 @@ def check_state_dict(pred, obj_tuple, state_dict):
     """
     #pred_to_action = {"is_switchedon": "switchon", "is_open":"open", "is_grabbed": "grab", "is_touched": "touch", "is_in": "putin", "is_on":"puton"}
     if len(obj_tuple) == 2:
+        if pred == "is_on": pred = "is_in" 
         (obj_1, obj_2) = obj_tuple
         return state_dict[obj_1][pred] == obj_2 if pred in state_dict[obj_1] else False
     elif len(obj_tuple) == 1:

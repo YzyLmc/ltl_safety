@@ -1,0 +1,17 @@
+Browse internet
+I go to living room and sit in a chair, I turn on the computer and grab the mouse. I type on the keyboard and starting working on the computer.
+
+
+[WALK] <livingroom> (241)
+[WALK] <desk> (272)
+[FIND] <desk> (272)
+[FIND] <chair> (271)
+[SIT] <chair> (271)
+[FIND] <computer> (276)
+[SWITCHON] <computer> (276)
+[FIND] <mouse> (280)
+[GRAB] <mouse> (280)
+[FIND] <keyboard> (278)
+[TYPE] <keyboard> (278)
+[TURNTO] <computer> (276)
+[LOOKAT] <computer> (276)

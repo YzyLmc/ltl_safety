@@ -1,10 +1,10 @@
-Put salmon into the fridge
-go to kitchen, finda and take salmon, and put it into the fridge, and close the fridge
+Put chicken into the fridge
+go to kitchen, finda and take chicken, and put it into the fridge, and close the fridge
 
 
 [WALK] <kitchen> (205)
 [WALK] <fridge> (305)
-[FIND] <apple> (437)
-[GRAB] <apple> (437)
+[FIND] <chicken> (437)
+[GRAB] <chicken> (437)
 [OPEN] <fridge> (305)
-[PUTIN] <apple> (437) <fridge> (305)
+[PUTIN] <chicken> (437) <fridge> (305)
