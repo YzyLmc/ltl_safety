@@ -1,27 +1,37 @@
-# ltl_safety
-Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator and dataset, and put them under `virtualhome/simulation` and `virtualhome/dataset` repectively.
+# Safety Chip
+Codebase for paper: *Plug in the Safety Chip: Enforcing Temporal Constraints for LLM Agents*
+## Installation
+1. Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator, and put them under `virtualhome_v2.3.0/simulation`.
+2. Creating the environment by:
+```
+conda env create -f environment.yml
+```
+## Prepare for Experiments
+Set environment variable for OpenAI API key for current shell
+```
+export OPENAI_API_KEY=<YOUR_API_KEY>
+```
+## Files
+- `src`: all scripts for the project are stored here
+    * `exp_virtualhome_manip.py`: script for virtualhome experiments
+    * `exp_spot.py`: script for robot demo. Doesn't require virtualhome simulator installed
+    * `constraint_module.py`: currently only used for translating natural language into LTL formulas
+    * `lang2ltl.py`: library for enhanced version of lang2ltl framework. Can translate predifined predicates
+    * `precond.py`: precondition module used for robot demo on baseline model and safety chip.
+    * `get_embed.py`: encode action list or object list for grounding
+    * `utils.py`
+- `results`: experimental results. Two runs for robot demo. Two sets of results for virtualhome experiments: one with non-expert provided utterances, the other with expert provided utterances.
+- `virtualhome_v2.3.0/dataset`: datasets for virtualhome exp and robot demo
+- `robot`: nav graph scanned by Boston Dynamics Spot robot
 
-### Changelog
-08/02: `get_visible_nodes()` check indirect objects up to 3 levels.
+## Running Experiments
+1. for virtualhome experiments, install virtaulhome simulator, export your `OPENAI_API_KEY`. Then you should be able to run exps by (an example)
+```
+python src/exp_virtualhome_manip.py --exp rooms --example_fname 0_1 --constraint_num 5 --safety_level full
+```
+If you place the embedding files somewhere, don't forget to specify them using the flags.
 
-08/05: These objects in TestScene1_graph mismatch the trimmed graph `{'wall_clock', 'food_cheese', 'towel_rack', 'bathroom_cabinet', 'after_shave', 'kitchen_counter', 'home_office', 'dining_room', 'food_food', 'coffe_maker', 'filing_cabinet', 'bathroom_counter', 'measuring_cup', 'food_carrot'}`. Among them, two rooms `kitchen` and `living_room` have been renamed to `dining_room` and `home_office`.
-
-08/07: `max_nodes` set to 500 instead of 300.
-
-08/08: 
-- Switching back to v2.3.0. Constructing new dataset from 1.0.0 dataset. Aiming at 50 programs * 10 constraint for each program.
-- Action embeddings stored on Oscar (ada-002)
-
-08/09: deleting dining_room and home_office in `resources/class_name_equivalence.json`. Change class_name `livingroom` to `living_room` in `virtualhome_v2.3.0/env_graphs/TestScene1_graph.json`
-
-08/10: More programs added for env0. Program `0_13.txt` need all lightswitch to be turned off at the beginning. Test run with `src/exp_virtualhome.py`, output not guranteed to be runable. 
-
-08/11: delay_react and prompt_react doesn't work since `stop` doesn't need to check DFA and cannot check using the current method, i.e., if there's a path towards accepting states.
-
-08/12: potential issues moving forward: providing env info to base agent. and Initial state. Instant reaction has issue, e.g., go to kitchen right after visiting living room is impossible if the kitchen between them is tracked too.
-
-08/23: change 'U' to 'W' for past avoidance. Adding Lang2LTL part for encoding.
-
-08/24: work on parsing predicates for mobile manipulation. Current supported predicates are: `{agent_at(), is_switchedon(), is_open(), is_grabbed(), is_touched(), is_in(), is_on()}`. Add `F` operator to task specifications.
-
-08/26: Working on scripts for pre-generating plans for spot. Working on parsing predicates and getting truth values.
+2. Similarly, you can also generate plans for robot demo by:
+```
+python src/exp_spot.py --example_fname task1 --constraint_num 10 --safety_level full
+```
