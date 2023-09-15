@@ -24,8 +24,13 @@ def main():
     # load dataset
     dataset = load_from_file(args.dataset_fpath)
     task_dict = dataset[args.exp][args.env_num][args.example_fname]
-    constraints = task_dict["constraints"][args.constraint_num] # 1 - 5
 
+    if args.diverse:
+        constraint_name = f"{args.constraint_num}_diverse"
+    else:
+        constraint_name = args.constraint_num
+
+    constraints = task_dict["constraints"][constraint_name] # 1 - 5
 
     # start vh simulator
     EXEC_FNAME= "/users/zyang157/data/zyang157/virtualhome/exec_v2.3.0/linux_exec.v2.3.0.x86_64"
@@ -44,7 +49,6 @@ def main():
 
     room2id = {room["class_name"]: room["id"] for room in rooms}
     obj2id = {node["class_name"]: node["id"] for node in g["nodes"]}
-    # breakpoint()
     # save translation
     translation_result = load_from_file(args.translation_result_fpath)
     if args.exp not in translation_result:
@@ -53,14 +57,17 @@ def main():
         translation_result[args.exp][args.env_num] = {}
     if args.example_fname not in translation_result[args.exp][args.env_num]:
         translation_result[args.exp][args.env_num][args.example_fname] = {}
-    if args.constraint_num not in translation_result[args.exp][args.env_num][args.example_fname]:
-        translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = {}
-    if translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num]:
-        trans = translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num]
+    if constraint_name not in translation_result[args.exp][args.env_num][args.example_fname]:
+        translation_result[args.exp][args.env_num][args.example_fname][constraint_name] = {}
+    if translation_result[args.exp][args.env_num][args.example_fname][constraint_name]:
+        trans = translation_result[args.exp][args.env_num][args.example_fname][constraint_name]
         pred_mapping = trans["unified_trans"]["predicate"]
         obj_mapping = trans["unified_trans"]["object"]
         grounded_pred_mapping = trans["unified_trans"]["grounded_pred"]
         input_ltl = trans["unified_trans"]["unified_ltl"]
+        sym_utts = trans["sub_trans"]["sym_utt"]
+        sym_ltls = trans["sub_trans"]["sym_ltl"]
+        placeholder_maps = trans["sub_trans"]["placeholder"]
     else:
         obj_embed_fpath = f"{args.obj_embed_prefix}vh_{args.env_num}.pkl"
         cm = constraint_module()
@@ -73,53 +80,13 @@ def main():
         trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
         if not args.no_log:
     # take_num = len(translation_result[args.example_fname][args.constraint_num]
-            translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num] = trans
+            translation_result[args.exp][args.env_num][args.example_fname][constraint_name] = trans
             save_to_file(translation_result, args.translation_result_fpath)
-        else:
-            print('sym_utts', sym_utts)
-            print('sym_ltls', sym_ltls)
-            print('placeholder_maps', placeholder_maps)
+
+    print('sym_utts', sym_utts)
+    print('sym_ltls', sym_ltls)
+    print('placeholder_maps', placeholder_maps)
     
-    # breakpoint()
-
-
-    # test constraints
-    # constraints = ["you have to go to living room before pick up salmon"]
-    # constraints = ["you have to put pie in fridge before pick up salmon"]
-    # constraints = ["you have to put pie in fridge before put salmon in the fridge"]
-    # constraints = ["you have to put pie in fridge before putting salmon in fridge", "you have to enter bathroom before entering kitchen", "you have to enter living room in the future if you pick up salmon", "don't go to bedroom if you have put salmon in the fridge", "you can visit kitchen at most two times"]
-    # constraints = ["you have to put pie in fridge before putting salmon in fridge", "you have to enter living room in the future if you pick up salmon"]
-    # input_ltl = '& W ! c d G i b F a'
-    # pred_mapping = {'a': 'agent_at(B)', 'b': 'is_grabbed(A)', 'c': 'is_in(A,D)', 'd': 'is_in(C,D)'}
-    # obj_mapping = {'A': 'salmon', 'B': 'livingroom', 'C': 'pie', 'D': 'fridge'}
-    # constraints = ["always avoid kitchen table", "always avoid tv stand", "always avoid chair"]
-    # input_ltl = '& & G ! b G ! a G ! c'
-    # pred_mapping = {'a': 'agent_at(A)', 'b': 'agent_at(B)', 'c': 'agent_at(C)'}
-    # obj_mapping = {'A': 'tvstand', 'B': 'kitchentable', 'C': 'chair'}
-    # constraints = ["you have to put apple in fridge before putting salmon in fridge", "you have to enter bathroom before entering kitchen", "don't go to living room if you have put apple in fridge"]
-    # cm = constraint_module()
-    # input_ltl, obj_mapping, pred_mapping = cm.encode_constraints(constraints)
-    # breakpoint()
-   
-    # input_ltl = 'W ! b a'
-    # obj_mapping = {'A': 'livingroom', 'B': 'salmon'}
-    # pred_mapping = {'a': 'agent_at(A)', 'b': 'is_grabbed(B)'}
-    # input_ltl = 'W ! b a'
-    # pred_mapping = {'a': 'is_in(C,B)', 'b': 'is_grabbed(A)'}
-    # obj_mapping = {'A': 'salmon', 'B': 'fridge', 'C': 'pie'}
-    # input_ltl = 'W ! b a'
-    # pred_mapping = {'a': 'is_in(A,B)', 'b': 'is_in(C,B)'}
-    # obj_mapping = {'A': 'pie', 'B': 'fridge', 'C': 'salmon'}
-    # input_ltl = '& W ! c a W ! d b'
-    # pred_mapping = {'a': 'is_in(C,A)', 'b': 'agent_at(H)', 'c': 'is_in(D,A)', 'd': 'agent_at(B)'}
-    # obj_mapping = {'A': 'fridge', 'B': 'kitchen', 'C': 'apple', 'D': 'salmon', 'H': 'bathroom'}
-    # input_ltl = '& & W ! a b W ! d h G i b G ! c'
-    # pred_mapping = {'a': 'is_in(H,J)', 'b': 'is_in(C,J)', 'c': 'agent_at(D)', 'd': 'agent_at(A)', 'h': 'agent_at(B)'}
-    # obj_mapping = {'A': 'kitchen', 'B': 'bathroom', 'C': 'apple', 'D': 'livingroom', 'H': 'salmon', 'J': 'fridge'}
-    # input_ltl = '& & & W ! b h W ! k j G i l F a G i c G ! d'
-    # pred_mapping = {'a': 'agent_at(J)', 'b': 'is_in(D,K)', 'c': 'is_in(D,C)', 'd': 'agent_at(B)', 'h': 'is_in(L,K)', 'j': 'agent_at(A)', 'k': 'agent_at(H)', 'l': 'is_grabbed(D)'}
-    # obj_mapping = {'A': 'bathroom', 'B': 'bedroom', 'C': 'fridge', 'D': 'salmon', 'H': 'kitchen', 'J': 'livingroom', 'K': 'fridge', 'L': 'pie'}
-    # breakpoint()
     grounded_pred_mapping = {}
     for prop, pred in pred_mapping.items():
         for placeholder, obj in obj_mapping.items():
@@ -230,12 +197,24 @@ def main():
     print(prompt)
 
     # evaluate completeness
+    if args.diverse: # expert formula must have been stored
+        trans = translation_result[args.exp][args.env_num][args.example_fname][args.constraint_num]
+        pred_mapping = trans["unified_trans"]["predicate"]
+        obj_mapping = trans["unified_trans"]["object"]
+        grounded_pred_mapping = trans["unified_trans"]["grounded_pred"]
+        input_ltl = trans["unified_trans"]["unified_ltl"]
+        comm.reset(args.env_num)
+        success, state_list, manip_dict = state_change_by_step_manipulation(comm, program, input_ltl, obj2id, room2id, obj_mapping, pred_mapping, init_position, init_room, stopped=True)
     # goal_state = {'salmon': {'is_in': 'fridge'}}
     goal_state = task_dict['goal_state']
     complete = evaluate_completeness(manip_dict, goal_state)
     if not args.no_log:
-        if os.path.exists(args.saved_results_fpath):
-            saved_results = load_from_file(args.saved_results_fpath)
+        if args.diverse:
+            result_path = f"{args.saved_results_fpath.split('.')[0]}_diverse.json"
+        else:
+            result_path = args.saved_results_fpath
+        if os.path.exists(result_path):
+            saved_results = load_from_file(result_path)
         else:
             saved_results = defaultdict(dict)
         result = {"constraint": constraints, "program":program, "safe": success, "completed": complete, "safety_level": args.safety_level}
@@ -247,7 +226,7 @@ def main():
             saved_results[args.exp][str(args.env_num)][args.example_fname].append(result)
         else:
             saved_results[args.exp][str(args.env_num)][args.example_fname] = [result]
-        save_to_file(saved_results, args.saved_results_fpath)
+        save_to_file(saved_results, result_path)
     else:
         print("completed", complete)
         print("safe", success)
@@ -262,7 +241,7 @@ if __name__ == "__main__":
     parser.add_argument("--planning_ts_fpath", type=str, default="prompts/planning/planning_with_cons_v2.txt", help="task specification for planning")
     parser.add_argument("--example_fname", type=str, default="0_10", help="name of the text file for tasks")
     parser.add_argument("--constraint_num", type=str, default='5', help='number of constraints applied')
-    parser.add_argument("--max_step", type=int, default=25, help="max step of generation")
+    parser.add_argument("--max_step", type=int, default=15, help="max step of generation")
     parser.add_argument("--saved_results_fpath", type=str, default="results/results_vh.json", help="filepath for saved experiment results")
     parser.add_argument("--translation_result_fpath", type=str, default="results/translation_vh.json")
     parser.add_argument("--act_embed_prefix", type=str, default="/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_vh")
@@ -270,6 +249,7 @@ if __name__ == "__main__":
     parser.add_argument("--obj_embed_prefix", default="/users/zyang157/data/zyang157/virtualhome/obj_embeds/")
     parser.add_argument("--no_log", action='store_true')
     parser.add_argument("--port", type=str, default="8080", help="port number for unity, if you want to run multiple simulation in parallel")
+    parser.add_argument("--diverse", action="store_true", help="evaluate use expert, inference use diverse")
     args = parser.parse_args()
 
     main()

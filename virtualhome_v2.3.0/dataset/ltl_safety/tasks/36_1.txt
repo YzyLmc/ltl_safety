@@ -1,0 +1,7 @@
+Open window
+Walk to living room, then to the window, and open the window.
+
+
+[WALK] <livingroom> (241)
+[WALK] <window> (310)
+[OPEN] <window> (310)

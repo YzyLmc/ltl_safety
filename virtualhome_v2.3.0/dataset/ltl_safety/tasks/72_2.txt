@@ -1,0 +1,12 @@
+Watch TV
+I sit on the sofa and watch TV.
+
+
+[WALK] <livingroom> (241)
+[WALK] <tv> (281)
+[FIND] <tv> (281)
+[FIND] <sofa> (269)
+[SIT] <sofa> (269)
+[TURNTO] <tv> (281)
+[LOOKAT] <tv> (281)
+[WATCH] <tv> (281)

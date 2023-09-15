@@ -622,7 +622,7 @@ def reprompt(translate_engine, valid_action2states, invalid_action, invalid_stat
     for state in state_eng:
         invalid_act += f"\n{state}"
     prompt = f"{task_description}\n{constraints}\n{valid_act}\n\n{invalid_act}\n\nReason of violation:"
-    breakpoint()
+    # breakpoint()
     return translate_engine.generate(prompt)[0]
 
 ## truth value function for manipulation tasks

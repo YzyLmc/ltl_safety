@@ -1,0 +1,8 @@
+Look out window
+Walk to living room and look at window
+
+
+[WALK] <livingroom> (162)
+[WALK] <window> (191)
+[TURNTO] <window> (191)
+[LOOKAT] <window> (191)

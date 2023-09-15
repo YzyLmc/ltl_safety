@@ -1,0 +1,8 @@
+Sleep
+Going to bed
+
+
+[WALK] <bedroom> (0)
+[FIND] <bed> (197)
+[TURNTO] <bed> (197)
+[SIT] <bed> (197)

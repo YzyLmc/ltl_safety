@@ -2,6 +2,6 @@ Make coffee
 Go to the kitchen and make coffee.
 
 
-[RUN] <dining_room> (1.41)
-[WALK] <coffe_maker> (1.130)
-[SWITCHON] <coffe_maker> (1.130)
+[RUN] <kitchen> (41)
+[WALK] <coffemaker> (130)
+[SWITCHON] <coffemaker> (130)

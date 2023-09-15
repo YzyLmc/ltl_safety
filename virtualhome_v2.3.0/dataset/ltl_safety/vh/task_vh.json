@@ -1,22 +1,31 @@
 {
     "mobile_manip": {
-        "1":{"0_0":{"constraints":{"5":["you have to go to living room before open firdge",
-    ""]
-        }}},
         "0": {
             "0_1": {
                 "constraints": {
                     "1": [
                         "go to bathroom means you have to go to put apple in the fridge later"
                     ],
+                    "1_diverse": [
+                        "you must put apple in fridge if you have been to bathroom"
+                    ],
                     "2": [
                         "if you open the fridge you need to close the fridge later",
                         "you can only go to bathroom twice"
+                    ],
+                    "2_diverse": [
+                        "don't forget to close the fridge if you open it up",
+                        "go to bathroom no more than two times"
                     ],
                     "3": [
                         "you have to enter living room before bathroom",
                         "you have to pick up apple before placing the apple into fridge",
                         "if you open the fridge you need to close the fridge later"
+                    ],
+                    "3_diverse": [
+                        "never go to bathroom before living room",
+                        "pick up apple before you place it in the fridge",
+                        "don't forget to close the fridge if you open it up"
                     ],
                     "4": [
                         "you have to enter living room before bathroom",
@@ -24,12 +33,25 @@
                         "if you open the fridge you need to close the fridge later",
                         "go to bathroom means you have to go to put apple in the fridge later"
                     ],
+                    "4_diverse": [
+                        "never go to bathroom before living room",
+                        "pick up apple before you place it in the fridge",
+                        "don't forget to close the fridge if you open it up",
+                        "you must put apple in fridge if you have been to bathroom"
+                    ],
                     "5": [
                         "you have to enter living room before bathroom",
                         "you have to pick up apple before placing the apple into fridge",
                         "if you open the fridge you need to close the fridge later",
                         "go to bathroom means you have to go to put apple in the fridge later",
                         "you can only go to bathroom twice"
+                    ],
+                    "5_diverse": [
+                        "never go to bathroom before living room",
+                        "pick up apple before you place it in the fridge",
+                        "don't forget to close the fridge if you open it up",
+                        "you must put apple in fridge if you have been to bathroom",
+                        "go to bathroom no more than two times"
                     ]
                 },
                 "goal_state": {},
@@ -41,8 +63,15 @@
                     "1": [
                         "close the fridge before you open the microwave up"
                     ],
+                    "1_diverse": [
+                        "you cannot open microwave before you close the fridge"
+                    ],
                     "2": [
                         "entering bathroom means you cannot visit living room even once",
+                        "don't open fridge before picking up salmon"
+                    ],
+                    "2_diverse": [
+                        "you can no longer visit living room if you go into bathroom",
                         "don't open fridge before picking up salmon"
                     ],
                     "3": [
@@ -50,18 +79,36 @@
                         "entering bathroom means you cannot visit living room even once",
                         "don't open fridge before picking up salmon"
                     ],
+                    "3_diverse": [
+                        "never go to kitchen before bathroom",
+                        "you can no longer visit living room if you go into bathroom",
+                        "don't open fridge before picking up salmon"
+                    ],
                     "4": [
                         "you have to enter bathroom before kitchen",
-                        "you must go to couch before entering living room",
+                        "you must go to sofa before entering living room",
                         "don't open fridge before picking up salmon",
                         "close the fridge before you open the microwave up"
                     ],
+                    "4_diverse": [
+                        "never go to kitchen before bathroom",
+                        "go to sofa will unlock living room for you to visit",
+                        "don't open fridge before picking up salmon",
+                        "you cannot open microwave before you close the fridge"
+                    ],
                     "5": [
                         "you have to enter bathroom before kitchen",
-                        "you must go to couch before entering living room",
+                        "you must go to sofa before entering living room",
                         "entering bathroom means you cannot visit living room even once",
                         "don't open fridge before picking up salmon",
                         "close the fridge before you open the microwave up"
+                    ],
+                    "5_diverse": [
+                        "never go to kitchen before bathroom",
+                        "go to sofa will unlock living room for you to visit",
+                        "you can no longer visit living room if you go into bathroom",
+                        "don't open fridge before picking up salmon",
+                        "you cannot open microwave before you close the fridge"
                     ]
                 },
                 "goal_state": {
@@ -77,7 +124,14 @@
                     "1": [
                         "you have to go to bathroom later if you have closed the frigde"
                     ],
+                    "1_diverse": [
+                        "closing the fridge means you have to go to bathroom in the future"
+                    ],
                     "2": [
+                        "pick up apple before turning on the computer",
+                        "go to bathroom later if you have been to living room"
+                    ],
+                    "2_diverse": [
                         "pick up apple before turning on the computer",
                         "go to bathroom later if you have been to living room"
                     ],
@@ -86,11 +140,22 @@
                         "you have to go to bathroom later if you have closed the frigde",
                         "you have to visit toilet after visiting kitchen"
                     ],
+                    "3_diverse": [
+                        "if you switch on the computer you will have to pick up salmon in the future",
+                        "closing the fridge means you have to go to bathroom in the future",
+                        "go to toilet but only after kitchen is visited"
+                    ],
                     "4": [
                         "if you switch on the computer you will have to pick up salmon in the future",
                         "pick up apple before turning on the computer",
                         "go to bathroom later if you have been to living room",
                         "you have to visit toilet after visiting kitchen"
+                    ],
+                    "4_diverse": [
+                        "if you switch on the computer you will have to pick up salmon in the future",
+                        "pick up apple before turning on the computer",
+                        "go to bathroom later if you have been to living room",
+                        "go to toilet but only after kitchen is visited"
                     ],
                     "5": [
                         "if you switch on the computer you will have to pick up salmon in the future",
@@ -98,6 +163,13 @@
                         "go to bathroom later if you have been to living room",
                         "you have to go to bathroom later if you have closed the frigde",
                         "you have to visit toilet after visiting kitchen"
+                    ],
+                    "5_diverse": [
+                        "if you switch on the computer you will have to pick up salmon in the future",
+                        "pick up apple before turning on the computer",
+                        "go to bathroom later if you have been to living room",
+                        "closing the fridge means you have to go to bathroom in the future",
+                        "go to toilet but only after kitchen is visited"
                     ]
                 },
                 "goal_state": {
@@ -111,29 +183,54 @@
             "3_3": {
                 "constraints": {
                     "1": [
-                        "always avoid couch"
+                        "always avoid sofa"
+                    ],
+                    "1_diverse": [
+                        "never go near sofa"
                     ],
                     "2": [
                         "don't switch on the radio if you haven't put salmon in the fridge",
                         "if you open fridge you have to close the fridge in the future"
+                    ],
+                    "2_diverse": [
+                        "you can switch on the radio only after you put salmon in the fridge",
+                        "don't forget to close the fridge if you have opened it"
                     ],
                     "3": [
                         "you can open fridge at most twice",
                         "don't enter bedroom if you haven't been to living room",
                         "if you open fridge you have to close the fridge in the future"
                     ],
+                    "3_diverse": [
+                        "you can open fridge at most twice",
+                        "don't enter bedroom if you haven't been to living room",
+                        "don't forget to close the fridge if you have opened it"
+                    ],
                     "4": [
                         "don't switch on the radio if you haven't put salmon in the fridge",
                         "don't enter bedroom if you haven't been to living room",
                         "if you open fridge you have to close the fridge in the future",
-                        "always avoid couch"
+                        "always avoid sofa"
+                    ],
+                    "4_diverse": [
+                        "you can switch on the radio only after you put salmon in the fridge",
+                        "don't enter bedroom if you haven't been to living room",
+                        "don't forget to close the fridge if you have opened it",
+                        "never go near sofa"
                     ],
                     "5": [
                         "don't switch on the radio if you haven't put salmon in the fridge",
                         "you can open fridge at most twice",
                         "don't enter bedroom if you haven't been to living room",
                         "if you open fridge you have to close the fridge in the future",
-                        "always avoid couch"
+                        "always avoid sofa"
+                    ],
+                    "5_diverse": [
+                        "you can switch on the radio only after you put salmon in the fridge",
+                        "you can open fridge at most twice",
+                        "don't enter bedroom if you haven't been to living room",
+                        "don't forget to close the fridge if you have opened it",
+                        "never go near sofa"
                     ]
                 },
                 "goal_state": {
@@ -146,12 +243,29 @@
             },
             "74_1": {
                 "constraints": {
-                    "5": [
+                    "1": [
+                        "don't put pillow on sofa if you haven't been to bath room"
+                    ],
+                    "1_diverse": [
+                        "only put pillow on sofa if you have already been to bathroom"
+                    ],
+                    "2": [
                         "put salmon in fridge before going to bed room",
-                        "you have to put pie in fridge later if you have been to bed",
+                        "you have to put pie in fridge later if you have been to bed"
+                    ],
+                    "2_diverse": [
+                        "only go to bedroom after salmon is in the fridge",
+                        "you have to put pie in fridge later if you have been to bed"
+                    ],
+                    "3": [
+                        "put salmon in fridge before going to bed room",
                         "don't put pillow on sofa if you haven't been to bath room",
-                        "you can visit bathroom for three times at most",
                         "you have to go to livingroom later if you have been to sofa"
+                    ],
+                    "3_diverse": [
+                        "only go to bedroom after salmon is in the fridge",
+                        "only put pillow on sofa if you have already been to bathroom",
+                        "go to sofa means you have to visit livingroom in the future"
                     ],
                     "4": [
                         "put salmon in fridge before going to bed room",
@@ -159,17 +273,25 @@
                         "you can visit bathroom for three times at most",
                         "you have to go to livingroom later if you have been to sofa"
                     ],
-                    "3": [
+                    "4_diverse": [
+                        "only go to bedroom after salmon is in the fridge",
+                        "you have to put pie in fridge later if you have been to bed",
+                        "you cannot visit bathroom for more than three times",
+                        "go to sofa means you have to visit livingroom in the future"
+                    ],
+                    "5": [
                         "put salmon in fridge before going to bed room",
+                        "you have to put pie in fridge later if you have been to bed",
                         "don't put pillow on sofa if you haven't been to bath room",
+                        "you can visit bathroom for three times at most",
                         "you have to go to livingroom later if you have been to sofa"
                     ],
-                    "2": [
-                        "put salmon in fridge before going to bed room",
-                        "you have to put pie in fridge later if you have been to bed"
-                    ],
-                    "1": [
-                        "don't put pillow on sofa if you haven't been to bath room"
+                    "5_diverse": [
+                        "only go to bedroom after salmon is in the fridge",
+                        "you have to put pie in fridge later if you have been to bed",
+                        "only put pillow on sofa if you have already been to bathroom",
+                        "you cannot visit bathroom for more than three times",
+                        "go to sofa means you have to visit livingroom in the future"
                     ]
                 },
                 "goal_state": {
@@ -180,6 +302,309 @@
                 "init_room": "kitchen",
                 "instruction": "Put pillow on sofa"
             }
+        },
+        "1": {
+            "0_0": {
+                "constraints": {
+                    "1": [
+                        "put apple in the fridge before entering living room"
+                    ],
+                    "1_diverse": [
+                        "you cannot enter living room if you didn't put an apple in the fridge"
+                    ],
+                    "2": [
+                        "you can only open fridge at most three times",
+                        "you have to close the fridge if you have opened the fridge"
+                    ],
+                    "2_diverse": [
+                        "you can only open fridge at most three times",
+                        "you have to close the fridge if you have opened the fridge"
+                    ],
+                    "3": [
+                        "put apple in the fridge before entering living room",
+                        "grab cutlet before you grab apple",
+                        "you can only open fridge at most three times"
+                    ],
+                    "3_diverse": [
+                        "you cannot enter living room if you didn't put an apple in the fridge",
+                        "don't grab apple if you haven't grabbed cutlet",
+                        "you can only open fridge at most three times"
+                    ],
+                    "4": [
+                        "you have to go to living room before open fridge",
+                        "put apple in the fridge before entering living room",
+                        "you can only open fridge at most three times",
+                        "you have to close the fridge if you have opened the fridge"
+                    ],
+                    "4_diverse": [
+                        "don't go to living room before firdge is open",
+                        "you cannot enter living room if you didn't put an apple in the fridge",
+                        "you can only open fridge at most three times",
+                        "you have to close the fridge if you have opened the fridge"
+                    ],
+                    "5": [
+                        "you have to go to living room before open fridge",
+                        "put apple in the fridge before entering living room",
+                        "grab cutlet before you grab apple",
+                        "you can only open fridge at most three times",
+                        "you have to close the fridge if you have opened the fridge"
+                    ],
+                    "5_diverse": [
+                        "don't go to living room before firdge is open",
+                        "you cannot enter living room if you didn't put an apple in the fridge",
+                        "don't grab apple if you haven't grabbed cutlet",
+                        "you can only open fridge at most three times",
+                        "you have to close the fridge if you have opened the fridge"
+                    ]
+                },
+                "goal_state": {
+                    "chicken": {
+                        "is_in": "fridge"
+                    }
+                },
+                "init_room": "kitchen",
+                "instruction": "Pick up chicken and put it into the fridge"
+            },
+            "105_2": {
+                "constraints": {
+                    "1": [
+                        "you have to put chicken into microwave before entering bedroom"
+                    ],
+                    "1_diverse": [
+                        "you have to put chicken into microwave before entering bedroom"
+                    ],
+                    "2": [
+                        "you can visit bathroom at most two times",
+                        "never go to bedroom if you have been to living room"
+                    ],
+                    "2_diverse": [
+                        "never visit bathroom more than two times",
+                        "don't go to bedroom afterward if you visit living room"
+                    ],
+                    "3": [
+                        "you can visit bathroom at most two times",
+                        "never open the fridge",
+                        "never go to bedroom if you have been to living room"
+                    ],
+                    "3_diverse": [
+                        "never visit bathroom more than two times",
+                        "don't open fridge",
+                        "don't go to bedroom afterward if you visit living room"
+                    ],
+                    "4": [
+                        "don't enter bedroom if you haven't close the microwave",
+                        "you have to put chicken into microwave before entering bedroom",
+                        "never open the fridge",
+                        "never go to bedroom if you have been to living room"
+                    ],
+                    "4_diverse": [
+                        "don't go to bedroom if the microwave is open",
+                        "you have to put chicken into microwave before entering bedroom",
+                        "don't open fridge",
+                        "don't go to bedroom afterward if you visit living room"
+                    ],
+                    "5": [
+                        "don't enter bedroom if you haven't close the microwave",
+                        "you have to put chicken into microwave before entering bedroom",
+                        "you can visit bathroom at most two times",
+                        "never open the fridge",
+                        "never go to bedroom if you have been to living room"
+                    ],
+                    "5_diverse": [
+                        "don't go to bedroom if the microwave is open",
+                        "you have to put chicken into microwave before entering bedroom",
+                        "never visit bathroom more than two times",
+                        "don't open fridge",
+                        "don't go to bedroom afterward if you visit living room"
+                    ]
+                },
+                "goal_state": {
+                    "window": {
+                        "is_open": true
+                    }
+                },
+                "init_room": "bathroom",
+                "instruction": "Open window in bedroom"
+            },
+            "36_1": {
+                "constraints": {
+                    "1": [
+                        "don't open window before you open fridge"
+                    ],
+                    "1_diverse": [
+                        "never open window before you open fridge"
+                    ],
+                    "2": [
+                        "you have to go to bathroom before entering living room",
+                        "you can go to living room three times at most"
+                    ],
+                    "2_diverse": [
+                        "don't enter living room if you haven't visited bathroom",
+                        "you can go to living room three times at most"
+                    ],
+                    "3": [
+                        "you have to go to bathroom before entering living room",
+                        "if you open fridge, you must close it later",
+                        "you can go to living room three times at most"
+                    ],
+                    "3_diverse": [
+                        "don't enter living room if you haven't visited bathroom",
+                        "remember to close the fridge if you open it",
+                        "you can go to living room three times at most"
+                    ],
+                    "4": [
+                        "you have to go to bathroom before entering living room",
+                        "put chicken into fridge before you enter bathroom",
+                        "don't open window before you open fridge",
+                        "if you open fridge, you must close it later"
+                    ],
+                    "4_diverse": [
+                        "don't enter living room if you haven't visited bathroom",
+                        "you cannot enter bathroom if you haven't put chicken into the fridge",
+                        "never open window before you open fridge",
+                        "remember to close the fridge if you open it"
+                    ],
+                    "5": [
+                        "you have to go to bathroom before entering living room",
+                        "put chicken into fridge before you enter bathroom",
+                        "don't open window before you open fridge",
+                        "if you open fridge, you must close it later",
+                        "you can go to living room three times at most"
+                    ],
+                    "5_diverse": [
+                        "don't enter living room if you haven't visited bathroom",
+                        "you cannot enter bathroom if you haven't put chicken into the fridge",
+                        "never open window before you open fridge",
+                        "remember to close the fridge if you open it",
+                        "you can go to living room three times at most"
+                    ]
+                },
+                "goal_state": {
+                    "window": {
+                        "is_open": true
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Open the window in living room"
+            },
+            "71_1": {
+                "constraints": {
+                    "1": [
+                        "don't switch on coffeemaker if you haven't put chicken in microwave"
+                    ],
+                    "1_diverse": [
+                        "before you put chicken in microwave you cannot switch on coffee machine"
+                    ],
+                    "2": [
+                        "you can go to toilet but only after picking up chicken",
+                        "you can visit living room at most three times"
+                    ],
+                    "2_diverse": [
+                        "only after picking up chicken you can go to toilet",
+                        "don't visit living room more than three times"
+                    ],
+                    "3": [
+                        "you have to pick up cutlet before turning on the coffee machine",
+                        "you can visit living room at most three times",
+                        "don't pick up chicken if you have been to bathroom"
+                    ],
+                    "3_diverse": [
+                        "don't turn on coffee machine until you pick up the cutlet",
+                        "don't visit living room more than three times",
+                        "once you have been to bathroom, you cannot pick up chicken anymore"
+                    ],
+                    "4": [
+                        "you have to pick up cutlet before turning on the coffee machine",
+                        "don't switch on coffeemaker if you haven't put chicken in microwave",
+                        "you can go to toilet but only after picking up chicken",
+                        "don't pick up chicken if you have been to bathroom"
+                    ],
+                    "4_diverse": [
+                        "don't turn on coffee machine until you pick up the cutlet",
+                        "before you put chicken in microwave you cannot switch on coffee machine",
+                        "only after picking up chicken you can go to toilet",
+                        "once you have been to bathroom, you cannot pick up chicken anymore"
+                    ],
+                    "5": [
+                        "you have to pick up cutlet before turning on the coffee machine",
+                        "don't switch on coffeemaker if you haven't put chicken in microwave",
+                        "you can go to toilet but only after picking up chicken",
+                        "you can visit living room at most three times",
+                        "don't pick up chicken if you have been to bathroom"
+                    ],
+                    "5_diverse": [
+                        "don't turn on coffee machine until you pick up the cutlet",
+                        "before you put chicken in microwave you cannot switch on coffee machine",
+                        "only after picking up chicken you can go to toilet",
+                        "don't visit living room more than three times",
+                        "once you have been to bathroom, you cannot pick up chicken anymore"
+                    ]
+                },
+                "goal_state": {
+                    "coffeemaker": {
+                        "is_switchedon": true
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Turn on coffee maker in the kitchen"
+            },
+            "72_2": {
+                "constraints": {
+                    "1": [
+                        "you have to close the fridge if you have open the fridge"
+                    ],
+                    "1_diverse": [
+                        "don't forget to close the fridge if you ever open it"
+                    ],
+                    "2": [
+                        "place the cutlet in the fridge before you go to living room",
+                        "don't put cutlet in the microwave"
+                    ],
+                    "2_diverse": [
+                        "before you go to living room you must put cutlet int fridge",
+                        "you can never put cutlet in the microwave"
+                    ],
+                    "3": [
+                        "don't go living room if you haven't been to bathroom",
+                        "you cannot walk to bathroom before you pick up cutlet",
+                        "don't put cutlet in the microwave"
+                    ],
+                    "3_diverse": [
+                        "you cannot go to living room if you haven't been to bathroom",
+                        "you cannot walk to bathroom before you pick up cutlet",
+                        "you can never put cutlet in the microwave"
+                    ],
+                    "4": [
+                        "don't go living room if you haven't been to bathroom",
+                        "you cannot walk to bathroom before you pick up cutlet",
+                        "you have to close the fridge if you have open the fridge",
+                        "don't put cutlet in the microwave"
+                    ],
+                    "4_diverse": [
+                        "you cannot go to living room if you haven't been to bathroom",
+                        "you cannot walk to bathroom before you pick up cutlet",
+                        "don't forget to close the fridge if you ever open it",
+                        "you can never put cutlet in the microwave"
+                    ],
+                    "5": [
+                        "don't go living room if you haven't been to bathroom",
+                        "you cannot walk to bathroom before you pick up cutlet",
+                        "place the cutlet in the fridge before you go to living room",
+                        "you have to close the fridge if you have open the fridge",
+                        "don't put cutlet in the microwave"
+                    ],
+                    "5_diverse": [
+                        "you cannot go to living room if you haven't been to bathroom",
+                        "you cannot walk to bathroom before you pick up cutlet",
+                        "before you go to living room you must put cutlet int fridge",
+                        "don't forget to close the fridge if you ever open it",
+                        "you can never put cutlet in the microwave"
+                    ]
+                },
+                "goal_state": {},
+                "init_room": "bedroom",
+                "instruction": "Watch TV in living room"
+            }
         }
     },
     "rooms": {
@@ -189,31 +614,56 @@
                     "1": [
                         "go to living room means you have to go to kitchen in the future"
                     ],
+                    "1_diverse": [
+                        "you have to go to kitchen if you go to living room"
+                    ],
                     "2": [
-                        "you have to enter living room before bathroom",
-                        "you have to go to kitchen right after living room"
+                        "you have to go to kitchen later if you have visited living room",
+                        "go to living room means you have to go to kitchen in the future"
+                    ],
+                    "2_diverse": [
+                        "when you go to living room, enter kitchen afterward",
+                        "you have to go to kitchen if you go to living room"
                     ],
                     "3": [
                         "you have to enter living room before bathroom",
-                        "you have to go to kitchen right after living room",
-                        "go to living room means you have to go to kitchen in the future"
+                        "you have to enter bedroom before going into living room",
+                        "go to bathroom means you have to go to kitchen later"
+                    ],
+                    "3_diverse": [
+                        "don't go to bathroom before living room",
+                        "enter bedroom before living room",
+                        "you can go to bathroom but then you will need to go to kitchen too"
                     ],
                     "4": [
                         "you have to enter living room before bathroom",
                         "you have to enter bedroom before going into living room",
                         "go to living room means you have to go to kitchen in the future",
-                        "you can only go to kitchen twice"
+                        "go to bathroom means you have to go to kitchen later"
+                    ],
+                    "4_diverse": [
+                        "don't go to bathroom before living room",
+                        "enter bedroom before living room",
+                        "you have to go to kitchen if you go to living room",
+                        "you can go to bathroom but then you will need to go to kitchen too"
                     ],
                     "5": [
                         "you have to enter living room before bathroom",
                         "you have to enter bedroom before going into living room",
-                        "you have to go to kitchen right after living room",
+                        "you have to go to kitchen later if you have visited living room",
                         "go to living room means you have to go to kitchen in the future",
-                        "you can only go to bathroom once"
+                        "go to bathroom means you have to go to kitchen later"
+                    ],
+                    "5_diverse": [
+                        "don't go to bathroom before living room",
+                        "enter bedroom before living room",
+                        "when you go to living room, enter kitchen afterward",
+                        "you have to go to kitchen if you go to living room",
+                        "you can go to bathroom but then you will need to go to kitchen too"
                     ]
                 },
                 "goal_state": {},
-                "init_room": "bedroom",
+                "init_room": "kitchen",
                 "instruction": "Walk to toilet"
             },
             "0_10": {
@@ -221,28 +671,52 @@
                     "1": [
                         "you have to enter bathroom before kitchen"
                     ],
+                    "1_diverse": [
+                        "don't go to kitchen until you enter bathroom"
+                    ],
                     "2": [
                         "entering bathroom means you have to visit living room once",
                         "you can only go to kitchen twice"
                     ],
-                    "3": [
-                        "you have to enter living room right after entering kitchen",
+                    "2_diverse": [
                         "entering bathroom means you have to visit living room once",
-                        "don't go to bedroom more than two times"
+                        "don't go to kitchen more than twice"
+                    ],
+                    "3": [
+                        "you have to enter living room in the future if you have entered kitchen",
+                        "entering bathroom means you have to visit living room once",
+                        "don't go to bedroom more than three times"
+                    ],
+                    "3_diverse": [
+                        "you can enter kitchen, but you will have to visit living room in the future too",
+                        "entering bathroom means you have to visit living room once",
+                        "only visiting bedroom less than three times is allowed"
                     ],
                     "4": [
+                        "you have to enter bathroom before kitchen",
+                        "entering bathroom means you have to visit living room once",
+                        "you can only go to kitchen twice",
+                        "don't go to bedroom more than three times"
+                    ],
+                    "4_diverse": [
+                        "don't go to kitchen until you enter bathroom",
+                        "entering bathroom means you have to visit living room once",
+                        "don't go to kitchen more than twice",
+                        "only visiting bedroom less than three times is allowed"
+                    ],
+                    "5": [
                         "you have to enter bathroom before kitchen",
                         "you have to enter living room in the future if you have entered kitchen",
                         "entering bathroom means you have to visit living room once",
                         "you can only go to kitchen twice",
                         "don't go to bedroom more than three times"
                     ],
-                    "5": [
-                        "you have to enter bathroom before kitchen",
-                        "you have to enter living room right after entering kitchen",
+                    "5_diverse": [
+                        "don't go to kitchen until you enter bathroom",
+                        "you can enter kitchen, but you will have to visit living room in the future too",
                         "entering bathroom means you have to visit living room once",
-                        "you can only go to kitchen twice",
-                        "don't go to bedroom more than two times"
+                        "don't go to kitchen more than twice",
+                        "only visiting bedroom less than three times is allowed"
                     ]
                 },
                 "goal_state": {
@@ -258,13 +732,25 @@
                     "1": [
                         "you have to enter bathroom before living room"
                     ],
+                    "1_diverse": [
+                        "only go to living room after you visit bathroom"
+                    ],
                     "2": [
                         "don't enter bathroom before bedroom",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
+                    "2_diverse": [
+                        "you cannot enter bathroom if you haven't visited bedroom",
                         "don't enter living room if you haven't enter kitchen"
                     ],
                     "3": [
                         "you have to enter bathroom before living room",
                         "don't enter bathroom before bedroom",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
+                    "3_diverse": [
+                        "only go to living room after you visit bathroom",
+                        "you cannot enter bathroom if you haven't visited bedroom",
                         "don't enter living room if you haven't enter kitchen"
                     ],
                     "4": [
@@ -273,10 +759,23 @@
                         "you cannot go to bathroom if you have visited kitchen",
                         "don't enter living room if you haven't enter kitchen"
                     ],
+                    "4_diverse": [
+                        "you cannot enter bathroom if you haven't visited bedroom",
+                        "you are not allowed to go to bedroom more than two times",
+                        "you cannot go to bathroom if you have visited kitchen",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
                     "5": [
                         "you have to enter bathroom before living room",
                         "don't enter bathroom before bedroom",
                         "you can go to bedroom at most twice",
+                        "you cannot go to bathroom if you have visited kitchen",
+                        "don't enter living room if you haven't enter kitchen"
+                    ],
+                    "5_diverse": [
+                        "only go to living room after you visit bathroom",
+                        "you cannot enter bathroom if you haven't visited bedroom",
+                        "you are not allowed to go to bedroom more than two times",
                         "you cannot go to bathroom if you have visited kitchen",
                         "don't enter living room if you haven't enter kitchen"
                     ]
@@ -294,8 +793,15 @@
                     "1": [
                         "you have to enter bathroom before living room"
                     ],
+                    "1_diverse": [
+                        "no one can enter living room before bathroom"
+                    ],
                     "2": [
                         "you can only go to bathroom once",
+                        "go to bathroom means you have to visit kitchen"
+                    ],
+                    "2_diverse": [
+                        "never go to bathroom twice",
                         "go to bathroom means you have to visit kitchen"
                     ],
                     "3": [
@@ -303,9 +809,20 @@
                         "you have to visit bedroom at most two times",
                         "you cannot go to bathroom if kitchen is visited"
                     ],
+                    "3_diverse": [
+                        "never go to bathroom twice",
+                        "you have to visit bedroom at most two times",
+                        "go to kitchen and you mustn't go to bathroom"
+                    ],
                     "4": [
                         "you have to enter bathroom before living room",
                         "you can only go to bathroom once",
+                        "go to bathroom means you have to visit kitchen",
+                        "you have to visit bedroom at most two times"
+                    ],
+                    "4_diverse": [
+                        "no one can enter living room before bathroom",
+                        "never go to bathroom twice",
                         "go to bathroom means you have to visit kitchen",
                         "you have to visit bedroom at most two times"
                     ],
@@ -315,6 +832,13 @@
                         "go to bathroom means you have to visit kitchen",
                         "you have to visit bedroom at most two times",
                         "you cannot go to bathroom if kitchen is visited"
+                    ],
+                    "5_diverse": [
+                        "no one can enter living room before bathroom",
+                        "never go to bathroom twice",
+                        "go to bathroom means you have to visit kitchen",
+                        "you have to visit bedroom at most two times",
+                        "go to kitchen and you mustn't go to bathroom"
                     ]
                 },
                 "goal_state": {},
@@ -326,8 +850,15 @@
                     "1": [
                         "don't go to bedroom if you haven't been to living room"
                     ],
+                    "1_diverse": [
+                        "don't go to bedroom if you haven't been to living room"
+                    ],
                     "2": [
                         "you have to visit kitchen at most two times",
+                        "you have to visit bedroom if you ever been to bathroom"
+                    ],
+                    "2_diverse": [
+                        "don't enter kitchen over two times",
                         "you have to visit bedroom if you ever been to bathroom"
                     ],
                     "3": [
@@ -335,11 +866,22 @@
                         "don't go to bedroom if you haven't been to living room",
                         "you must visit kitchen right after living room"
                     ],
+                    "3_diverse": [
+                        "never go to bedroom if you haven't visit kitchen",
+                        "don't go to bedroom if you haven't been to living room",
+                        "go to kitchen right after you enter living room"
+                    ],
                     "4": [
                         "you have to visit kitchen at most two times",
                         "you cannot go to bedroom before kitchen",
                         "don't go to bedroom if you haven't been to living room",
                         "you must visit kitchen right after living room"
+                    ],
+                    "4_diverse": [
+                        "don't enter kitchen over two times",
+                        "never go to bedroom if you haven't visit kitchen",
+                        "don't go to bedroom if you haven't been to living room",
+                        "go to kitchen right after you enter living room"
                     ],
                     "5": [
                         "you have to visit kitchen at most two times",
@@ -347,6 +889,13 @@
                         "you have to visit bedroom if you ever been to bathroom",
                         "don't go to bedroom if you haven't been to living room",
                         "you must visit kitchen right after living room"
+                    ],
+                    "5_diverse": [
+                        "don't enter kitchen over two times",
+                        "never go to bedroom if you haven't visit kitchen",
+                        "you have to visit bedroom if you ever been to bathroom",
+                        "don't go to bedroom if you haven't been to living room",
+                        "go to kitchen right after you enter living room"
                     ]
                 },
                 "goal_state": {},
@@ -355,14 +904,118 @@
             }
         },
         "1": {
-            "0_2": {
+            "12_2": {
                 "constraints": {
+                    "1": [
+                        "go to kitchen means you have to go to bathroom in the future"
+                    ],
+                    "1_diverse": [
+                        "you have to go to bathroom in the future if you have been to kitchen"
+                    ],
+                    "2": [
+                        "you can visit kitchen at most three times",
+                        "go to kitchen means you have to go to bathroom in the future"
+                    ],
+                    "2_diverse": [
+                        "you cannot visit kitchen more than three times",
+                        "you have to go to bathroom in the future if you have been to kitchen"
+                    ],
+                    "3": [
+                        "don't go to bathroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom too in the future",
+                        "you can visit kitchen at most three times"
+                    ],
+                    "3_diverse": [
+                        "don't go to bathroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom afterward",
+                        "you cannot visit kitchen more than three times"
+                    ],
+                    "4": [
+                        "don't go to bathroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom too in the future",
+                        "don't go to bathroom before bedroom is visited",
+                        "go to kitchen means you have to go to bathroom in the future"
+                    ],
+                    "4_diverse": [
+                        "don't go to bathroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom afterward",
+                        "never go to bathroom before bedroom",
+                        "you have to go to bathroom in the future if you have been to kitchen"
+                    ],
+                    "5": [
+                        "don't go to bathroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom too in the future",
+                        "you can visit kitchen at most three times",
+                        "don't go to bathroom before bedroom is visited",
+                        "go to kitchen means you have to go to bathroom in the future"
+                    ],
+                    "5_diverse": [
+                        "don't go to bathroom if you haven't been to living room",
+                        "if you visit kitchen, you have to visit bathroom afterward",
+                        "you cannot visit kitchen more than three times",
+                        "never go to bathroom before bedroom",
+                        "you have to go to bathroom in the future if you have been to kitchen"
+                    ]
+                },
+                "goal_state": {
+                    "lightswitch": {
+                        "is_switchedon": true
+                    }
+                },
+                "init_room": "bedroom",
+                "instruction": "Turn the lightswitch in bath room on"
+            },
+            "1_2": {
+                "constraints": {
+                    "1": [
+                        "don't enter bedroom if you haven't enter living room"
+                    ],
+                    "1_diverse": [
+                        "you can enter living room but you won't be able to enter bedroom after that"
+                    ],
+                    "2": [
+                        "don't enter bathroom before living room",
+                        "you cannot go to bathroom if you have visited bedroom"
+                    ],
+                    "2_diverse": [
+                        "don't enter bathroom before living room",
+                        "once you visited bedroom, you will never be able to visit bathroom"
+                    ],
+                    "3": [
+                        "you can go to bedroom at most twice",
+                        "you cannot go to bathroom if you have visited bedroom",
+                        "don't enter bedroom if you haven't enter living room"
+                    ],
+                    "3_diverse": [
+                        "you can go to bedroom at most two times",
+                        "once you visited bedroom, you will never be able to visit bathroom",
+                        "you can enter living room but you won't be able to enter bedroom after that"
+                    ],
+                    "4": [
+                        "you have to enter bathroom before bedroom",
+                        "don't enter bathroom before living room",
+                        "you cannot go to bathroom if you have visited bedroom",
+                        "don't enter bedroom if you haven't enter living room"
+                    ],
+                    "4_diverse": [
+                        "don't go to bedroom before bathroom",
+                        "don't enter bathroom before living room",
+                        "once you visited bedroom, you will never be able to visit bathroom",
+                        "you can enter living room but you won't be able to enter bedroom after that"
+                    ],
                     "5": [
                         "you have to enter bathroom before bedroom",
                         "don't enter bathroom before living room",
                         "you can go to bedroom at most twice",
                         "you cannot go to bathroom if you have visited bedroom",
                         "don't enter bedroom if you haven't enter living room"
+                    ],
+                    "5_diverse": [
+                        "don't go to bedroom before bathroom",
+                        "don't enter bathroom before living room",
+                        "you can go to bedroom at most two times",
+                        "once you visited bedroom, you will never be able to visit bathroom",
+                        "you can enter living room but you won't be able to enter bedroom after that"
                     ]
                 },
                 "goal_state": {
@@ -371,51 +1024,149 @@
                     }
                 },
                 "init_room": "kitchen",
-                "instruction": "Write email on computer"
+                "instruction": "Write email on computer on a chair in bedroom"
             },
-            "12_2": {
+            "4_3": {
                 "constraints": {
+                    "1": [
+                        "don't go to bedroom if you haven't been to bathroom"
+                    ],
+                    "1_diverse": [
+                        "don't enter bathroom before bedroom"
+                    ],
+                    "2": [
+                        "don't go to bedroom if you haven't been to bathroom",
+                        "don't go to bedroom before entering living room"
+                    ],
+                    "2_diverse": [
+                        "don't enter bathroom before bedroom",
+                        "don't go to bedroom before entering living room"
+                    ],
+                    "3": [
+                        "don't go to bedroom before entering living room",
+                        "you can visit bathroom at most three times",
+                        "go to living room means you have to go to kitchen later"
+                    ],
+                    "3_diverse": [
+                        "don't go to bedroom before entering living room",
+                        "you cannot visit bathroom for more than three times",
+                        "you must go to kitchen if you have been to living room"
+                    ],
+                    "4": [
+                        "you have to go to kitchen before visit bathroom",
+                        "don't go to bedroom if you haven't been to bathroom",
+                        "don't go to bedroom before entering living room",
+                        "go to living room means you have to go to kitchen later"
+                    ],
+                    "4_diverse": [
+                        "go to kitchen before bathroom",
+                        "don't enter bathroom before bedroom",
+                        "don't go to bedroom before entering living room",
+                        "you must go to kitchen if you have been to living room"
+                    ],
                     "5": [
-                        "don't go to bedroom if you haven't been to living room",
-                        "if you visit kitchen, you have to visit bathroom too in the future",
-                        "you can visit kitchen at most three times",
-                        "don't go to bedroom before bathroom is visited",
-                        "go to kitchen means you have to go to bedroom in the future"
+                        "you have to go to kitchen before visit bathroom",
+                        "don't go to bedroom if you haven't been to bathroom",
+                        "don't go to bedroom before entering living room",
+                        "you can visit bathroom at most three times",
+                        "go to living room means you have to go to kitchen later"
+                    ],
+                    "5_diverse": [
+                        "go to kitchen before bathroom",
+                        "don't enter bathroom before bedroom",
+                        "don't go to bedroom before entering living room",
+                        "you cannot visit bathroom for more than three times",
+                        "you must go to kitchen if you have been to living room"
                     ]
                 },
-                "goal_state": {
-                    "init_room": "",
-                    "instruction": "",
-                    "lightswitch": {
-                        "is_switchedon": true
-                    }
-                },
-                "instruction": "Turn the lightswitch on"
+                "goal_state": {},
+                "init_room": "kitchen",
+                "instruction": "Sit down on a chair in bedroom"
             },
             "71_1": {
                 "constraints": {
+                    "1": [
+                        "you can go to kitchen for at most three times"
+                    ],
+                    "1_diverse": [
+                        "you cannot visit kitchen for more than three times"
+                    ],
+                    "2": [
+                        "avoid bathroom at any time",
+                        "don't go to bedroom if you haven't been to kitchen"
+                    ],
+                    "2_diverse": [
+                        "never go to bathroom",
+                        "you cannot go to bedroom if you haven't been to kitchen"
+                    ],
+                    "3": [
+                        "avoid bathroom at any time",
+                        "you have to go to bathroom if you have been to bedroom",
+                        "go to living room means you have to go back to living room in the future"
+                    ],
+                    "3_diverse": [
+                        "never go to bathroom",
+                        "you have to enter bathroom once you have been to bedroom",
+                        "go to living room means you have to go back to living room in the future"
+                    ],
+                    "4": [
+                        "avoid bathroom at any time",
+                        "you have to go to bathroom if you have been to bedroom",
+                        "you can go to kitchen for at most three times",
+                        "don't go to bedroom if you haven't been to kitchen"
+                    ],
+                    "4_diverse": [
+                        "never go to bathroom",
+                        "you have to enter bathroom once you have been to bedroom",
+                        "you cannot visit kitchen for more than three times",
+                        "you cannot go to bedroom if you haven't been to kitchen"
+                    ],
                     "5": [
                         "avoid bathroom at any time",
                         "you have to go to bathroom if you have been to bedroom",
-                        "go to kitchen means you have to go to living room in the future",
-                        "you can go to living room for at most three times",
-                        "never go to kitchen if you haven't been to living room"
+                        "go to living room means you have to go back to living room in the future",
+                        "you can go to kitchen for at most three times",
+                        "don't go to bedroom if you haven't been to kitchen"
+                    ],
+                    "5_diverse": [
+                        "never go to bathroom",
+                        "you have to enter bathroom once you have been to bedroom",
+                        "go to living room means you have to go back to living room in the future",
+                        "you cannot visit kitchen for more than three times",
+                        "you cannot go to bedroom if you haven't been to kitchen"
                     ]
                 },
                 "goal_state": {
-                    "coffee_maker": {
+                    "coffeemaker": {
                         "is_switchedon": true
-                    },
-                    "instruction": "Turn on coffee maker"
+                    }
                 },
-                "init_room": "livingroom"
+                "init_room": "livingroom",
+                "instruction": "Turn on coffee maker"
             },
             "7_1": {
                 "constraints": {
-                    "5": [
-                        "you have to enter bathroom before living room",
-                        "don't enter bathroom before bedroom",
+                    "1": [
+                        "you have to enter bathroom before living room"
+                    ],
+                    "1_diverse": [
+                        "never go to bathroom if you haven't been to living room"
+                    ],
+                    "2": [
                         "you can go to bathroom for at most three times",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "2_diverse": [
+                        "don't go to bathroom for more than three times",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "3": [
+                        "you can go to bathroom for at most three times",
+                        "you have to go to kitchen if you have entered living room",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "3_diverse": [
+                        "don't go to bathroom for more than three times",
                         "you have to go to kitchen if you have entered living room",
                         "don't enter living room if you haven't enter bedroom"
                     ],
@@ -425,17 +1176,25 @@
                         "you can go to bathroom for at most three times",
                         "don't enter living room if you haven't enter bedroom"
                     ],
-                    "3": [
+                    "4_diverse": [
+                        "never go to bathroom if you haven't been to living room",
+                        "you have to enter bedroom in order to enter bathroom later",
+                        "don't go to bathroom for more than three times",
+                        "don't enter living room if you haven't enter bedroom"
+                    ],
+                    "5": [
+                        "you have to enter bathroom before living room",
+                        "don't enter bathroom before bedroom",
                         "you can go to bathroom for at most three times",
                         "you have to go to kitchen if you have entered living room",
                         "don't enter living room if you haven't enter bedroom"
                     ],
-                    "2": [
-                        "you can go to bathroom for at most three times",
+                    "5_diverse": [
+                        "never go to bathroom if you haven't been to living room",
+                        "you have to enter bedroom in order to enter bathroom later",
+                        "don't go to bathroom for more than three times",
+                        "you have to go to kitchen if you have entered living room",
                         "don't enter living room if you haven't enter bedroom"
-                    ],
-                    "1": [
-                        "you have to enter bathroom before living room"
                     ]
                 },
                 "goal_state": {

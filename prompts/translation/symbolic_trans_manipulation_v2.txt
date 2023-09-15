@@ -45,8 +45,11 @@ LTL: G i is_grabbed(A) F agent_at(B)
 Utterance: if you switch on A, you have to switch it off later
 LTL: G i is_switchedon(A) F ! is_switchedon(A)
 
-Utterance: you can grab A, you have to leave B at some point in the future
+Utterance: you can grab A, but then you have to leave B at some point in the future
 LTL: G i is_grabbed(A) F ! agent_at(B)
+
+Utterance: you must pick up A if you have visited B
+LTL: G i agent_at(B) F is_grabbed(A)
 
 Utterance: if you hold A, you have to go to B right after that
 LTL: G i is_grabbed(A) X agent_at(B)

@@ -1,0 +1,7 @@
+Sit in down on the chair
+I find a chair in kitchen, and I sit down on the chair
+
+[WALK] <kitchen> (0)
+[FIND] <chair> (194)
+[TURNTO] <chair> (194)
+[SIT] <chair> (194)
