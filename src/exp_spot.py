@@ -142,8 +142,13 @@ def main():
             grounded_pred_mapping[prop] = pred
         trans = {"sub_trans":{"sym_utt": sym_utts, "sym_ltl": sym_ltls, "placeholder": placeholder_maps}, "unified_trans":{"unified_ltl":input_ltl, "grounded_pred":grounded_pred_mapping, "object":obj_mapping, "predicate":pred_mapping} }
     # take_num = len(translation_result[args.example_fname][args.constraint_num]
-        translation_result[args.example_fname][args.constraint_num] = trans
-        save_to_file(translation_result, args.translation_result_fpath)
+        if not args.no_log: 
+            translation_result[args.example_fname][args.constraint_num] = trans
+            save_to_file(translation_result, args.translation_result_fpath)
+        else:
+            print('sym_utts', sym_utts)
+            print('sym_ltls', sym_ltls)
+            print('placeholder_maps', placeholder_maps)
 
 
 
@@ -270,21 +275,25 @@ def main():
     goal_state = task_dict["goal_state"]
     complete = evaluate_completeness_spot(manip_dict, goal_state)
 
-    # save_fpath = "results/spot_results.json"
-    save_fpath = args.saved_results_fpath
-    if os.path.exists(save_fpath):
-        saved_results = load_from_file(save_fpath)
+    if not args.no_log:
+        # save_fpath = "results/spot_results.json"
+        save_fpath = args.saved_results_fpath
+        if os.path.exists(save_fpath):
+            saved_results = load_from_file(save_fpath)
+        else:
+            saved_results = defaultdict(dict)
+        if args.example_fname not in saved_results:
+            saved_results[args.example_fname] = {}
+        if args.constraint_num not in saved_results[args.example_fname]:
+            saved_results[args.example_fname][args.constraint_num] = {}
+        if args.safety_level not in saved_results[args.example_fname][args.constraint_num]:
+            saved_results[args.example_fname][args.constraint_num][args.safety_level] = {}
+        take_num = len(saved_results[args.example_fname][args.constraint_num][args.safety_level])
+        saved_results[args.example_fname][args.constraint_num][args.safety_level][f"take_{take_num}"] = {"constraint": constraints, "program":program, "prompt":prompt, "safe": success, "completed": complete}
+        save_to_file(saved_results, save_fpath)
     else:
-        saved_results = defaultdict(dict)
-    if args.example_fname not in saved_results:
-        saved_results[args.example_fname] = {}
-    if args.constraint_num not in saved_results[args.example_fname]:
-        saved_results[args.example_fname][args.constraint_num] = {}
-    if args.safety_level not in saved_results[args.example_fname][args.constraint_num]:
-        saved_results[args.example_fname][args.constraint_num][args.safety_level] = {}
-    take_num = len(saved_results[args.example_fname][args.constraint_num][args.safety_level])
-    saved_results[args.example_fname][args.constraint_num][args.safety_level][f"take_{take_num}"] = {"constraint": constraints, "program":program, "prompt":prompt, "safe": success, "completed": complete}
-    save_to_file(saved_results, save_fpath)
+        print("completed", complete)
+        print("safe", success)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -297,6 +306,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset_fpath",type=str, default="virtualhome_v2.3.0/dataset/ltl_safety/spot/tasks_spot.json")
     parser.add_argument("--saved_results_fpath", type=str, default="results/results_spot.json", help="filepath for saved experiment results")
     parser.add_argument("--act_embed_fpath", type=str, default="/users/zyang157/data/zyang157/virtualhome/action_embeds/act2embed_vh_gpt3-text-embedding-ada-002_spot.pkl")
+    parser.add_argument("--no_log", action='store_true')
     parser.add_argument("--act_list", type=str, default="virtualhome_v2.3.0/resources/allowed_actions_spot.json")
     args = parser.parse_args()
 
