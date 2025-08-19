@@ -1,5 +1,5 @@
 # Safety Chip
-Codebase for paper: *Plug in the Safety Chip: Enforcing Temporal Constraints for LLM Agents*
+Codebase for ICRA paper: [*Plug in the Safety Chip: Enforcing Constraints for LLM-driven Robot Agents*](https://arxiv.org/abs/2309.09919)
 ## Installation
 1. Download [Virtual Home](https://github.com/xavierpuigf/virtualhome) simulator, and put them under `virtualhome_v2.3.0/simulation`.
 2. Creating the environment by:
